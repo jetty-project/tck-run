@@ -5,7 +5,7 @@
 # terms of the Eclipse Public License v. 2.0, which is available at
 # http://www.eclipse.org/legal/epl-2.0.
 #
-# This Source Code may also be made available under the following Secondary
+# This Source Code may also be made available under the following Secondaryf
 # Licenses when the conditions for such availability set forth in the
 # Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
 # version 2 with the GNU Classpath Exception, which is available at
@@ -77,7 +77,7 @@ javatest.timeout.factor=1.0
 ## Settings for Vendor Servlet Implementation
 #  @web.home The location of the vendor's Servlet implementation.
 ########################################################################
-web.home=/Users/olamy/dev/sources/open-sources/jetty/jetty.project/jetty-distribution/target/jetty-distribution-9.4.16-SNAPSHOT
+web.home=/home/jenkins/workspace/experiments/tck-test/jetty.project/jetty-distribution/target/jetty-distribution-9.4.16-SNAPSHOT
 
 ###############################################################
 # The following property are added for setting up security tests.
