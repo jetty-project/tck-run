@@ -77,7 +77,7 @@ javatest.timeout.factor=1.0
 ## Settings for Vendor Servlet Implementation
 #  @web.home The location of the vendor's Servlet implementation.
 ########################################################################
-web.home=/home/jenkins/workspace/experiments/tck-test/jetty.project/jetty-distribution/target/jetty-distribution-9.4.16-SNAPSHOT
+web.home=/home/jenkins/workspace/experiments/tck-test/jetty-distribution/target/jetty-distribution-9.4.16-SNAPSHOT
 
 ###############################################################
 # The following property are added for setting up security tests.
