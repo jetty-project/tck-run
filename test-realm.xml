@@ -11,7 +11,7 @@
     <Call name="addBean">
       <Arg>
         <New class="org.eclipse.jetty.security.HashLoginService">
-          <Set name="name">Test Realm</Set>
+          <Set name="name">default</Set>
           <Set name="config"><Property name="jetty.demo.realm" default="etc/realm.properties"/></Set>
           <Set name="hotReload">false</Set>
         </New>
