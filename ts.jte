@@ -56,8 +56,8 @@
 #                    if.existing.work.report.dirs = value in this file
 #                  end if
 ########################################################################
-work.dir=/home/jenkins/workspace/experiments/tck-test/JTWork
-report.dir=/home/jenkins/workspace/experiments/tck-test/JTReport
+work.dir=/home/jenkins/workspace/nightlies/servlettck-run/JTWork
+report.dir=/home/jenkins/workspace/nightlies/servlettck-run/JTReport
 if.existing.work.report.dirs=auto
 
  
