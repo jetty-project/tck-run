@@ -5,8 +5,17 @@ node('linux'){
   stage("cleanup"){
     sh "rm -rf *"
   }
-  stage("Checkout") {
+  stage("Checkout TCK Run") {
     git url: "https://github.com/jetty-project/tck-run.git", branch: "master"
+    stash name: 'ts.jte', includes: 'ts.jte'
+    stash name: 'realm.ini', includes: 'realm.ini'
+    stash name: 'realm.properties', includes: 'realm.properties'
+    stash name: 'test-realm.xml', includes: 'test-realm.xml'
+    stash name: 'cacerts.jks', includes: 'cacerts.jks'
+    stash name: 'clientcert.jks', includes: 'clientcert.jks'
+  }
+
+  stage("Checkout Jetty") {
     git url: "https://github.com/eclipse/jetty.project.git", branch: "$branch"
   }
   stage("Build Jetty") {
@@ -38,23 +47,23 @@ node('linux'){
     //props['work.dir'] = "${env.WORKSPACE}/JTWork"
     //props['report.dir'] = "${env.WORKSPACE}/JTReport"
     //writeFile file: "${env.WORKSPACE}/servlettck/bin/ts.jte", text: propsToString(props)
-    sh "wget -O ts.jte https://raw.githubusercontent.com/jetty-project/tck-run/master/ts.jte"
+    unstash name: 'ts.jte'
     sh "cp ts.jte servlettck/bin"
 
-    sh "wget -O realm.ini https://raw.githubusercontent.com/jetty-project/tck-run/master/realm.ini"
+    unstash name: 'realm.ini'
     sh "cp realm.ini jetty-distribution/target/jetty-base/start.d"
 
-    sh "wget -O realm.properties https://github.com/jetty-project/tck-run/raw/master/realm.properties"
+    unstash name: 'realm.properties'
     sh "cp realm.properties jetty-distribution/target/jetty-base/etc"
 
-    sh "wget -O test-realm.xml https://github.com/jetty-project/tck-run/raw/master/test-realm.xml"
+    unstash name: 'test-realm.xml'
     sh "cp test-realm.xml jetty-distribution/target/jetty-base/etc"
 
-    sh "wget -O cacerts.jks https://github.com/jetty-project/tck-run/raw/master/cacerts.jks"
+    unstash name: 'cacerts.jks'
     sh "cp cacerts.jks servlettck/bin/certificates"
     sh "cp cacerts.jks jetty-distribution/target/jetty-base/etc"
 
-    sh "wget -O clientcert.jks https://github.com/jetty-project/tck-run/raw/master/clientcert.jks"
+    unstash name: 'clientcert.jks'
     sh "cp clientcert.jks servlettck/bin/certificates"
     sh "cp clientcert.jks jetty-distribution/target/jetty-base/etc"
 
@@ -70,9 +79,4 @@ node('linux'){
     }
     publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: '/home/jenkins/workspace/experiments/tck-test/JTReport/html', reportFiles: 'report.html', reportName: 'TCK Report', reportTitles: ''])
   }
-}
-
-@NonCPS
-def propsToString(Map map){
-  return new StringWriter().with{w-> (map as Properties).store(w, null); w; }.toString()
 }
