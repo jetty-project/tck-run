@@ -70,6 +70,6 @@ node('linux'){
     } catch(Throwable e){
       e.printStackTrace();
     }
-    publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: '${env.WORKSPACE}/JTReport/html', reportFiles: 'report.html', reportName: 'TCKReport', reportTitles: ''])
+    publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/JTReport/html", reportFiles: 'report.html', reportName: 'TCKReport', reportTitles: ''])
   }
 }
