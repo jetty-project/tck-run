@@ -70,6 +70,6 @@ node('linux'){
     } catch(Throwable e){
       e.printStackTrace();
     }
-    publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: '/home/jenkins/workspace/experiments/wstck-test/JTReport/html', reportFiles: 'report.html', reportName: 'TCKReport', reportTitles: ''])
+    publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: '$WORKSPACE/JTReport/html', reportFiles: 'report.html', reportName: 'TCKReport', reportTitles: ''])
   }
 }
