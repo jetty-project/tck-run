@@ -77,7 +77,7 @@ javatest.timeout.factor=1.0
 ## Settings for Vendor WebSocket Implementation
 #  @web.home The location of the vendor's WebSocket Implementation
 ########################################################################
-web.home=/home/jenkins/workspace/experiments/tck-test/jetty-distribution/target/distribution
+web.home=/home/jenkins/workspace/nightlies/websockettck-run/jetty-distribution/target/distribution
 
 ########################################################################
 ## Common environment for both ts_unix and ts_win32
