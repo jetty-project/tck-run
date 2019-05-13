@@ -71,8 +71,10 @@ node('linux'){
   }
   stage("run servlet tck"){
     try {
-      withAnt(installation: 'ant-latest', jdk: 'jdk8') {
-        sh "cd servlettck/bin && ant run.all"
+      timeout( time: 3, unit: 'HOURS' ) {
+        withAnt( installation: 'ant-latest', jdk: 'jdk8' ) {
+          sh "cd servlettck/bin && ant run.all"
+        }
       }
     } catch(Throwable e){
       e.printStackTrace();
