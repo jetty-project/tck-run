@@ -1,5 +1,6 @@
 
 def branch = params.JETTY_BRANCH ?: "jetty-9.4.x"
+def jdk = params.JDK ?: "jdk8"
 
 node('linux'){
   stage("cleanup"){
@@ -22,7 +23,7 @@ node('linux'){
     timeout(time: 30, unit: 'MINUTES') {
       withMaven(
               maven: 'maven3',
-              jdk: "jdk8",
+              jdk: "$jdk",
               publisherStrategy: 'EXPLICIT',
               globalMavenSettingsConfig: 'oss-settings.xml',
               mavenOpts: '-Xms1g -Xmx4g',
@@ -32,12 +33,11 @@ node('linux'){
     }
   }
   stage("Setup servlet tck"){
-    env.JAVA_HOME="${tool 'jdk8'}"
+    env.JAVA_HOME='${tool "$jdk"}'
     env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
     sh "wget https://jenkins.webtide.net/userContent/servlettck-4.0_latest.zip"
     sh "unzip servlettck-4.0_latest.zip"
-    sh "ls -lrt"
-    //sh "cd jetty-distribution/target/ && unzip jetty-distribution-*.zip"
+
     sh "cd jetty-distribution/target/ && mkdir jetty-base"
     sh "cd jetty-distribution/target/jetty-base && java -jar ../distribution/start.jar --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,jmx,jmx-remote"
     sh 'find servlettck -name *.war -exec cp {} jetty-distribution/target/jetty-base/webapps/ \\;'
@@ -72,7 +72,7 @@ node('linux'){
   stage("run servlet tck"){
     try {
       timeout( time: 3, unit: 'HOURS' ) {
-        withAnt( installation: 'ant-latest', jdk: 'jdk8' ) {
+        withAnt( installation: 'ant-latest', jdk: "$jdk" ) {
           sh "cd servlettck/bin && ant run.all"
         }
       }
