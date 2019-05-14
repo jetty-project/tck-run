@@ -71,7 +71,7 @@ node('linux'){
     try {
       timeout( time: 3, unit: 'HOURS' ) {
         withAnt(installation: 'ant-latest', jdk: "$jdk") {
-          //sh "cd websockettck/bin && ant run.all"
+          sh "cd websockettck/bin && ant run.all"
         }
       }
     } catch(Throwable e){
