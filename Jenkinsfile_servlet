@@ -51,7 +51,7 @@ node('linux'){
     // replace values in ts.jte
     def text = readFile "ts.jte"
     text.replaceAll("@WORKSPACE@", "${env.WORKSPACE}")
-    writeFile file:"servlettck/bin/ts.jte", text: $text
+    writeFile file:"servlettck/bin/ts.jte", text: text
     //sh "cp ts.jte servlettck/bin"
     sh "cat servlettck/bin/ts.jte"
 
