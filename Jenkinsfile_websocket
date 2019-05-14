@@ -22,9 +22,8 @@ node('linux'){
               globalMavenSettingsConfig: 'oss-settings.xml',
               mavenOpts: '-Xms1g -Xmx4g',
               mavenLocalRepo: ".repository") {
-        def pom = readFile "pom.xml"
-        def list = new XmlSlurper().parseText(pom)
-        jettyVersion = list.project.version
+        pom = readMavenPom file: 'pom.xml'
+        jettyVersion =  pom.version
         println "JETTY VERSION " + jettyVersion
         sh "mvn -V -B clean install -DskipTests -T8 -e"
       }
