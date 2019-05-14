@@ -48,6 +48,8 @@ node('linux'){
     //props['report.dir'] = "${env.WORKSPACE}/JTReport"
     //writeFile file: "${env.WORKSPACE}/servlettck/bin/ts.jte", text: propsToString(props)
     unstash name: 'ts.jte'
+    // replace values in ts.jte
+
     sh "cp ts.jte servlettck/bin"
 
     unstash name: 'realm.ini'

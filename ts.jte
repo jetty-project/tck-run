@@ -56,8 +56,8 @@
 #                    if.existing.work.report.dirs = value in this file
 #                  end if
 ########################################################################
-work.dir=/home/jenkins/workspace/nightlies/servlettck-run/JTWork
-report.dir=/home/jenkins/workspace/nightlies/servlettck-run/JTReport
+work.dir=@WORKSPACE@/JTWork
+report.dir=@WORKSPACE@/JTReport
 if.existing.work.report.dirs=auto
 
  
@@ -77,7 +77,7 @@ javatest.timeout.factor=1.0
 ## Settings for Vendor Servlet Implementation
 #  @web.home The location of the vendor's Servlet implementation.
 ########################################################################
-web.home=/home/jenkins/workspace/nightlies/servlettck-run/jetty-distribution/target/distribution
+web.home=@WORKSPACE@/jetty-distribution/target/distribution
 
 ###############################################################
 # The following property are added for setting up security tests.
