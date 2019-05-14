@@ -26,9 +26,9 @@ node('linux'){
               jdk: "$jdk",
               publisherStrategy: 'EXPLICIT',
               globalMavenSettingsConfig: 'oss-settings.xml',
-              mavenOpts: '-Xms1g -Xmx4g',
+              mavenOpts: '-Xms2g -Xmx4g',
               mavenLocalRepo: ".repository") {
-        sh "mvn -V -B clean install -DskipTests -T8 -e"
+        sh "mvn -V -B clean install -DskipTests -T10 -e"
       }
     }
   }
@@ -49,8 +49,11 @@ node('linux'){
     //writeFile file: "${env.WORKSPACE}/servlettck/bin/ts.jte", text: propsToString(props)
     unstash name: 'ts.jte'
     // replace values in ts.jte
-
-    sh "cp ts.jte servlettck/bin"
+    def text = readFile "ts.jte"
+    text.replaceAll("@WORKSPACE@", "${env.WORKSPACE}")
+    writeFile file:"servlettck/bin/ts.jte", text: $text
+    //sh "cp ts.jte servlettck/bin"
+    sh "cat servlettck/bin/ts.jte"
 
     unstash name: 'realm.ini'
     sh "cp realm.ini jetty-distribution/target/jetty-base/start.d"
