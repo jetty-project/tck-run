@@ -47,7 +47,7 @@ node('linux'){
     def text = readFile "ts.jte"
     text = text.replaceAll("@WORKSPACE@", "${env.WORKSPACE}")
     writeFile file:"servlettck/bin/ts.jte", text: text
-    
+
     unstash name: 'realm.ini'
     sh "cp realm.ini jetty-distribution/target/jetty-base/start.d"
 

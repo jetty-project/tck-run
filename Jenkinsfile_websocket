@@ -1,29 +1,37 @@
 
 def branch = params.JETTY_BRANCH ?: "jetty-9.4.x"
-
+def jdk = params.JDK ?: "jdk8"
+def jettyVersion = ""
 node('linux'){
   stage("cleanup"){
     sh "rm -rf *"
   }
-  stage("Checkout") {
+  stage("Checkout TCK Run") {
     git url: "https://github.com/jetty-project/tck-run.git", branch: "master"
+    stash name: 'wsts.jte', includes: 'wsts.jte'
+  }
+  stage("Checkout Jetty") {
     git url: "https://github.com/eclipse/jetty.project.git", branch: "$branch"
   }
   stage("Build Jetty") {
     timeout(time: 30, unit: 'MINUTES') {
       withMaven(
               maven: 'maven3',
-              jdk: "jdk8",
+              jdk: "$jdk",
               publisherStrategy: 'EXPLICIT',
               globalMavenSettingsConfig: 'oss-settings.xml',
               mavenOpts: '-Xms1g -Xmx4g',
               mavenLocalRepo: ".repository") {
+        def pom = readFile "pom.xml"
+        def list = new XmlSlurper().parseText(pom)
+        jettyVersion = list.project.version
+        println "JETTY VERSION " + jettyVersion
         sh "mvn -V -B clean install -DskipTests -T8 -e"
       }
     }
   }
   stage("Setup servlet tck"){
-    env.JAVA_HOME="${tool 'jdk8'}"
+    env.JAVA_HOME="${tool "$jdk"}"
     env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
     sh "wget https://jenkins.webtide.net/userContent/websockettck-1.1_latest.zip"
     sh "unzip websockettck-1.1_latest.zip"
@@ -32,13 +40,13 @@ node('linux'){
     sh "cd jetty-distribution/target/jetty-base && java -jar ../distribution/start.jar --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,jmx,jmx-remote,websocket"
     sh 'find websockettck -name *.war -exec cp {} jetty-distribution/target/jetty-base/webapps/ \\;'
 
-    //${env.WORKSPACE}
-    //def props = readProperties file: "${env.WORKSPACE}/servlettck/bin/ts.jte"
-    //props['work.dir'] = "${env.WORKSPACE}/JTWork"
-    //props['report.dir'] = "${env.WORKSPACE}/JTReport"
-    //writeFile file: "${env.WORKSPACE}/servlettck/bin/ts.jte", text: propsToString(props)
-    sh "wget -O ts.jte https://raw.githubusercontent.com/jetty-project/tck-run/master/wsts.jte"
-    sh "cp ts.jte websockettck/bin"
+    unstash name: 'wsts.jte'
+    // replace values in ts.jte
+    def text = readFile "wsts.jte"
+    text = text.replaceAll("@WORKSPACE@", "${env.WORKSPACE}")
+    text = text.replaceAll("@JETTY_VERSION@", jettyVersion)
+    writeFile file:"websockettck/bin/ts.jte", text: text
+
 
     //sh "wget -O realm.ini https://raw.githubusercontent.com/jetty-project/tck-run/master/realm.ini"
     //sh "cp realm.ini jetty-distribution/target/jetty-base/start.d"
@@ -63,7 +71,7 @@ node('linux'){
   stage("run websocket tck"){
     try {
       timeout( time: 3, unit: 'HOURS' ) {
-        withAnt(installation: 'ant-latest', jdk: 'jdk8') {
+        withAnt(installation: 'ant-latest', jdk: "$jdk") {
           sh "cd websockettck/bin && ant run.all"
         }
       }

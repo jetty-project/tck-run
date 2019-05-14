@@ -57,8 +57,8 @@
 #                    if.existing.work.report.dirs = value in this file
 #                  end if
 ########################################################################
-work.dir=/home/jenkins/workspace/nightlies/websockettck-run/JTWork
-report.dir=/home/jenkins/workspace/nightlies/websockettck-run/JTReport
+work.dir=@WORKSPACE@/JTWork
+report.dir=@WORKSPACE@/JTReport
 if.existing.work.report.dirs=auto
 
 ########################################################################
@@ -77,7 +77,7 @@ javatest.timeout.factor=1.0
 ## Settings for Vendor WebSocket Implementation
 #  @web.home The location of the vendor's WebSocket Implementation
 ########################################################################
-web.home=/home/jenkins/workspace/nightlies/websockettck-run/jetty-distribution/target/distribution
+web.home=@WORKSPACE@/jetty-distribution/target/distribution
 
 ########################################################################
 ## Common environment for both ts_unix and ts_win32
@@ -205,12 +205,12 @@ ClientThreads=2
 # @ts.run.classpath     -- Classpath required to run Web Socket TCK tests
 ##########################################################################
 #websocket.api=${web.home}/modules/jakarta.websocket-api.jar${pathsep}${web.home}/modules/jakarta.servlet-api.jar${pathsep}${web.home}/modules/cdi-api.jar
-websocket.api=${web.home}/lib/websocket/javax.websocket-api-1.0.jar${pathsep}${web.home}/lib/websocket/websocket-api-9.4.19-SNAPSHOT.jar
+websocket.api=${web.home}/lib/websocket/javax.websocket-api-1.0.jar${pathsep}${web.home}/lib/websocket/websocket-api-@JETTY_VERSION@.jar
 
 
 #websocket.classes=${web.home}/modules/tyrus-websocket-core.jar${pathsep}${web.home}/modules/tyrus-client.jar${pathsep}${web.home}/modules/tyrus-core.jar${pathsep}${web.home}/modules/tyrus-container-grizzly.jar${pathsep}${web.home}/modules/glassfish-grizzly-extra-all.jar${pathsep}${web.home}/modules/nucleus-grizzly-all.jar${pathsep}${web.home}/modules/tyrus-server.jar${pathsep}${web.home}/modules/tyrus-container-servlet.jar${pathsep}${web.home}/modules/tyrus-container-grizzly-client.jar${pathsep}${web.home}/modules/tyrus-spi.jar
 
-websocket.classes=${websocket.api}${pathsep}${web.home}/lib/websocket/javax-websocket-client-impl-9.4.19-SNAPSHOT.jar${pathsep}${web.home}/lib/websocket/javax-websocket-server-impl-9.4.19-SNAPSHOT.jar${pathsep}${web.home}/lib/websocket/websocket-client-9.4.19-SNAPSHOT.jar${pathsep}${web.home}/lib/websocket/websocket-common-9.4.19-SNAPSHOT.jar${pathsep}${web.home}/lib/websocket/websocket-server-9.4.19-SNAPSHOT.jar${pathsep}${web.home}/lib/websocket/websocket-servlet-9.4.19-SNAPSHOT.jar${pathsep}${web.home}/lib/websocket/javax.websocket-api-1.0.jar${pathsep}${web.home}/lib/jetty-util-9.4.19-SNAPSHOT.jar${pathsep}${web.home}/lib/jetty-io-9.4.19-SNAPSHOT.jar${pathsep}${web.home}/lib/jetty-client-9.4.19-SNAPSHOT.jar${pathsep}${web.home}/lib/jetty-http-9.4.19-SNAPSHOT.jar
+websocket.classes=${websocket.api}${pathsep}${web.home}/lib/websocket/javax-websocket-client-impl-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/javax-websocket-server-impl-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/websocket-client-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/websocket-common-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/websocket-server-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/websocket-servlet-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/javax.websocket-api-1.0.jar${pathsep}${web.home}/lib/jetty-util-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/jetty-io-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/jetty-client-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/jetty-http-@JETTY_VERSION@.jar
 
 ts.classpath=${websocket.api}${pathsep}${ts.harness.classpath}
 
