@@ -45,6 +45,7 @@ node('linux'){
     text = text.replaceAll("@JETTY_VERSION@", jettyVersion)
     writeFile file:"websockettck/bin/ts.jte", text: text
 
+    sh "cat websockettck/bin/ts.jte"
 
     //sh "wget -O realm.ini https://raw.githubusercontent.com/jetty-project/tck-run/master/realm.ini"
     //sh "cp realm.ini jetty-distribution/target/jetty-base/start.d"
@@ -70,7 +71,7 @@ node('linux'){
     try {
       timeout( time: 3, unit: 'HOURS' ) {
         withAnt(installation: 'ant-latest', jdk: "$jdk") {
-          sh "cd websockettck/bin && ant run.all"
+          //sh "cd websockettck/bin && ant run.all"
         }
       }
     } catch(Throwable e){
