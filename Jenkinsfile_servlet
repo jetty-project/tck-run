@@ -50,7 +50,10 @@ node('linux'){
     unstash name: 'ts.jte'
     // replace values in ts.jte
     def text = readFile "ts.jte"
+    println(text)
     text.replaceAll("@WORKSPACE@", "${env.WORKSPACE}")
+    println("after replaceAll")
+    println(text)
     writeFile file:"servlettck/bin/ts.jte", text: text
     //sh "cp ts.jte servlettck/bin"
     sh "cat servlettck/bin/ts.jte"
