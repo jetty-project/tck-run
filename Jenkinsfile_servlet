@@ -78,6 +78,7 @@ node('linux'){
       e.printStackTrace();
     }
     currentBuild.description = "Build branch $branch with jdk $jdk"
+    archiveArtifacts artifacts: "${env.WORKSPACE}/JTReport/text/*.*"
     publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/JTReport/html", reportFiles: 'report.html', reportName: 'TCK Report', reportTitles: ''])
   }
 }
