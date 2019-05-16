@@ -71,7 +71,9 @@ node('linux'){
     try {
       timeout( time: 3, unit: 'HOURS' ) {
         withAnt( installation: 'ant-latest', jdk: "$jdk" ) {
-          sh "cd servlettck/bin && ant run.all"
+          withEnv(["JAVA_HOME=${ tool "$jdk" }", "PATH+ANT=${tool 'ant-latest'}/bin:${env.JAVA_HOME}/bin"]) {
+            sh "cd servlettck/bin && ant run.all"
+          }
         }
       }
     } catch(Throwable e){
