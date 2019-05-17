@@ -37,8 +37,8 @@ node('linux'){
       // env.JAVA_HOME='${tool "$jdk"}'
       // env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
 
-      echo "Fetching servlettck from ${env.JENKINS_URL}/userContent/tcks/servlettck-4.0_latest.zip"
-      sh "wget ${env.JENKINS_URL}/userContent/tcks/servlettck-4.0_latest.zip"
+      echo "Fetching servlettck from ${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip"
+      sh "curl -O ${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip"
 
       echo "Unpacking Servlet TCK"
       sh "unzip servlettck-4.0_latest.zip"
