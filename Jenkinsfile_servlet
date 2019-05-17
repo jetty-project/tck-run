@@ -33,9 +33,14 @@ node('linux'){
   }
   stage("Setup servlet tck"){
     echo "Starting withEnv()"
-    withEnv(["JAVA_HOME=${ tool "$jdk" }", "PATH=${env.JAVA_HOME}/bin"]) {
+    withEnv(["JAVA_HOME=${ tool "$jdk" }", "PATH=${env.JAVA_HOME}/bin:${env.PATH}"]) {
       // env.JAVA_HOME='${tool "$jdk"}'
       // env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
+      sh "which curl"
+      sh "which wget"
+      sh "which unzip"
+      sh "which find"
+      sh "which java"
 
       echo "Fetching servlettck from ${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip"
       sh "curl -O ${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip"
