@@ -33,7 +33,7 @@ node('linux'){
   }
   stage("Setup servlet tck"){
     echo "Starting withEnv()"
-    withEnv(["JAVA_HOME=${ tool "$jdk" }", "PATH=${env.JAVA_HOME}/bin:${env.PATH}"]) {
+    withEnv(["JAVA_HOME=${ tool "$jdk" }", "PATH=${ tool "$jdk" }/bin:${env.PATH}"]) {
       // env.JAVA_HOME='${tool "$jdk"}'
       // env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
 
