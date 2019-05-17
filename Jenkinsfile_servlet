@@ -36,6 +36,14 @@ node('linux'){
     withEnv(["JAVA_HOME=${ tool "$jdk" }", "PATH=${env.JAVA_HOME}/bin:${env.PATH}"]) {
       // env.JAVA_HOME='${tool "$jdk"}'
       // env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
+
+      echo "JAVA_HOME=${env.JAVA_HOME}"
+      echo "PATH=${env.PATH}"
+
+      sh "ls -la ${env.JAVA_HOME}"
+
+      // Execute some simple lookups of required command line applications
+      // If the application isn't found, then it fails the build
       sh "which curl"
       sh "which wget"
       sh "which unzip"
