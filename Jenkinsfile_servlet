@@ -63,7 +63,7 @@ node('linux'){
 
       echo "Running home to create startd"
 
-      sh "cd jetty-home/target/jetty-base && java -jar ../home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,jmx,jmx-remote"
+      sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,jmx,jmx-remote"
 
       sh "ls -la jetty-home/target/jetty-base/start.d"
 
@@ -100,7 +100,7 @@ node('linux'){
       sh "cp clientcert.jks jetty-home/target/jetty-base/etc"
 
       echo "Executing Jetty Instance ..."
-      sh "cd jetty-home/target/jetty-base && java -Duser.language=en -Duser.country=US -Djavax.net.ssl.trustStore=etc/cacerts.jks -Djavax.net.ssl.keyStore=etc/clientcert.jks -Djavax.net.ssl.keyStorePassword=changeit -jar ../home/start.jar jetty.sslContext.trustStorePath=etc/cacerts.jks &"
+      sh "cd jetty-home/target/jetty-base && java -Duser.language=en -Duser.country=US -Djavax.net.ssl.trustStore=etc/cacerts.jks -Djavax.net.ssl.keyStore=etc/clientcert.jks -Djavax.net.ssl.keyStorePassword=changeit -jar ../jetty-home/start.jar jetty.sslContext.trustStorePath=etc/cacerts.jks &"
     }
   }
   stage("run servlet tck"){
