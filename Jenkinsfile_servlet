@@ -6,7 +6,7 @@ node('linux'){
     sh "rm -rf *"
   }
   stage("Checkout TCK Run") {
-    git url: "https://github.com/jetty-project/tck-run.git", branch: "master"
+    git url: "https://github.com/jetty-project/tck-run.git", branch: "joakim-tck-sanity"
     stash name: 'ts.jte', includes: 'ts.jte'
     stash name: 'realm.ini', includes: 'realm.ini'
     stash name: 'realm.properties', includes: 'realm.properties'
@@ -27,7 +27,7 @@ node('linux'){
               globalMavenSettingsConfig: 'oss-settings.xml',
               mavenOpts: '-Xms2g -Xmx4g',
               mavenLocalRepo: ".repository") {
-        sh "mvn -V -B clean install -DskipTests -T10 -e"
+        sh "mvn -V -B clean install -DskipTests -T2 -e"
       }
     }
   }
