@@ -27,30 +27,35 @@ node('linux'){
               globalMavenSettingsConfig: 'oss-settings.xml',
               mavenOpts: '-Xms2g -Xmx4g',
               mavenLocalRepo: ".repository") {
-        sh "mvn -V -B clean install -DskipTests -T2 -e"
+        sh "mvn -V -B -pl jetty-home -am clean install -DskipTests -T2 -e"
       }
     }
   }
   stage("Setup servlet tck"){
+    echo "Starting withEnv()"
     withEnv(["JAVA_HOME=${ tool "$jdk" }", "PATH=${env.JAVA_HOME}/bin"]) {
       // env.JAVA_HOME='${tool "$jdk"}'
       // env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
+
+      echo "Fetching servlettck from ${env.JENKINS_URL}/userContent/tcks/servlettck-4.0_latest.zip"
       sh "wget ${env.JENKINS_URL}/userContent/tcks/servlettck-4.0_latest.zip"
+
+      echo "Unpacking Servlet TCK"
       sh "unzip servlettck-4.0_latest.zip"
 
-      sh "cd jetty-distribution/target/ && mkdir jetty-base"
+      sh "cd jetty-home/target/ && mkdir jetty-base"
 
-      sh "ls -la jetty-distribution/target/"
-      sh "ls -la jetty-distribution/target/jetty-base"
+      sh "ls -la jetty-home/target/"
+      sh "ls -la jetty-home/target/jetty-base"
 
-      echo "Running distribution - create startd"
+      echo "Running home to create startd"
 
-      sh "cd jetty-distribution/target/jetty-base && java -jar ../distribution/start.jar --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,jmx,jmx-remote"
+      sh "cd jetty-home/target/jetty-base && java -jar ../home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,jmx,jmx-remote"
 
-      sh "ls -la jetty-distribution/target/jetty-base/start.d"
+      sh "ls -la jetty-home/target/jetty-base/start.d"
 
       echo "Copying war from servlet TCK to webapps"
-      sh 'find servlettck -name *.war -exec cp {} jetty-distribution/target/jetty-base/webapps/ \\;'
+      sh 'find servlettck -name *.war -exec cp {} jetty-home/target/jetty-base/webapps/ \\;'
 
       echo "Unstashing ts.jte"
       unstash name: 'ts.jte'
@@ -61,28 +66,28 @@ node('linux'){
 
       echo "Unstashing realm.ini"
       unstash name: 'realm.ini'
-      sh "cp realm.ini jetty-distribution/target/jetty-base/start.d"
+      sh "cp realm.ini jetty-home/target/jetty-base/start.d"
 
       echo "Unstashing realm.properties"
       unstash name: 'realm.properties'
-      sh "cp realm.properties jetty-distribution/target/jetty-base/etc"
+      sh "cp realm.properties jetty-home/target/jetty-base/etc"
 
       echo "Unstashing test-realm.xml"
       unstash name: 'test-realm.xml'
-      sh "cp test-realm.xml jetty-distribution/target/jetty-base/etc"
+      sh "cp test-realm.xml jetty-home/target/jetty-base/etc"
 
       echo "Unstashing cacerts.jks"
       unstash name: 'cacerts.jks'
       sh "cp cacerts.jks servlettck/bin/certificates"
-      sh "cp cacerts.jks jetty-distribution/target/jetty-base/etc"
+      sh "cp cacerts.jks jetty-home/target/jetty-base/etc"
 
       echo "Unstashing clientcerts.jks"
       unstash name: 'clientcert.jks'
       sh "cp clientcert.jks servlettck/bin/certificates"
-      sh "cp clientcert.jks jetty-distribution/target/jetty-base/etc"
+      sh "cp clientcert.jks jetty-home/target/jetty-base/etc"
 
       echo "Executing Jetty Instance ..."
-      sh "cd jetty-distribution/target/jetty-base && java -Duser.language=en -Duser.country=US -Djavax.net.ssl.trustStore=etc/cacerts.jks -Djavax.net.ssl.keyStore=etc/clientcert.jks -Djavax.net.ssl.keyStorePassword=changeit -jar ../distribution/start.jar jetty.sslContext.trustStorePath=etc/cacerts.jks &"
+      sh "cd jetty-home/target/jetty-base && java -Duser.language=en -Duser.country=US -Djavax.net.ssl.trustStore=etc/cacerts.jks -Djavax.net.ssl.keyStore=etc/clientcert.jks -Djavax.net.ssl.keyStorePassword=changeit -jar ../home/start.jar jetty.sslContext.trustStorePath=etc/cacerts.jks &"
     }
   }
   stage("run servlet tck"){
