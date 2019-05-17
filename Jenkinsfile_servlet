@@ -1,4 +1,3 @@
-
 def branch = params.JETTY_BRANCH ?: "jetty-9.4.x"
 def jdk = params.JDK ?: "jdk8"
 
@@ -33,41 +32,39 @@ node('linux'){
     }
   }
   stage("Setup servlet tck"){
-    env.JAVA_HOME='${tool "$jdk"}'
-    env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
-    sh "wget ${env.JENKINS_URL}/userContent/tcks/servlettck-4.0_latest.zip"
-    sh "unzip servlettck-4.0_latest.zip"
-
-    sh "cd jetty-distribution/target/ && mkdir jetty-base"
     withEnv(["JAVA_HOME=${ tool "$jdk" }", "PATH=${env.JAVA_HOME}/bin"]) {
+      // env.JAVA_HOME='${tool "$jdk"}'
+      // env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
+      sh "wget ${env.JENKINS_URL}/userContent/tcks/servlettck-4.0_latest.zip"
+      sh "unzip servlettck-4.0_latest.zip"
+
+      sh "cd jetty-distribution/target/ && mkdir jetty-base"
       sh "cd jetty-distribution/target/jetty-base && java -jar ../distribution/start.jar --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,jmx,jmx-remote"
-    }
-    sh 'find servlettck -name *.war -exec cp {} jetty-distribution/target/jetty-base/webapps/ \\;'
+      sh 'find servlettck -name *.war -exec cp {} jetty-distribution/target/jetty-base/webapps/ \\;'
 
-    unstash name: 'ts.jte'
-    // replace values in ts.jte
-    def text = readFile "ts.jte"
-    text = text.replaceAll("@WORKSPACE@", "${env.WORKSPACE}")
-    writeFile file:"servlettck/bin/ts.jte", text: text
+      unstash name: 'ts.jte'
+      // replace values in ts.jte
+      def text = readFile "ts.jte"
+      text = text.replaceAll("@WORKSPACE@", "${env.WORKSPACE}")
+      writeFile file:"servlettck/bin/ts.jte", text: text
 
-    unstash name: 'realm.ini'
-    sh "cp realm.ini jetty-distribution/target/jetty-base/start.d"
+      unstash name: 'realm.ini'
+      sh "cp realm.ini jetty-distribution/target/jetty-base/start.d"
 
-    unstash name: 'realm.properties'
-    sh "cp realm.properties jetty-distribution/target/jetty-base/etc"
+      unstash name: 'realm.properties'
+      sh "cp realm.properties jetty-distribution/target/jetty-base/etc"
 
-    unstash name: 'test-realm.xml'
-    sh "cp test-realm.xml jetty-distribution/target/jetty-base/etc"
+      unstash name: 'test-realm.xml'
+      sh "cp test-realm.xml jetty-distribution/target/jetty-base/etc"
 
-    unstash name: 'cacerts.jks'
-    sh "cp cacerts.jks servlettck/bin/certificates"
-    sh "cp cacerts.jks jetty-distribution/target/jetty-base/etc"
+      unstash name: 'cacerts.jks'
+      sh "cp cacerts.jks servlettck/bin/certificates"
+      sh "cp cacerts.jks jetty-distribution/target/jetty-base/etc"
 
-    unstash name: 'clientcert.jks'
-    sh "cp clientcert.jks servlettck/bin/certificates"
-    sh "cp clientcert.jks jetty-distribution/target/jetty-base/etc"
+      unstash name: 'clientcert.jks'
+      sh "cp clientcert.jks servlettck/bin/certificates"
+      sh "cp clientcert.jks jetty-distribution/target/jetty-base/etc"
 
-    withEnv(["JAVA_HOME=${ tool "$jdk" }", "PATH=${env.JAVA_HOME}/bin"]) {
       sh "cd jetty-distribution/target/jetty-base && java -Duser.language=en -Duser.country=US -Djavax.net.ssl.trustStore=etc/cacerts.jks -Djavax.net.ssl.keyStore=etc/clientcert.jks -Djavax.net.ssl.keyStorePassword=changeit -jar ../distribution/start.jar jetty.sslContext.trustStorePath=etc/cacerts.jks &"
     }
   }
@@ -88,3 +85,5 @@ node('linux'){
     publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/JTReport/html", reportFiles: 'report.html', reportName: 'TCK Report', reportTitles: ''])
   }
 }
+
+// vim:syntax=groovy expandtab tabstop=2 softtabstop=2 shiftwidth=2
