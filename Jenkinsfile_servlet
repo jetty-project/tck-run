@@ -39,8 +39,7 @@ node('linux'){
     sh "unzip servlettck-4.0_latest.zip"
 
     sh "cd jetty-distribution/target/ && mkdir jetty-base"
-    sh "cd jetty-distribution/target/jetty-base"
-    sh "${env.JAVA_HOME}/bin/java -jar ../distribution/start.jar --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,jmx,jmx-remote"
+    sh "cd jetty-distribution/target/jetty-base && ${env.JAVA_HOME}/bin/java -jar ../distribution/start.jar --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,jmx,jmx-remote"
     sh 'find servlettck -name *.war -exec cp {} jetty-distribution/target/jetty-base/webapps/ \\;'
 
     unstash name: 'ts.jte'
@@ -66,8 +65,7 @@ node('linux'){
     sh "cp clientcert.jks servlettck/bin/certificates"
     sh "cp clientcert.jks jetty-distribution/target/jetty-base/etc"
 
-    sh "cd jetty-distribution/target/jetty-base"
-    sh "${env.JAVA_HOME}/bin/java -Duser.language=en -Duser.country=US -Djavax.net.ssl.trustStore=etc/cacerts.jks -Djavax.net.ssl.keyStore=etc/clientcert.jks -Djavax.net.ssl.keyStorePassword=changeit -jar ../distribution/start.jar jetty.sslContext.trustStorePath=etc/cacerts.jks &"
+    sh "cd jetty-distribution/target/jetty-base && ${env.JAVA_HOME}/bin/java -Duser.language=en -Duser.country=US -Djavax.net.ssl.trustStore=etc/cacerts.jks -Djavax.net.ssl.keyStore=etc/clientcert.jks -Djavax.net.ssl.keyStorePassword=changeit -jar ../distribution/start.jar jetty.sslContext.trustStorePath=etc/cacerts.jks &"
   }
   stage("run servlet tck"){
     try {
