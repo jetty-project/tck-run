@@ -1,4 +1,3 @@
-
 def branch = params.JETTY_BRANCH ?: "jetty-9.4.x"
 def jdk = params.JDK ?: "jdk8"
 
@@ -7,7 +6,7 @@ node('linux'){
     sh "rm -rf *"
   }
   stage("Checkout TCK Run") {
-    git url: "https://github.com/jetty-project/tck-run.git", branch: "master"
+    git url: "https://github.com/jetty-project/tck-run.git", branch: "joakim-tck-sanity"
     stash name: 'ts.jte', includes: 'ts.jte'
     stash name: 'realm.ini', includes: 'realm.ini'
     stash name: 'realm.properties', includes: 'realm.properties'
@@ -28,44 +27,81 @@ node('linux'){
               globalMavenSettingsConfig: 'oss-settings.xml',
               mavenOpts: '-Xms2g -Xmx4g',
               mavenLocalRepo: ".repository") {
-        sh "mvn -V -B clean install -DskipTests -T10 -e"
+        sh "mvn -V -B -pl jetty-home -am clean install -DskipTests -T2 -e"
       }
     }
   }
   stage("Setup servlet tck"){
-    env.JAVA_HOME='${tool "$jdk"}'
-    env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
-    sh "wget https://jenkins.webtide.net/userContent/servlettck-4.0_latest.zip"
-    sh "unzip servlettck-4.0_latest.zip"
+    echo "Starting withEnv()"
+    withEnv(["JAVA_HOME=${ tool "$jdk" }", "PATH=${ tool "$jdk" }/bin:${env.PATH}"]) {
+      // env.JAVA_HOME='${tool "$jdk"}'
+      // env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
 
-    sh "cd jetty-distribution/target/ && mkdir jetty-base"
-    sh "cd jetty-distribution/target/jetty-base && java -jar ../distribution/start.jar --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,jmx,jmx-remote"
-    sh 'find servlettck -name *.war -exec cp {} jetty-distribution/target/jetty-base/webapps/ \\;'
+      echo "JAVA_HOME=${env.JAVA_HOME}"
+      echo "PATH=${env.PATH}"
 
-    unstash name: 'ts.jte'
-    // replace values in ts.jte
-    def text = readFile "ts.jte"
-    text = text.replaceAll("@WORKSPACE@", "${env.WORKSPACE}")
-    writeFile file:"servlettck/bin/ts.jte", text: text
+      sh "ls -la ${env.JAVA_HOME}"
 
-    unstash name: 'realm.ini'
-    sh "cp realm.ini jetty-distribution/target/jetty-base/start.d"
+      // Execute some simple lookups of required command line applications
+      // If the application isn't found, then it fails the build
+      sh "which curl"
+      sh "which wget"
+      sh "which unzip"
+      sh "which find"
+      sh "which java"
 
-    unstash name: 'realm.properties'
-    sh "cp realm.properties jetty-distribution/target/jetty-base/etc"
+      echo "Fetching servlettck from ${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip"
+      sh "curl -O ${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip"
 
-    unstash name: 'test-realm.xml'
-    sh "cp test-realm.xml jetty-distribution/target/jetty-base/etc"
+      echo "Unpacking Servlet TCK"
+      sh "unzip servlettck-4.0_latest.zip"
 
-    unstash name: 'cacerts.jks'
-    sh "cp cacerts.jks servlettck/bin/certificates"
-    sh "cp cacerts.jks jetty-distribution/target/jetty-base/etc"
+      sh "cd jetty-home/target/ && mkdir jetty-base"
 
-    unstash name: 'clientcert.jks'
-    sh "cp clientcert.jks servlettck/bin/certificates"
-    sh "cp clientcert.jks jetty-distribution/target/jetty-base/etc"
+      sh "ls -la jetty-home/target/"
+      sh "ls -la jetty-home/target/jetty-base"
 
-    sh "cd jetty-distribution/target/jetty-base && java -Duser.language=en -Duser.country=US -Djavax.net.ssl.trustStore=etc/cacerts.jks -Djavax.net.ssl.keyStore=etc/clientcert.jks -Djavax.net.ssl.keyStorePassword=changeit -jar ../distribution/start.jar jetty.sslContext.trustStorePath=etc/cacerts.jks &"
+      echo "Running home to create startd"
+
+      sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,jmx,jmx-remote"
+
+      sh "ls -la jetty-home/target/jetty-base/start.d"
+
+      echo "Copying war from servlet TCK to webapps"
+      sh 'find servlettck -name *.war -exec cp {} jetty-home/target/jetty-base/webapps/ \\;'
+
+      echo "Unstashing ts.jte"
+      unstash name: 'ts.jte'
+      // replace values in ts.jte
+      def text = readFile "ts.jte"
+      text = text.replaceAll("@WORKSPACE@", "${env.WORKSPACE}")
+      writeFile file:"servlettck/bin/ts.jte", text: text
+
+      echo "Unstashing realm.ini"
+      unstash name: 'realm.ini'
+      sh "cp realm.ini jetty-home/target/jetty-base/start.d"
+
+      echo "Unstashing realm.properties"
+      unstash name: 'realm.properties'
+      sh "cp realm.properties jetty-home/target/jetty-base/etc"
+
+      echo "Unstashing test-realm.xml"
+      unstash name: 'test-realm.xml'
+      sh "cp test-realm.xml jetty-home/target/jetty-base/etc"
+
+      echo "Unstashing cacerts.jks"
+      unstash name: 'cacerts.jks'
+      sh "cp cacerts.jks servlettck/bin/certificates"
+      sh "cp cacerts.jks jetty-home/target/jetty-base/etc"
+
+      echo "Unstashing clientcerts.jks"
+      unstash name: 'clientcert.jks'
+      sh "cp clientcert.jks servlettck/bin/certificates"
+      sh "cp clientcert.jks jetty-home/target/jetty-base/etc"
+
+      echo "Executing Jetty Instance ..."
+      sh "cd jetty-home/target/jetty-base && java -Duser.language=en -Duser.country=US -Djavax.net.ssl.trustStore=etc/cacerts.jks -Djavax.net.ssl.keyStore=etc/clientcert.jks -Djavax.net.ssl.keyStorePassword=changeit -jar ../jetty-home/start.jar jetty.sslContext.trustStorePath=etc/cacerts.jks &"
+    }
   }
   stage("run servlet tck"){
     try {
@@ -84,3 +120,5 @@ node('linux'){
     publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/JTReport/html", reportFiles: 'report.html', reportName: 'TCK Report', reportTitles: ''])
   }
 }
+
+// vim:syntax=groovy expandtab tabstop=2 softtabstop=2 shiftwidth=2
