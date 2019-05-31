@@ -13,6 +13,7 @@ node('linux'){
     stash name: 'test-realm.xml', includes: 'test-realm.xml'
     stash name: 'cacerts.jks', includes: 'cacerts.jks'
     stash name: 'clientcert.jks', includes: 'clientcert.jks'
+    stash name: 'log4j2.xml', includes: 'log4j2.xml'
   }
 
   stage("Checkout Jetty") {
@@ -99,6 +100,7 @@ node('linux'){
       sh "cp clientcert.jks servlettck/bin/certificates"
       sh "cp clientcert.jks jetty-home/target/jetty-base/etc"
 
+      unstash name: 'log4j2.xml'
       sh "cp log4j2.xml jetty-home/target/jetty-base/resources"
 
       echo "Executing Jetty Instance ..."
