@@ -28,7 +28,7 @@ node('linux'){
               globalMavenSettingsConfig: 'oss-settings.xml',
               mavenOpts: '-Xms2g -Xmx4g',
               mavenLocalRepo: ".repository") {
-        sh "mvn -V -B -pl jetty-home -am clean install -DskipTests -T2 -e"
+        sh "mvn -V -B -pl jetty-home -am clean install -DskipTests -T6 -e"
       }
     }
   }
