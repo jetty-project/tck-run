@@ -58,7 +58,7 @@ node('linux'){
       sh "unzip servlettck-4.0_latest.zip"
 
       sh "cd jetty-home/target/ && mkdir jetty-base"
-      sh "cd jetty-base && mkdir etc && cd .."
+      sh "cd jetty-home/target/jetty-base && mkdir etc && cd .."
 
       sh "ls -la jetty-home/target/"
       sh "ls -la jetty-home/target/jetty-base"
