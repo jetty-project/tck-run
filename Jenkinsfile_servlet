@@ -65,7 +65,8 @@ node('linux'){
 
       echo "Running home to create startd"
 
-      sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,logging-log4j2"
+      sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,,http2c,webapp,deploy,jsp,logging-log4j2"
+      //sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,logging-log4j2"
 
       sh "ls -la jetty-home/target/jetty-base"
       sh "ls -la jetty-home/target/jetty-base/start.d"
