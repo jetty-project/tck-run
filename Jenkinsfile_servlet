@@ -66,6 +66,7 @@ node('linux'){
 
       sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,jmx,jmx-remote,logging-log4j2"
 
+      sh "ls -la jetty-home/target/jetty-base"
       sh "ls -la jetty-home/target/jetty-base/start.d"
 
       echo "Copying war from servlet TCK to webapps"
@@ -80,28 +81,28 @@ node('linux'){
 
       echo "Unstashing realm.ini"
       unstash name: 'realm.ini'
-      sh "cp realm.ini jetty-home/target/jetty-base/start.d"
+      sh "cp realm.ini jetty-home/target/jetty-base/start.d/"
 
       echo "Unstashing realm.properties"
       unstash name: 'realm.properties'
-      sh "cp realm.properties jetty-home/target/jetty-base/etc"
+      sh "cp realm.properties jetty-home/target/jetty-base/etc/"
 
       echo "Unstashing test-realm.xml"
       unstash name: 'test-realm.xml'
-      sh "cp test-realm.xml jetty-home/target/jetty-base/etc"
+      sh "cp test-realm.xml jetty-home/target/jetty-base/etc/"
 
       echo "Unstashing cacerts.jks"
       unstash name: 'cacerts.jks'
       sh "cp cacerts.jks servlettck/bin/certificates"
-      sh "cp cacerts.jks jetty-home/target/jetty-base/etc"
+      sh "cp cacerts.jks jetty-home/target/jetty-base/etc/"
 
       echo "Unstashing clientcerts.jks"
       unstash name: 'clientcert.jks'
       sh "cp clientcert.jks servlettck/bin/certificates"
-      sh "cp clientcert.jks jetty-home/target/jetty-base/etc"
+      sh "cp clientcert.jks jetty-home/target/jetty-base/etc/"
 
       unstash name: 'log4j2.xml'
-      sh "cp log4j2.xml jetty-home/target/jetty-base/resources"
+      sh "cp log4j2.xml jetty-home/target/jetty-base/resources/"
 
       echo "Executing Jetty Instance ..."
       sh "cd jetty-home/target/jetty-base && java -Duser.language=en -Duser.country=US -Djavax.net.ssl.trustStore=etc/cacerts.jks -Djavax.net.ssl.keyStore=etc/clientcert.jks -Djavax.net.ssl.keyStorePassword=changeit -Dorg.eclipse.jetty.ssl.password=changeit -jar ../jetty-home/start.jar jetty.sslContext.trustStorePath=etc/cacerts.jks jetty.sslContext.keyStorePassword=changeit org.eclipse.jetty.ssl.password=changeit jetty.sslContext.trustStorePassword=changeit &"
