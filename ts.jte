@@ -77,7 +77,7 @@ javatest.timeout.factor=1.0
 ## Settings for Vendor Servlet Implementation
 #  @web.home The location of the vendor's Servlet implementation.
 ########################################################################
-web.home=@WORKSPACE@/jetty-distribution/target/distribution
+web.home=@WORKSPACE@/jetty-home/target/jetty-home
 
 ###############################################################
 # The following property are added for setting up security tests.
