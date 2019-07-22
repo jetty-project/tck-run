@@ -123,8 +123,10 @@ node('linux'){
         }
       }
     } catch(Throwable e){
-      e.printStackTrace();
+      e.printStackTrace()
     }
+    tckreporttojunit tckReportTxtPath: "${env.WORKSPACE}/JTReport/text/summary.txt", junitFolderPath: 'surefire-reports'
+    junit testResults: '**/surefire-reports/*.xml'
     currentBuild.description = "Build branch $branch with jdk $jdk"
     archiveArtifacts artifacts: "${env.WORKSPACE}/JTReport/text/*.txt",allowEmptyArchive: true
     archiveArtifacts artifacts: "jetty-home/target/jetty-base/logs/*.*",allowEmptyArchive: true
