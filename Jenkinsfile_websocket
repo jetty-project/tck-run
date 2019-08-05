@@ -77,6 +77,8 @@ node('linux'){
     } catch(Throwable e){
       e.printStackTrace();
     }
+    tckreporttojunit tckReportTxtPath: "${env.WORKSPACE}/JTReport/text/summary.txt", junitFolderPath: 'surefire-reports'
+    junit testResults: '**/surefire-reports/*.xml'
     currentBuild.description = "Build branch $branch with jdk $jdk"
     publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/JTReport/html", reportFiles: 'report.html', reportName: 'TCKReport', reportTitles: ''])
   }
