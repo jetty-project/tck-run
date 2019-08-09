@@ -80,6 +80,8 @@ node('linux'){
     tckreporttojunit tckReportTxtPath: "${env.WORKSPACE}/JTReport/text/summary.txt", junitFolderPath: 'surefire-reports'
     junit testResults: '**/surefire-reports/*.xml'
     currentBuild.description = "Build branch $branch with jdk $jdk"
-    publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/JTReport/html", reportFiles: 'report.html', reportName: 'TCKReport', reportTitles: ''])
+    archiveArtifacts artifacts: "${env.WORKSPACE}/JTReport/text/*.txt",allowEmptyArchive: true
+    archiveArtifacts artifacts: "jetty-home/target/jetty-base/logs/*.*",allowEmptyArchive: true
+    publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/JTReport/html", reportFiles: 'report.html', reportName: 'TCK Report', reportTitles: ''])
   }
 }
