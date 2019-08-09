@@ -9,6 +9,7 @@ node('linux'){
   stage("Checkout TCK Run") {
     git url: "https://github.com/jetty-project/tck-run.git", branch: "master"
     stash name: 'wsts.jte', includes: 'wsts.jte'
+    stash name: 'log4j2.xml', includes: 'log4j2.xml'
   }
   stage("Checkout Jetty") {
     git url: "https://github.com/eclipse/jetty.project.git", branch: "$branch"
@@ -35,7 +36,7 @@ node('linux'){
     sh "unzip websockettck-1.1_latest.zip"
     sh "ls -lrt"
     sh "cd jetty-distribution/target/ && mkdir jetty-base"
-    sh "cd jetty-distribution/target/jetty-base && java -jar ../distribution/start.jar --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,websocket"
+    sh "cd jetty-distribution/target/jetty-base && java -jar ../distribution/start.jar --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,websocket,logging-log4j2"
     sh 'find websockettck -name *.war -exec cp {} jetty-distribution/target/jetty-base/webapps/ \\;'
 
     unstash name: 'wsts.jte'
@@ -46,6 +47,9 @@ node('linux'){
     writeFile file:"websockettck/bin/ts.jte", text: text
 
     sh "cat websockettck/bin/ts.jte"
+
+    unstash name: 'log4j2.xml'
+    sh "cp log4j2.xml jetty-home/target/jetty-base/resources/"
 
     //sh "wget -O realm.ini https://raw.githubusercontent.com/jetty-project/tck-run/master/realm.ini"
     //sh "cp realm.ini jetty-distribution/target/jetty-base/start.d"
