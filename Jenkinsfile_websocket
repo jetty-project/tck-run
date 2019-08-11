@@ -49,7 +49,7 @@ node('linux'){
     sh "cat websockettck/bin/ts.jte"
 
     unstash name: 'log4j2.xml'
-    sh "cp log4j2.xml jetty-home/target/jetty-base/resources/"
+    sh "cp log4j2.xml jetty-distribution/target/jetty-base/resources/"
 
     //sh "wget -O realm.ini https://raw.githubusercontent.com/jetty-project/tck-run/master/realm.ini"
     //sh "cp realm.ini jetty-distribution/target/jetty-base/start.d"
