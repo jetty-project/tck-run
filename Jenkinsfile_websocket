@@ -25,7 +25,7 @@ node('linux'){
               mavenLocalRepo: ".repository") {
         pom = readMavenPom file: 'pom.xml'
         jettyVersion =  pom.version
-        sh "mvn -V -B clean install -DskipTests -T8 -e"
+        sh "mvn -V -B -pl jetty-home -am clean install -DskipTests -T6 -e"
       }
     }
   }
@@ -35,9 +35,9 @@ node('linux'){
     sh "wget https://jenkins.webtide.net/userContent/websockettck-1.1_latest.zip"
     sh "unzip websockettck-1.1_latest.zip"
     sh "ls -lrt"
-    sh "cd jetty-distribution/target/ && mkdir jetty-base"
-    sh "cd jetty-distribution/target/jetty-base && java -jar ../distribution/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,websocket,logging-log4j2"
-    sh 'find websockettck -name *.war -exec cp {} jetty-distribution/target/jetty-base/webapps/ \\;'
+    sh "cd jetty-home/target/ && mkdir jetty-base"
+    sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,websocket,logging-log4j2"
+    sh 'find websockettck -name *.war -exec cp {} jetty-home/target/jetty-base/webapps/ \\;'
 
     unstash name: 'wsts.jte'
     // replace values in ts.jte
@@ -49,7 +49,7 @@ node('linux'){
     sh "cat websockettck/bin/ts.jte"
 
     unstash name: 'log4j2.xml'
-    sh "cp log4j2.xml jetty-distribution/target/jetty-base/resources/"
+    sh "cp log4j2.xml jetty-home/target/jetty-base/resources/"
 
     //sh "wget -O realm.ini https://raw.githubusercontent.com/jetty-project/tck-run/master/realm.ini"
     //sh "cp realm.ini jetty-distribution/target/jetty-base/start.d"
@@ -69,7 +69,7 @@ node('linux'){
     //sh "cp clientcert.jks jetty-distribution/target/jetty-base/etc"
 
     //sh "cd jetty-distribution/target/jetty-base && java -Duser.language=en -Duser.country=US -Djavax.net.ssl.trustStore=etc/cacerts.jks -Djavax.net.ssl.keyStore=etc/clientcert.jks -Djavax.net.ssl.keyStorePassword=changeit -jar ../distribution/start.jar jetty.sslContext.trustStorePath=etc/cacerts.jks &"
-    sh "cd jetty-distribution/target/jetty-base && java -Duser.language=en -Duser.country=US -jar ../distribution/start.jar  &"
+    sh "cd jetty-home/target/jetty-base && java -Duser.language=en -Duser.country=US -jar ../jetty-home/start.jar  &"
   }
   stage("run websocket tck"){
     try {
