@@ -205,7 +205,7 @@ ClientThreads=2
 # @ts.run.classpath     -- Classpath required to run Web Socket TCK tests
 ##########################################################################
 #websocket.api=${web.home}/modules/jakarta.websocket-api.jar${pathsep}${web.home}/modules/jakarta.servlet-api.jar${pathsep}${web.home}/modules/cdi-api.jar
-websocket.api=${web.home}/lib/websocket/javax.websocket-api-1.0.jar${pathsep}${web.home}/lib/websocket/websocket-api-@JETTY_VERSION@.jar
+websocket.api=${web.home}/lib/websocket/javax.websocket-api-1.0.jar${pathsep}${web.home}/lib/websocket/websocket-api-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/jetty-javax-websocket-api-1.1.1.jar{pathsep}${web.home}/lib/websocket/jetty-websocket-api-10.0.0-SNAPSHOT.jar
 
 
 #websocket.classes=${web.home}/modules/tyrus-websocket-core.jar${pathsep}${web.home}/modules/tyrus-client.jar${pathsep}${web.home}/modules/tyrus-core.jar${pathsep}${web.home}/modules/tyrus-container-grizzly.jar${pathsep}${web.home}/modules/glassfish-grizzly-extra-all.jar${pathsep}${web.home}/modules/nucleus-grizzly-all.jar${pathsep}${web.home}/modules/tyrus-server.jar${pathsep}${web.home}/modules/tyrus-container-servlet.jar${pathsep}${web.home}/modules/tyrus-container-grizzly-client.jar${pathsep}${web.home}/modules/tyrus-spi.jar
