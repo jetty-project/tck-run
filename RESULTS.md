@@ -6,11 +6,12 @@ Servlet TCK
 ---------------------
 
 9.4.x has 91 failures on 1690 tests
+
 10.0.x has 74 failures on 1690 tests
 
 | Failures | Cause | 9.4.x | 10.0.x |
 |----------|-------|-------|--------|
 |com/sun/ts/tests/servlet/api/javax_servlet/genericfilter/*          | Caused by: java.lang.ClassNotFoundException: javax.servlet.GenericFilter | Servlet 4.0 specs 8 failure |    1 failure to investigate    |
-|
+|com/sun/ts/tests/servlet/api/javax_servlet/scattributelistener40/URLClient.java#defaultMethodsTest | ava.lang.AbstractMethodError: com.sun.ts.tests.servlet.api.javax_servlet.scattributelistener40.SCAttributeListener40.attributeAdded(Ljavax/servlet/ServletContextAttributeEvent;)V | Servlet 4.0 Specs 1 failure | :white_check_mark: |
 
 
