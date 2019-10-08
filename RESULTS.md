@@ -5,9 +5,9 @@ This project contains details of failures running TCK against Jetty Project
 Servlet TCK
 ---------------------
 
-9.4.x has 91 failures on 1690 tests
+9.4.x has 91 failures on 1690 tests (Jenkins job running every day in case of code change in branch 9.4.x [https://jenkins.webtide.net/job/nightlies/job/servlettck-run-jetty-9.4.x] )
 
-10.0.x has 74 failures on 1690 tests
+10.0.x has 74 failures on 1690 tests (Jenkins job running every day in case of code change in branch 10.0.x [https://jenkins.webtide.net/job/nightlies/job/servlettck-run-jetty-10.0.x] )
 
 | Failures | Cause | 9.4.x | 10.0.x |
 |----------|-------|-------|--------|
