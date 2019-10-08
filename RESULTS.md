@@ -17,7 +17,7 @@ Servlet TCK
 | com/sun/ts/tests/servlet/api/javax_servlet/scinitializer/geteffectivesessiontrackingmodes/URLClient.java#getEffectiveSessionTrackingModes | Exception (UnsupportedOperationException) not throw | 1 test | 1 test |
 | com/sun/ts/tests/servlet/api/javax_servlet/sclistener40/URLClient.java#defaultMethodsTest | java.lang.AbstractMethodError () | Servlet 4.0 ServletContextListener has default methods but not in 3.1 | :white_check_mark: |
 | com/sun/ts/tests/servlet/api/javax_servlet/servletcontext/URLClient.java#GetMajorVersionTest | 4 expected but return 3 | Servlet 4.0 Specs | :white_check_mark: |
-| com/sun/ts/tests/servlet/api/javax_servlet/servletcontext/URLClient.java#GetMinorVersionTest | 0 expected but return 1 | :white_check_mark: |
+| com/sun/ts/tests/servlet/api/javax_servlet/servletcontext/URLClient.java#GetMinorVersionTest | 0 expected but return 1 | Servlet 4.0 Specs | :white_check_mark: |
 
   
 
