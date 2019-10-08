@@ -21,6 +21,27 @@ Servlet TCK
 | com/sun/ts/tests/servlet/api/javax_servlet/servletcontext304/URLClient.java#addListenerTest | No IAE, ServletContext #createListener must IllegalArgumentException - if the specified EventListener class does not implement any of the ServletContextListener,ServletContextAttributeListener, ServletRequestListener, ServletRequestAttributeListener, HttpSessionAttributeListener, HttpSessionIdListener, orHttpSessionListener interfaces. ServletContextHandler#createListener is used to create more type of listener... | 1 test | 1 test |
 | com/sun/ts/tests/servlet/api/javax_servlet/servletcontext40/Client.java | NoSuchMethodError | Servlet 4.0 specs 12 failure | 12 failure to investigate :question: |
 | com/sun/ts/tests/servlet/api/javax_servlet/servletresponse/URLClient.java#getContentTypeNull2Test | Servlet verifies content-type is being re-set by programmer and character encoding setting does not change. Not clear Test code do ``` response.setContentType("text/html;charset=Shift_Jis"); response.setContentType("text/xml"); String actual_encoding = response.getCharacterEncoding(); String actual_type = response.getContentType(); Expected is: Actual_type == "text/html;charset=Shift_Jis" ``` | 1 failure | 1 failure |
+| com/sun/ts/tests/servlet/api/javax_servlet/srlistener40/URLClient.java#defaultMethodsTest | Servlet 4.0 Interface with default method | Servlet 4.0 Specs | :white_check_mark: |
+| com/sun/ts/tests/servlet/api/javax_servlet_http/cookie/URLClient.java#getDomainTest | Cookie: $Version="1"; name1="value1"; $Path="/servlet_jsh_cookie_web"; $Domain="localhost" cookie.getDomain null | 1 test | 1 test |
+| com/sun/ts/tests/servlet/api/javax_servlet_http/cookie/URLClient.java#getPathTest | Cookie: $Version="1"; name1="value1"; $Path="/servlet_jsh_cookie_web"; $Domain="localhost" cookie.getPath null | 1 test | 1 test |
+| com/sun/ts/tests/servlet/api/javax_servlet_http/cookie/URLClient.java#getVersionTest | Cookie: $Version="1"; name1="value1"; $Path="/servlet_jsh_cookie_web"; $Domain="localhost" : cookie.getVersion -> 0 (not 1) | 1 test | 1 test |
+| com/sun/ts/tests/servlet/api/javax_servlet_http/cookie/URLClient.java#setMaxAgeNegativeTest | Version=1 missing | 1 test | 1 test |
+| com/sun/ts/tests/servlet/api/javax_servlet_http/cookie/URLClient.java#setMaxAgePositiveTest | Version=1 missing | 1 test | 1 test |
+| com/sun/ts/tests/servlet/api/javax_servlet_http/cookie/URLClient.java#setMaxAgeZeroTest | Version=1 missing | 1 test | 1 test |
+| com/sun/ts/tests/servlet/api/javax_servlet_http/cookie/URLClient.java#setPathTest | Version=1 Missing in response headers | 1 test | 1 test |
+| com/sun/ts/tests/servlet/api/javax_servlet_http/httpfilter/URLClient.java#dofilterTest | Servlet 4.0 Interface | Servlet 4.0 Specs | :white_check_mark: |
+| com/sun/ts/tests/servlet/api/javax_servlet_http/httpservletrequest40/Client.java#** | Servlet 4.0 Specs | Servlet 4.0 Specs 11 failure | 9 failures :question: |
+| com/sun/ts/tests/servlet/api/javax_servlet_http/httpservletrequestwrapper/URLClient.java#changeSessionIDTest1 | NPE weird test. code request.getSession(false).getAttribute(attrName_OLD)) Trying accessing an attribute which is never set... | :question: | :question: |
+| com/sun/ts/tests/servlet/api/javax_servlet_http/httpservletresponse40/Client.java#* |  Servlet 4.0 Specs | Servlet 4.0 Specs 3 failure | 3 failures :question: |
+| com/sun/ts/tests/servlet/api/javax_servlet_http/httpsessionbindinglistener40/URLClient.java#defaultMethodsTest | Servlet 4.0 Interface with default method | Servlet 4.0 Specs | :white_check_mark: |
+| com/sun/ts/tests/servlet/api/javax_servlet_http/httpupgradehandler/URLClient.java#upgradeTest | HttpServletRequest.upgrade not supported | Not supported | Not supported |
+| com/sun/ts/tests/servlet/api/javax_servlet_http/readlistener1/URLClient.java#nioInputTest2 | ServletInputStream.setReadListener should throw ISE if request not upgraded nor async started | 1 test | 1 test |
+| com/sun/ts/tests/servlet/api/javax_servlet_http/servletcontext304/URLClient.java#addListenerTest | ContextHandler fix addProgrammaticListener do not add the Listener ServletContext.addListener | 1 test | 1 test |
+
+
+
+ 
+
 
 
 
