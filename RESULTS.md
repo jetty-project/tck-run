@@ -37,6 +37,7 @@ Servlet TCK
 | com/sun/ts/tests/servlet/api/javax_servlet_http/httpupgradehandler/URLClient.java#upgradeTest | HttpServletRequest.upgrade not supported | Not supported | Not supported |
 | com/sun/ts/tests/servlet/api/javax_servlet_http/readlistener1/URLClient.java#nioInputTest2 | ServletInputStream.setReadListener should throw ISE if request not upgraded nor async started | 1 test | 1 test |
 | com/sun/ts/tests/servlet/api/javax_servlet_http/servletcontext304/URLClient.java#addListenerTest | ContextHandler fix addProgrammaticListener do not add the Listener ServletContext.addListener | 1 test | 1 test |
+| com/sun/ts/tests/servlet/spec/httpservletresponse/URLClient.java.sendErrorCommitTest | call response.sendError(HttpServletResponse.SC_OK, "sendErrorCommitTest"); then response.addIntHeader("header1", 12345); header1 must not be in the response | 1 test | 1 test |
 
 
 
