@@ -9,8 +9,8 @@ Servlet TCK
 
 10.0.x has 74 failures on 1690 tests (Jenkins job running every day in case of code change in branch 10.0.x [https://jenkins.webtide.net/job/nightlies/job/servlettck-run-jetty-10.0.x] )
 
-| Failures | Cause | 9.4.x | 10.0.x |
-|----------|-------|-------|--------|
+| Failures | Cause | 9.4.x | 10.0.x | Github issue |
+|----------|-------|-------|--------|--------------|
 | com/sun/ts/tests/servlet/api/javax_servlet/genericfilter/*          | Caused by: java.lang.ClassNotFoundException: javax.servlet.GenericFilter | Servlet 4.0 specs 8 failure | 1 failure to investigate :question: |
 | com/sun/ts/tests/servlet/api/javax_servlet/scattributelistener40/URLClient.java#defaultMethodsTest | java.lang.AbstractMethodError: com.sun.ts.tests.servlet.api.javax_servlet.scattributelistener40.SCAttributeListener40.attributeAdded(Ljavax/servlet/ServletContextAttributeEvent;)V | Servlet 4.0 Specs 1 failure | :white_check_mark: |
 | com/sun/ts/tests/servlet/api/javax_servlet/scinitializer/getdefaultsessiontrackingmodes/URLClient.java#getDefaultSessionTrackingModes | Exception (UnsupportedOperationException) not throw https://javaee.github.io/javaee-spec/javadocs/javax/servlet/ServletContext.html#getDefaultSessionTrackingModes-- | 1 test | 1 test |
@@ -37,7 +37,7 @@ Servlet TCK
 | com/sun/ts/tests/servlet/api/javax_servlet_http/httpupgradehandler/URLClient.java#upgradeTest | HttpServletRequest.upgrade not supported | Not supported | Not supported |
 | com/sun/ts/tests/servlet/api/javax_servlet_http/readlistener1/URLClient.java#nioInputTest2 | ServletInputStream.setReadListener should throw ISE if request not upgraded nor async started | 1 test | 1 test |
 | com/sun/ts/tests/servlet/api/javax_servlet_http/servletcontext304/URLClient.java#addListenerTest | ContextHandler fix addProgrammaticListener do not add the Listener ServletContext.addListener | 1 test | 1 test |
-| com/sun/ts/tests/servlet/spec/httpservletresponse/URLClient.java.sendErrorCommitTest | call response.sendError(HttpServletResponse.SC_OK, "sendErrorCommitTest"); then response.addIntHeader("header1", 12345); header1 must not be in the response | 1 test | 1 test |
+| com/sun/ts/tests/servlet/spec/httpservletresponse/URLClient.java.sendErrorCommitTest | call response.sendError(HttpServletResponse.SC_OK, "sendErrorCommitTest"); then response.addIntHeader("header1", 12345); header1 must not be in the response | 1 test | 1 test | [https://github.com/eclipse/jetty.project/issues/4176] |
 
 
 
