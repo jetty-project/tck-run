@@ -74,7 +74,7 @@ node('linux'){
       echo "Copying war from servlet TCK to webapps"
       sh 'find servlettck -name *.war -exec cp {} jetty-home/target/jetty-base/webapps/ \\;'
 
-      // needed until this available as a build
+      // needed until this available as a build https://github.com/eclipse-ee4j/jakartaee-tck/issues/45
       sh 'mv jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered.war'
 
       echo "Unstashing ts.jte"
