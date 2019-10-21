@@ -43,7 +43,9 @@ Servlet TCK
 | com/sun/ts/tests/servlet/spec/i18n/encoding/URLClient.java.spec2Test | response.setContentType("text/html"); response.getCharacterEncoding() != "iso-8859-1",  with  ``` <locale-encoding-mapping-list> <locale-encoding-mapping> <locale>ja</locale> <encoding>euc-jp</encoding> </locale-encoding-mapping> <locale-encoding-mapping> <locale>zh_CN</locale> <encoding>gb18030</encoding> </locale-encoding-mapping> </locale-encoding-mapping-list> ```, response.setLocale(Locale.CHINA); response.getCharacterEncoding() != gb18030; response.setContentType("text/html"); response.getCharacterEncoding() != gb18030 | 1 failure | 1 failure |
 | com/sun/ts/tests/servlet/spec/i18n/encoding/URLClient.java.spec3Test | expected iso-8859-1 // setContentType should set character encoding response.setContentType("text/html"); actual[0] = response.getCharacterEncoding(); // committing should freeze the character encoding response.flushBuffer(); actual[1] = response.getCharacterEncoding(); // setCharacterEncoding should no longer be able to change the encoding response.setCharacterEncoding("utf-8"); actual[2] = response.getCharacterEncoding(); // setLocale should not override explicit character encoding request response.setLocale(Locale.JAPAN); actual[3] = response.getCharacterEncoding(); // getWriter should freeze the character encoding PrintWriter pw = response.getWriter(); actual[4] = response.getCharacterEncoding(); | 1 failure | 1 failure |
 | com/sun/ts/tests/servlet/spec/security/clientcert/Client.java.clientCertTest | test in https | 1 failure | 1 failure |
-| com/sun/ts/tests/servlet/spec/security/clientcertanno/Client.java.clientCertTest | test in https | 1 failure | 1 failure |     
+| com/sun/ts/tests/servlet/spec/security/clientcertanno/Client.java.clientCertTest | test in https | 1 failure | 1 failure |    
+| com/sun/ts/tests/servlet/spec/security/denyUncovered/Client.java.* | the TCK test is deployed with a war named `servlet_sec_denyUncovered_web.war` so the default path is `/servlet_sec_denyUncovered_web` but TCK tests are targeting context path `servlet_sec_denyUncovered` | 5 failure | 5 failure |
+  
 
 
  

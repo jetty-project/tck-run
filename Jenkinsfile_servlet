@@ -74,6 +74,8 @@ node('linux'){
       echo "Copying war from servlet TCK to webapps"
       sh 'find servlettck -name *.war -exec cp {} jetty-home/target/jetty-base/webapps/ \\;'
 
+      sh 'mv jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered.war'
+
       echo "Unstashing ts.jte"
       unstash name: 'ts.jte'
       // replace values in ts.jte
