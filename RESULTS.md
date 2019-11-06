@@ -5,9 +5,9 @@ This project contains details of failures running TCK against Jetty Project
 Servlet TCK
 ---------------------
 
-9.4.x has 91 failures on 1690 tests (Jenkins job running every day in case of code change in branch 9.4.x (https://jenkins.webtide.net/job/nightlies/job/servlettck-run-jetty-9.4.x)
+9.4.x has 85 failures on 1690 tests (Jenkins job running every day in case of code change in branch 9.4.x (https://jenkins.webtide.net/job/nightlies/job/servlettck-run-jetty-9.4.x)
 
-10.0.x has 69 failures on 1690 tests (Jenkins job running every day in case of code change in branch 10.0.x (https://jenkins.webtide.net/job/nightlies/job/servlettck-run-jetty-10.0.x)
+10.0.x has 64 failures on 1690 tests (Jenkins job running every day in case of code change in branch 10.0.x (https://jenkins.webtide.net/job/nightlies/job/servlettck-run-jetty-10.0.x)
 
 | Failures | Cause | 9.4.x | 10.0.x | Github issue |
 |----------|-------|-------|--------|--------------|
@@ -45,6 +45,7 @@ Servlet TCK
 | com/sun/ts/tests/servlet/spec/security/clientcert/Client.java.clientCertTest | test in https | 1 failure | 1 failure |
 | com/sun/ts/tests/servlet/spec/security/clientcertanno/Client.java.clientCertTest | test in https | 1 failure | 1 failure |    
 | com/sun/ts/tests/servlet/spec/security/denyUncovered/Client.java.* | the TCK test is deployed with a war named `servlet_sec_denyUncovered_web.war` so the default path is `/servlet_sec_denyUncovered_web` but TCK tests are targeting context path `servlet_sec_denyUncovered` | 5 failure | 5 failure | TCK bug https://github.com/eclipse-ee4j/jakartaee-tck/issues/45 |
+| com/sun/ts/tests/servlet/spec/security/metadatacomplete/Client.java.test5 | | | | 
   
 
 

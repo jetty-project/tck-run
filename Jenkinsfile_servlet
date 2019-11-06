@@ -14,6 +14,7 @@ node('linux'){
     stash name: 'cacerts.jks', includes: 'cacerts.jks'
     stash name: 'clientcert.jks', includes: 'clientcert.jks'
     stash name: 'log4j2.xml', includes: 'log4j2.xml'
+    stash name: 'http.ini', includes: 'http.ini'
   }
 
   stage("Checkout Jetty") {
@@ -108,6 +109,9 @@ node('linux'){
 
       unstash name: 'log4j2.xml'
       sh "cp log4j2.xml jetty-home/target/jetty-base/resources/"
+
+      unstash name: 'http.ini'
+      sh "cp http.ini jetty-home/target/jetty-base/start.d/"
 
       sh "ls -la jetty-home/target/jetty-base"
 
