@@ -7,7 +7,7 @@ Servlet TCK
 
 9.4.x has 72 failures on 1690 tests (Jenkins job running every day in case of code change in branch 9.4.x (https://jenkins.webtide.net/job/nightlies/job/servlettck-run-jetty-9.4.x)
 
-10.0.x has 64 failures on 1690 tests (Jenkins job running every day in case of code change in branch 10.0.x (https://jenkins.webtide.net/job/nightlies/job/servlettck-run-jetty-10.0.x)
+10.0.x has 53 failures on 1690 tests (Jenkins job running every day in case of code change in branch 10.0.x (https://jenkins.webtide.net/job/nightlies/job/servlettck-run-jetty-10.0.x)
 
 | Failures | Cause | 9.4.x | 10.0.x | Github issue |
 |----------|-------|-------|--------|--------------|
@@ -22,13 +22,13 @@ Servlet TCK
 | com/sun/ts/tests/servlet/api/javax_servlet/servletcontext40/Client.java | NoSuchMethodError | Servlet 4.0 specs 12 failure | 12 failure to investigate :question: |
 | com/sun/ts/tests/servlet/api/javax_servlet/servletresponse/URLClient.java#getContentTypeNull2Test | Servlet verifies content-type is being re-set by programmer and character encoding setting does not change. Not clear Test code do ``` response.setContentType("text/html;charset=Shift_Jis"); response.setContentType("text/xml"); String actual_encoding = response.getCharacterEncoding(); String actual_type = response.getContentType(); Expected is: Actual_type == "text/html;charset=Shift_Jis" ``` | 1 failure | 1 failure |
 | com/sun/ts/tests/servlet/api/javax_servlet/srlistener40/URLClient.java#defaultMethodsTest | Servlet 4.0 Interface with default method | Servlet 4.0 Specs | :white_check_mark: |
-| com/sun/ts/tests/servlet/api/javax_servlet_http/cookie/URLClient.java#getDomainTest | Cookie: $Version="1"; name1="value1"; $Path="/servlet_jsh_cookie_web"; $Domain="localhost" cookie.getDomain null | Setup compliance mode | 1 test |
-| com/sun/ts/tests/servlet/api/javax_servlet_http/cookie/URLClient.java#getPathTest | Cookie: $Version="1"; name1="value1"; $Path="/servlet_jsh_cookie_web"; $Domain="localhost" cookie.getPath null | Setup compliance mode | 1 test |
-| com/sun/ts/tests/servlet/api/javax_servlet_http/cookie/URLClient.java#getVersionTest | Cookie: $Version="1"; name1="value1"; $Path="/servlet_jsh_cookie_web"; $Domain="localhost" : cookie.getVersion -> 0 (not 1) | Setup compliance mode | 1 test |
-| com/sun/ts/tests/servlet/api/javax_servlet_http/cookie/URLClient.java#setMaxAgeNegativeTest | Version=1 missing | Setup compliance mode | 1 test |
-| com/sun/ts/tests/servlet/api/javax_servlet_http/cookie/URLClient.java#setMaxAgePositiveTest | Version=1 missing | Setup compliance mode | 1 test |
-| com/sun/ts/tests/servlet/api/javax_servlet_http/cookie/URLClient.java#setMaxAgeZeroTest | Version=1 missing | Setup compliance mode | 1 test |
-| com/sun/ts/tests/servlet/api/javax_servlet_http/cookie/URLClient.java#setPathTest | Version=1 Missing in response headers | 1 test | 1 test |
+| com/sun/ts/tests/servlet/api/javax_servlet_http/cookie/URLClient.java#getDomainTest | Cookie: $Version="1"; name1="value1"; $Path="/servlet_jsh_cookie_web"; $Domain="localhost" cookie.getDomain null | Setup compliance mode | Setup compliance mode |
+| com/sun/ts/tests/servlet/api/javax_servlet_http/cookie/URLClient.java#getPathTest | Cookie: $Version="1"; name1="value1"; $Path="/servlet_jsh_cookie_web"; $Domain="localhost" cookie.getPath null | Setup compliance mode | Setup compliance mode |
+| com/sun/ts/tests/servlet/api/javax_servlet_http/cookie/URLClient.java#getVersionTest | Cookie: $Version="1"; name1="value1"; $Path="/servlet_jsh_cookie_web"; $Domain="localhost" : cookie.getVersion -> 0 (not 1) | Setup compliance mode | Setup compliance mode |
+| com/sun/ts/tests/servlet/api/javax_servlet_http/cookie/URLClient.java#setMaxAgeNegativeTest | Version=1 missing | Setup compliance mode | Setup compliance mode |
+| com/sun/ts/tests/servlet/api/javax_servlet_http/cookie/URLClient.java#setMaxAgePositiveTest | Version=1 missing | Setup compliance mode | Setup compliance mode |
+| com/sun/ts/tests/servlet/api/javax_servlet_http/cookie/URLClient.java#setMaxAgeZeroTest | Version=1 missing | Setup compliance mode | Setup compliance mode |
+| com/sun/ts/tests/servlet/api/javax_servlet_http/cookie/URLClient.java#setPathTest | Version=1 Missing in response headers | 1 test | Setup compliance mode |
 | com/sun/ts/tests/servlet/api/javax_servlet_http/httpfilter/URLClient.java#dofilterTest | Servlet 4.0 Interface | Servlet 4.0 Specs | :white_check_mark: |
 | com/sun/ts/tests/servlet/api/javax_servlet_http/httpservletrequest40/Client.java#** | Servlet 4.0 Specs | Servlet 4.0 Specs 11 failure | 9 failures :question: |
 | com/sun/ts/tests/servlet/api/javax_servlet_http/httpservletrequestwrapper/URLClient.java#changeSessionIDTest1 | NPE weird test. code request.getSession(false).getAttribute(attrName_OLD)) Trying accessing an attribute which is never set... | :question: | :question: |
