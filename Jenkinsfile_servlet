@@ -73,7 +73,7 @@ node('linux'){
       sh "ls -la jetty-home/target/jetty-base/start.d"
 
       echo "Copying war from servlet TCK to webapps"
-      sh 'find servlettck -name *.war -exec cp {} jetty-home/target/jetty-base/webapps/ \\;'
+      sh 'find servlet-tck -name *.war -exec cp {} jetty-home/target/jetty-base/webapps/ \\;'
 
       // needed until this available as a build https://github.com/eclipse-ee4j/jakartaee-tck/issues/45
       sh 'mv jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered.war'
@@ -83,7 +83,7 @@ node('linux'){
       // replace values in ts.jte
       def text = readFile "ts.jte"
       text = text.replaceAll("@WORKSPACE@", "${env.WORKSPACE}")
-      writeFile file:"servlettck/bin/ts.jte", text: text
+      writeFile file:"servlet-tck/bin/ts.jte", text: text
 
       echo "Unstashing realm.ini"
       unstash name: 'realm.ini'
@@ -99,12 +99,12 @@ node('linux'){
 
       echo "Unstashing cacerts.jks"
       unstash name: 'cacerts.jks'
-      sh "cp cacerts.jks servlettck/bin/certificates"
+      sh "cp cacerts.jks servlet-tck/bin/certificates"
       sh "cp cacerts.jks jetty-home/target/jetty-base/etc/"
 
       echo "Unstashing clientcerts.jks"
       unstash name: 'clientcert.jks'
-      sh "cp clientcert.jks servlettck/bin/certificates"
+      sh "cp clientcert.jks servlet-tck/bin/certificates"
       sh "cp clientcert.jks jetty-home/target/jetty-base/etc/"
 
       unstash name: 'log4j2.xml'
@@ -125,7 +125,7 @@ node('linux'){
         withAnt( installation: 'ant-latest', jdk: "$jdk" ) {
           withEnv(["JAVA_HOME=${ tool "$jdk" }", "PATH+ANT=${tool 'ant-latest'}/bin:${env.JAVA_HOME}/bin"]) {
             sh "ls -la jetty-home/target/jetty-base"
-            sh "cd servlettck/bin && ant run.all"
+            sh "cd servlet-tck/bin && ant run.all"
           }
         }
       }
