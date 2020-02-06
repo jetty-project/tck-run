@@ -18,7 +18,4 @@
       </Arg>
     </Call>
 
-    <Get class="org.eclipse.jetty.util.log.Log" name="rootLogger">
-      <Call name="warn"><Arg>demo test-realm is deployed. DO NOT USE IN PRODUCTION!</Arg></Call>
-    </Get>
 </Configure>
