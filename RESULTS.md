@@ -7,7 +7,7 @@ Servlet TCK
 
 9.4.x has 72 failures on 1690 tests (Jenkins job running every day in case of code change in branch 9.4.x (https://jenkins.webtide.net/job/nightlies/job/servlettck-run-jetty-9.4.x)
 
-10.0.x has 40 failures on 1690 tests (Jenkins job running every day in case of code change in branch 10.0.x (https://jenkins.webtide.net/job/nightlies/job/servlettck-run-jetty-10.0.x)
+10.0.x has 38 failures on 1690 tests (Jenkins job running every day in case of code change in branch 10.0.x (https://jenkins.webtide.net/job/nightlies/job/servlettck-run-jetty-10.0.x)
 
 | Failures | Cause | 9.4.x | 10.0.x | Github issue |
 |----------|-------|-------|--------|--------------|
