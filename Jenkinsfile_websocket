@@ -36,7 +36,7 @@ node('linux'){
     sh "unzip websockettck-1.1_latest.zip"
     sh "ls -lrt"
     sh "cd jetty-home/target/ && mkdir jetty-base"
-    sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,webapp,deploy,jsp,websocket,logging-log4j2"
+    sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,webapp,deploy,annotations,jsp,websocket,logging-log4j2"
     sh 'find websockettck -name *.war -exec cp {} jetty-home/target/jetty-base/webapps/ \\;'
 
     unstash name: 'wsts.jte'
