@@ -8,8 +8,8 @@ mkdir etc
 #cd etc
 #touch keystore
 #cd ../
-#/Library/Java/JavaVirtualMachines/jdk-11.0.2.jdk/Contents/Home/bin/java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,logging-log4j2
-/Library/Java/JavaVirtualMachines/jdk-11.0.2.jdk/Contents/Home/bin/java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,http2c,webapp,deploy,jsp
+#/Library/Java/JavaVirtualMachines/jdk-11.0.2.jdk/Contents/Home/bin/java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,logging-log4j2,annotations
+/Library/Java/JavaVirtualMachines/jdk-11.0.2.jdk/Contents/Home/bin/java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,http2c,webapp,deploy,jsp,annotations
 cd /Users/olamy/dev/sources/open-sources/jetty/tck_tests/servlet-tck
 find . -name "*.war" -exec cp {} /Users/olamy/dev/sources/open-sources/jetty/jetty.project/jetty-home/target/jetty-base/webapps \;
 cd /Users/olamy/dev/sources/open-sources/jetty/tck-run
