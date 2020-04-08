@@ -32,8 +32,9 @@ node('linux'){
   stage("Setup servlet tck"){
     env.JAVA_HOME="${tool "$jdk"}"
     env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
-    sh "wget https://jenkins.webtide.net/userContent/websockettck-1.1_latest.zip"
-    sh "unzip websockettck-1.1_latest.zip"
+    //sh "wget https://jenkins.webtide.net/userContent/websockettck-1.1_latest.zip"
+    sh "wget -O websockettck.zip http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8/nightly-802/websocket-tck-1.1.1.zip"
+    sh "unzip websockettck.zip"
     sh "ls -lrt"
     sh "cd jetty-home/target/ && mkdir jetty-base"
     sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,webapp,deploy,annotations,jsp,websocket,logging-log4j2"
