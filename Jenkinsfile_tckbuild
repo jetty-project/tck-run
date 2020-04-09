@@ -1,3 +1,4 @@
+
 node('linux'){
   stage("cleanup"){
     sh "rm -rf *"
@@ -15,5 +16,4 @@ node('linux'){
         archiveArtifacts artifacts: "standalone-bundles/*.zip",allowEmptyArchive: true
     }
   }
-
 }
