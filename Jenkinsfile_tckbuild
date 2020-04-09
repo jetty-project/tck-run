@@ -1,4 +1,4 @@
-node('linux'){
+node('load-master'){
   stage("cleanup"){
     sh "rm -rf *"
   }
