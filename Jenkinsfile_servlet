@@ -1,5 +1,6 @@
 def branch = params.JETTY_BRANCH ?: "jetty-10.0.x"
 def jdk = params.JDK ?: "jdk11"
+def jdktck = params.JDK ?: "jdk9"
 
 node('linux'){
   stage("cleanup"){
@@ -122,8 +123,8 @@ node('linux'){
   stage("run servlet tck"){
     try {
       timeout( time: 3, unit: 'HOURS' ) {
-        withAnt( installation: 'ant-latest', jdk: "jdk9" ) {
-          withEnv(["JAVA_HOME=${ tool "jdk9" }", "PATH+ANT=${tool 'ant-latest'}/bin:${env.JAVA_HOME}/bin"]) {
+        withAnt( installation: 'ant-latest', jdk: "${jdktck}" ) {
+          withEnv(["JAVA_HOME=${ tool "${jdktck}" }", "PATH+ANT=${tool 'ant-latest'}/bin:${env.JAVA_HOME}/bin"]) {
             sh "ls -la jetty-home/target/jetty-base"
             sh "cd servlet-tck/bin && ant run.all"
           }
