@@ -1,6 +1,6 @@
 def branch = params.JETTY_BRANCH ?: "jetty-10.0.x"
 def jdk = params.JDK ?: "jdk11"
-def jdktck = params.JDK ?: "jdk9"
+def jdktck = params.JDKTCK ?: "jdk9"
 
 node('linux'){
   stage("cleanup"){
