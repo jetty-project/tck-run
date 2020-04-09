@@ -8,7 +8,7 @@ node('linux'){
 
   stage("Build TCK Servlet") {
     withEnv(["JAVA_HOME=${ tool "jdk8" }",
-            "PATH+ANT+MAVEN=${tool 'ant-latest'}/bin:${env.JAVA_HOME}/bin:{tool 'maven3'}/bin"],
+            "PATH+ANT+MAVEN=${tool 'ant-latest'}/bin:${env.JAVA_HOME}/bin:${tool 'maven3'}/bin"],
             "GF_BUNDLE_URL=https://jenkins.webtide.net/userContent/glassfish-5.1.0.zip") {
         sh "docker/build_standalone-tcks.sh servlet"
         sh "docker/build_standalone-tcks.sh websocket"
