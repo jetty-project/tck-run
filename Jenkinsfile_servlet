@@ -114,6 +114,10 @@ node('linux'){
       unstash name: 'http.ini'
       sh "cp http.ini jetty-home/target/jetty-base/start.d/"
 
+      // download servlet-api
+      sh "curl -o servlet-api-4.0.jar https://repo.maven.apache.org/maven2/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar"
+      sh "cp servlet-api-4.0.jar servlet-tck/lib/"
+
       sh "ls -la jetty-home/target/jetty-base"
 
       echo "Executing Jetty Instance ..."
