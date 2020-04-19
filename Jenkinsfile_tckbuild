@@ -1,9 +1,12 @@
 node('linux'){
+    properties([parameters([
+        string(defaultValue: '8.0', description: 'GIT branch name to build', name: 'TCK_BRANCH')
+    ])])
   stage("cleanup"){
     sh "rm -rf *"
   }
   stage("Checkout TCK Run") {
-    git url: "https://github.com/eclipse-ee4j/jakartaee-tck/", branch: "8.0"
+    git url: "https://github.com/eclipse-ee4j/jakartaee-tck/", branch: '${TCK_BRANCH}''
   }
 
   stage("Build TCK Servlet") {
