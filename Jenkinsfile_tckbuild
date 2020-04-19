@@ -6,7 +6,7 @@ node('linux'){
     sh "rm -rf *"
   }
   stage("Checkout TCK Run") {
-    git url: "https://github.com/eclipse-ee4j/jakartaee-tck/", branch: '${TCK_BRANCH}''
+    git url: "https://github.com/eclipse-ee4j/jakartaee-tck/", branch: '${TCK_BRANCH}'
   }
 
   stage("Build TCK Servlet") {
