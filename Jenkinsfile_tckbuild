@@ -1,12 +1,13 @@
 node('linux'){
     properties([parameters([
-        string(defaultValue: '8.0', description: 'GIT branch name to build', name: 'TCK_BRANCH')
+        string(defaultValue: '8.0', description: 'GIT branch name to build', name: 'TCK_BRANCH'),
+        string(defaultValue: 'eclipse-ee4j', description: 'Github org eclipse-ee4j or olamy', name: 'GITHUB_ORG')
     ])])
   stage("cleanup"){
     sh "rm -rf *"
   }
   stage("Checkout TCK Run") {
-    git url: "https://github.com/eclipse-ee4j/jakartaee-tck/", branch: '${TCK_BRANCH}'
+    git url: 'https://github.com/${GITHUB_ORG}/jakartaee-tck/', branch: '${TCK_BRANCH}'
   }
 
   stage("Build TCK Servlet") {
