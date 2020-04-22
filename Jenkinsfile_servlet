@@ -59,7 +59,7 @@ node('linux'){
       //sh "curl -O ${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip"
 
       echo "Fetching servlettck from ${tckUrl}"
-      sh "curl -s -O servlettck.zip ${tckUrl}"
+      sh "wget -O servlettck.zip ${tckUrl}"
 
       echo "Unpacking Servlet TCK"
       sh "unzip servlettck.zip"
@@ -118,14 +118,14 @@ node('linux'){
 
       // download servlet-api
       if(servletNamespace=='javax'){
-        sh "curl -s -o servlet-api.jar https://repo.maven.apache.org/maven2/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar"
+        sh "wget -O servlet-api.jar https://repo.maven.apache.org/maven2/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar"
         sh "cp servlet-api.jar servlet-tck/lib/servlet-api.jar"
-        sh "curl -s -o annotation-api.jar https://repo.maven.apache.org/maven2/javax/annotation/javax.annotation-api/1.3/javax.annotation-api-1.3.jar"
+        sh "wget -O annotation-api.jar https://repo.maven.apache.org/maven2/javax/annotation/javax.annotation-api/1.3/javax.annotation-api-1.3.jar"
         sh "cp annotation-api.jar servlet-tck/lib/annotation-api.jar"
       } else {
-        sh "curl -s -o servlet-api.jar https://repo.maven.apache.org/maven2/jakarta/servlet/jakarta.servlet-api/5.0.0-M1/jakarta.servlet-api-5.0.0-M1.jar"
+        sh "wget -O servlet-api.jar https://repo.maven.apache.org/maven2/jakarta/servlet/jakarta.servlet-api/5.0.0-M1/jakarta.servlet-api-5.0.0-M1.jar"
         sh "cp servlet-api.jar servlet-tck/lib/servlet-api.jar"
-        sh "curl -s -o annotation-api.jar https://repo.maven.apache.org/maven2/jakarta/annotation/jakarta.annotation-api/2.0.0-RC1/jakarta.annotation-api-2.0.0-RC1.jar"
+        sh "wget -O annotation-api.jar https://repo.maven.apache.org/maven2/jakarta/annotation/jakarta.annotation-api/2.0.0-RC1/jakarta.annotation-api-2.0.0-RC1.jar"
         sh "cp annotation-api.jar servlet-tck/lib/annotation-api.jar"
       }
 
