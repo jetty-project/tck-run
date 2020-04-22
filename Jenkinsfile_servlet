@@ -29,10 +29,9 @@ node('linux'){
               maven: 'maven3',
               jdk: "$jdk",
               publisherStrategy: 'EXPLICIT',
-              globalMavenSettingsConfig: 'oss-settings.xml',
               mavenOpts: '-Xms2g -Xmx4g',
               mavenLocalRepo: ".repository") {
-        sh "mvn -V -B -pl jetty-home -am clean install -DskipTests -T6 -e"
+        sh "mvn -V -B -U -Psnapshot-repositories -pl jetty-home -am clean install -DskipTests -T6 -e"
       }
     }
   }
