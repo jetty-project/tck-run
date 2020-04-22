@@ -1,6 +1,8 @@
 def branch = params.JETTY_BRANCH ?: "jetty-10.0.x"
 def jdk = params.JDK ?: "jdk11"
 def jdktck = params.JDKTCK ?: "jdk9"
+def tckUrl = params.TCKURL ?: '${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip'
+def servletNamespace = params.SVLT_NS ?: "javax"
 
 node('linux'){
   stage("cleanup"){
@@ -53,11 +55,14 @@ node('linux'){
       sh "which find"
       sh "which java"
 
-      echo "Fetching servlettck from ${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip"
-      sh "curl -O ${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip"
+      //echo "Fetching servlettck from ${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip"
+      //sh "curl -O ${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip"
+
+      echo "Fetching servlettck from ${tckUrl}"
+      sh "curl -O servlettck.zip ${tckUrl}"
 
       echo "Unpacking Servlet TCK"
-      sh "unzip servlettck-4.0_latest.zip"
+      sh "unzip servlettck.zip"
 
       sh "cd jetty-home/target/ && mkdir jetty-base"
       sh "cd jetty-home/target/jetty-base && mkdir etc && cd .."
@@ -115,8 +120,13 @@ node('linux'){
       sh "cp http.ini jetty-home/target/jetty-base/start.d/"
 
       // download servlet-api
-      sh "curl -o servlet-api-4.0.jar https://repo.maven.apache.org/maven2/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar"
-      sh "cp servlet-api-4.0.jar servlet-tck/lib/"
+      if(servletNamespace=='javax'){
+        sh "curl -o servlet-api.jar https://repo.maven.apache.org/maven2/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar"
+        sh "cp servlet-api.jar servlet-tck/lib/servlet-api.jar"
+        sh "curl -o annotation-api.jar https://repo.maven.apache.org/maven2/javax/annotation/javax.annotation-api/1.3/javax.annotation-api-1.3.jar"
+        sh "cp annotation-api.jar servlet-tck/lib/annotation-api.jar"
+      }
+
 
       sh "ls -la jetty-home/target/jetty-base"
 
