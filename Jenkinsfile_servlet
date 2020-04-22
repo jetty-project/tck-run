@@ -125,6 +125,11 @@ node('linux'){
         sh "cp servlet-api.jar servlet-tck/lib/servlet-api.jar"
         sh "curl -o annotation-api.jar https://repo.maven.apache.org/maven2/javax/annotation/javax.annotation-api/1.3/javax.annotation-api-1.3.jar"
         sh "cp annotation-api.jar servlet-tck/lib/annotation-api.jar"
+      } else {
+        sh "curl -o servlet-api.jar https://repo.maven.apache.org/maven2/jakarta/servlet/jakarta.servlet-api/5.0.0-M1/jakarta.servlet-api-5.0.0-M1.jar"
+        sh "cp servlet-api.jar servlet-tck/lib/servlet-api.jar"
+        sh "curl -o annotation-api.jar https://repo.maven.apache.org/maven2/jakarta/annotation/jakarta.annotation-api/2.0.0-RC1/jakarta.annotation-api-2.0.0-RC1.jar"
+        sh "cp annotation-api.jar servlet-tck/lib/annotation-api.jar"
       }
 
 
