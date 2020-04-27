@@ -6,7 +6,7 @@ pipeline {
             name: 'JETTY_BRANCH' )
     string( defaultValue: 'jdk11', description: 'JDK to build Jetty', name: 'JDK' )
     string( defaultValue: 'jdk9', description: 'JDK to run TCK (use jdk9)', name: 'JDKTCK' )
-    string( defaultValue: '${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip', description: 'Url to download TCK ', name: 'TCKURL' )
+    string( defaultValue: "${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip", description: 'Url to download TCK ', name: 'TCKURL' )
     string( defaultValue: 'javax', description: 'Servlet Namespace (javax or jakarta)', name: 'SVLT_NS' )
   }
   stages {
