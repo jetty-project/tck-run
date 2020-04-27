@@ -20,10 +20,10 @@ pipeline {
       steps {
         script{
           result = build job: 'servlettck-run',
-                         parameters: [string(name: 'JETTY_BRANCH', value: "$JETTY_BRANCH" ),
+                         parameters: [string(name: 'JETTY_BRANCH', value: "${JETTY_BRANCH}" ),
                                       string(name: 'JDK', value: 'jdk11'),
                                       string(name: 'JDKTCK', value: 'jdk9'),
-                                      string(name: 'TCKURL', value: "$TCKURL"),
+                                      string(name: 'TCKURL', value: "${TCKURL}"),
                                       string(name: 'SVLT_NS', value: 'javax')
                          ]
           echo "result $result"
