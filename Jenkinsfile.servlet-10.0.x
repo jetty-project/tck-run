@@ -13,14 +13,14 @@ pipeline {
             name: 'TCKURL' )
     string( defaultValue: "jetty-10.0.x",
             description: 'Jetty 10.0.x branch to build',
-            name: 'jettyBranch' )
+            name: 'JETTY_BRANCH' )
   }
   stages {
     stage( 'Tck Run' ) {
       steps {
         script{
           result = build job: 'servlettck-run',
-                         parameters: [string(name: 'JETTY_BRANCH', value: "$jettyBranch" ),
+                         parameters: [string(name: 'JETTY_BRANCH', value: "$JETTY_BRANCH" ),
                                       string(name: 'JDK', value: 'jdk11'),
                                       string(name: 'JDKTCK', value: 'jdk9'),
                                       string(name: 'TCKURL', value: "$TCKURL"),
