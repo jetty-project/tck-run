@@ -1,7 +1,7 @@
 #!groovy
 
 pipeline {
-  agent { node { label 'linux' } }
+  agent any
   parameters {
     choice(
             description: 'GIT branch name to build (master/8.0/servlet_jakarta)',
@@ -20,6 +20,7 @@ pipeline {
     )
   }
   stages {
+      agent { node { label 'linux' } }
       stage("cleanup"){
         steps {
             sh "rm -rf *"
