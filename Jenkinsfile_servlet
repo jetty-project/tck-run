@@ -97,8 +97,10 @@ pipeline {
           echo "Unstashing ts.jte"
           unstash name: 'ts.jte'
           // replace values in ts.jte
-          def text = readFile "ts.jte"
-          text = text.replaceAll("@WORKSPACE@", "${env.WORKSPACE}")
+          script{
+            def text = readFile "ts.jte"
+            text = text.replaceAll("@WORKSPACE@", "${env.WORKSPACE}")
+          }
           writeFile file:"servlet-tck/bin/ts.jte", text: text
 
           echo "Unstashing realm.ini"
@@ -128,20 +130,20 @@ pipeline {
 
           unstash name: 'http.ini'
           sh "cp http.ini jetty-home/target/jetty-base/start.d/"
-
-          // download servlet-api
-          if(servletNamespace=='javax'){
-            sh "wget -O servlet-api.jar https://repo.maven.apache.org/maven2/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar"
-            sh "cp servlet-api.jar servlet-tck/lib/servlet-api.jar"
-            sh "wget -O annotation-api.jar https://repo.maven.apache.org/maven2/javax/annotation/javax.annotation-api/1.3/javax.annotation-api-1.3.jar"
-            sh "cp annotation-api.jar servlet-tck/lib/annotation-api.jar"
-          } else {
-            sh "wget -O servlet-api.jar https://repo.maven.apache.org/maven2/jakarta/servlet/jakarta.servlet-api/5.0.0-M1/jakarta.servlet-api-5.0.0-M1.jar"
-            sh "cp servlet-api.jar servlet-tck/lib/servlet-api.jar"
-            sh "wget -O annotation-api.jar https://repo.maven.apache.org/maven2/jakarta/annotation/jakarta.annotation-api/2.0.0-RC1/jakarta.annotation-api-2.0.0-RC1.jar"
-            sh "cp annotation-api.jar servlet-tck/lib/annotation-api.jar"
+          script{
+            // download servlet-api
+            if(servletNamespace=='javax'){
+              sh "wget -O servlet-api.jar https://repo.maven.apache.org/maven2/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar"
+              sh "cp servlet-api.jar servlet-tck/lib/servlet-api.jar"
+              sh "wget -O annotation-api.jar https://repo.maven.apache.org/maven2/javax/annotation/javax.annotation-api/1.3/javax.annotation-api-1.3.jar"
+              sh "cp annotation-api.jar servlet-tck/lib/annotation-api.jar"
+            } else {
+              sh "wget -O servlet-api.jar https://repo.maven.apache.org/maven2/jakarta/servlet/jakarta.servlet-api/5.0.0-M1/jakarta.servlet-api-5.0.0-M1.jar"
+              sh "cp servlet-api.jar servlet-tck/lib/servlet-api.jar"
+              sh "wget -O annotation-api.jar https://repo.maven.apache.org/maven2/jakarta/annotation/jakarta.annotation-api/2.0.0-RC1/jakarta.annotation-api-2.0.0-RC1.jar"
+              sh "cp annotation-api.jar servlet-tck/lib/annotation-api.jar"
+            }
           }
-
 
           sh "ls -la jetty-home/target/jetty-base"
 
@@ -162,7 +164,9 @@ pipeline {
         }
         tckreporttojunit tckReportTxtPath: "${env.WORKSPACE}/JTReport/text/summary.txt", junitFolderPath: 'surefire-reports'
         junit testResults: '**/surefire-reports/*.xml'
-        currentBuild.description = "Build branch $branch with jdk $jdk"
+        script{
+          currentBuild.description = "Build branch $branch with jdk $jdk"
+        }
         archiveArtifacts artifacts: "${env.WORKSPACE}/JTReport/text/*.txt",allowEmptyArchive: true
         archiveArtifacts artifacts: "jetty-home/target/jetty-base/logs/*.*",allowEmptyArchive: true
         publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/JTReport/html", reportFiles: 'report.html', reportName: 'TCK Report', reportTitles: ''])
