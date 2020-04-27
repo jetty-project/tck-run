@@ -9,30 +9,38 @@ pipeline {
   }
   stages {
       stage("cleanup"){
-        sh "rm -rf *"
+        steps {
+            sh "rm -rf *"
+        }
       }
       stage("Checkout TCK Run") {
-        git url: 'https://github.com/${GITHUB_ORG}/jakartaee-tck/', branch: '${TCK_BRANCH}'
+        steps {
+            git url: 'https://github.com/${GITHUB_ORG}/jakartaee-tck/', branch: '${TCK_BRANCH}'
+        }
       }
 
       stage("Build TCK Servlet") {
-        withEnv(["JAVA_HOME=${ tool "jdk8" }",
-                "PATH+ANT+MAVEN=${tool 'ant-latest'}/bin:${env.JAVA_HOME}/bin:${tool 'maven3'}/bin",
-                "GF_BUNDLE_URL=https://jenkins.webtide.net/userContent/glassfish-5.1.0.zip"]) {
-            sh "apt --yes update && apt --yes install zip"
-            sh "docker/build_standalone-tcks.sh servlet"
-            sh "docker/build_standalone-tcks.sh websocket"
-            archiveArtifacts artifacts: "standalone-bundles/*.zip",allowEmptyArchive: true
+        steps {
+            withEnv(["JAVA_HOME=${ tool "jdk8" }",
+                    "PATH+ANT+MAVEN=${tool 'ant-latest'}/bin:${env.JAVA_HOME}/bin:${tool 'maven3'}/bin",
+                    "GF_BUNDLE_URL=https://jenkins.webtide.net/userContent/glassfish-5.1.0.zip"]) {
+                sh "apt --yes update && apt --yes install zip"
+                sh "docker/build_standalone-tcks.sh servlet"
+                sh "docker/build_standalone-tcks.sh websocket"
+                archiveArtifacts artifacts: "standalone-bundles/*.zip",allowEmptyArchive: true
+            }
         }
       }
 
       stage("Schedule TCK run") {
-        script {
-          if ($TCK_TO_RUN) {
-            // https://jenkins.webtide.net/job/external_oss/job/tck_jakarta_master_build/lastSuccessfulBuild/artifact/standalone-bundles/servlet-tck-4.0.0.zip
-            // https://jenkins.webtide.net/job/external_oss/job/tck_jakarta_master_build/4/artifact/standalone-bundles/servlet-tck-4.0.0.zip
-            echo "tckurl: $JENKINS_URL/$JOB_NAME/$BUILD_NUMBER/artifact/standalone-bundles/servlet-tck-4.0.0.zip"
-          }
+        steps {
+            script {
+              if ($TCK_TO_RUN) {
+                // https://jenkins.webtide.net/job/external_oss/job/tck_jakarta_master_build/lastSuccessfulBuild/artifact/standalone-bundles/servlet-tck-4.0.0.zip
+                // https://jenkins.webtide.net/job/external_oss/job/tck_jakarta_master_build/4/artifact/standalone-bundles/servlet-tck-4.0.0.zip
+                echo "tckurl: $JENKINS_URL/$JOB_NAME/$BUILD_NUMBER/artifact/standalone-bundles/servlet-tck-4.0.0.zip"
+              }
+            }
         }
       }
   }
