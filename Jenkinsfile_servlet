@@ -1,6 +1,6 @@
 #!groovy
 pipeline {
-  agent any
+  agent { node { label 'linux' } }
   options {
     buildDiscarder logRotator( numToKeepStr: '50' )
   }
@@ -15,7 +15,6 @@ pipeline {
     string( defaultValue: 'javax', description: 'Servlet Namespace (javax or jakarta)', name: 'SVLT_NS' )
   }
   stages {
-    agent { node { label 'linux' } }
     stage("cleanup"){
       steps {
         sh "rm -rf *"
