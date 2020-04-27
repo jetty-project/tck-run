@@ -4,8 +4,7 @@ pipeline {
     cron '@daily'
   }
   options {
-    buildDiscarder logRotator( numToKeepStr: '4' )
-    disableConcurrentBuilds()
+    buildDiscarder logRotator( numToKeepStr: '50' )
   }
   parameters {
     string( defaultValue: "${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip",

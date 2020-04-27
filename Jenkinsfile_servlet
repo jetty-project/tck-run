@@ -1,6 +1,9 @@
 #!groovy
 pipeline {
   agent { node { label 'linux' } }
+  options {
+    buildDiscarder logRotator( numToKeepStr: '50' )
+  }
   parameters {
     string( defaultValue: 'jetty-10.0.x', description: 'Jetty branch to build',
             name: 'JETTY_BRANCH' )
