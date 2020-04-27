@@ -16,7 +16,7 @@ pipeline {
     choice(
             description: 'TCK servlet job to run(servlettck-run-jetty-11.0.x/servlettck-run-jetty-10.0.x)',
             name: 'TCK_TO_RUN',
-            choices: ['servlettck-run-jetty-10.0.x','servlettck-run-jetty-11.0.x']
+            choices: ['','servlettck-run-jetty-10.0.x','servlettck-run-jetty-11.0.x']
     )
   }
   stages {
@@ -47,7 +47,7 @@ pipeline {
       stage("Schedule TCK run") {
         steps {
             script {
-              if (parameters.TCK_TO_RUN) {
+              if (TCK_TO_RUN) {
                 // https://jenkins.webtide.net/job/external_oss/job/tck_jakarta_master_build/lastSuccessfulBuild/artifact/standalone-bundles/servlet-tck-4.0.0.zip
                 // https://jenkins.webtide.net/job/external_oss/job/tck_jakarta_master_build/4/artifact/standalone-bundles/servlet-tck-4.0.0.zip
                 echo "tckurl: $JENKINS_URL/$JOB_NAME/$BUILD_NUMBER/artifact/standalone-bundles/servlet-tck-4.0.0.zip"
