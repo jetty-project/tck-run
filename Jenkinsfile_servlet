@@ -134,7 +134,7 @@ pipeline {
           sh "cp http.ini jetty-home/target/jetty-base/start.d/"
           script{
             // download servlet-api
-            if(servletNamespace=='javax'){
+            if(SVLT_NS=='javax'){
               sh "wget -O servlet-api.jar https://repo.maven.apache.org/maven2/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar"
               sh "cp servlet-api.jar servlet-tck/lib/servlet-api.jar"
               sh "wget -O annotation-api.jar https://repo.maven.apache.org/maven2/javax/annotation/javax.annotation-api/1.3/javax.annotation-api-1.3.jar"
