@@ -3,9 +3,21 @@
 pipeline {
   agent { node { label 'linux' } }
   parameters {
-    string(defaultValue: '8.0', description: 'GIT branch name to build (master/8.0/servlet_jakarta)', name: 'TCK_BRANCH')
-    string(defaultValue: 'eclipse-ee4j', description: 'Github org eclipse-ee4j or olamy', name: 'GITHUB_ORG')
-    string(defaultValue: '', description: 'TCK servlet job to run(servlettck-run-jetty-11.0.x/servlettck-run-jetty-10.0.x)', name: 'TCK_TO_RUN')
+    choice(
+            description: 'GIT branch name to build (master/8.0/servlet_jakarta)',
+            name: 'TCK_BRANCH',
+            choices: ['8.0','master','servlet_jakarta']
+    ),
+    choice(
+            description: 'Github org',
+            name: 'GITHUB_ORG',
+            choices: ['eclipse-ee4j','olamy']
+    ),
+    choice(
+            description: 'TCK servlet job to run(servlettck-run-jetty-11.0.x/servlettck-run-jetty-10.0.x)',
+            name: 'TCK_TO_RUN',
+            choices: ['servlettck-run-jetty-10.0.x','servlettck-run-jetty-11.0.x']
+    )    
   }
   stages {
       stage("cleanup"){
