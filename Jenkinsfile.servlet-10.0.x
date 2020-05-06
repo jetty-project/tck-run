@@ -8,7 +8,7 @@ pipeline {
   }
   parameters {
     string( defaultValue: "${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip",
-            description: 'Url to download TCK ()',
+            description: 'Url to download TCK () do not change anything if you are not sure :)',
             name: 'TCKURL' )
     string( defaultValue: "jetty-10.0.x",
             description: 'Jetty 10.0.x branch to build',
