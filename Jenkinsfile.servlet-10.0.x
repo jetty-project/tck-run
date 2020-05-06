@@ -36,7 +36,7 @@ pipeline {
         always {
           junit testResults: '**/surefire-reports/*.xml'
           script{
-            currentBuild.description = "Run TCK branch $JETTY_BRANCH"
+            currentBuild.description = "Run TCK branch ${JETTY_BRANCH}"
           }
           archiveArtifacts artifacts: "**/surefire-reports/*.xml",allowEmptyArchive: true
           archiveArtifacts artifacts: "JTReport/**",allowEmptyArchive: true
