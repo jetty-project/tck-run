@@ -18,18 +18,13 @@ pipeline {
     stage( 'Tck Run' ) {
       steps {
         script{
-          def result
-          try {
-            def built = build( job: 'servlettck-run',
+            def built = build( job: 'servlettck-run', propagate: false,
                            parameters: [string( name: 'JETTY_BRANCH', value: "${JETTY_BRANCH}" ),
                                         string( name: 'JDK', value: 'jdk11' ),
                                         string( name: 'JDKTCK', value: 'jdk9' ),
                                         string( name: 'TCKURL', value: "${TCKURL}" ),
                                         string( name: 'SVLT_NS', value: 'javax' )] )
             copyArtifacts(projectName: 'servlettck-run', selector: specific("${built.number}"));
-          } finally {
-
-          }
         }
       }
       post {
