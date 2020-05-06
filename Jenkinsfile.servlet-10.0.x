@@ -20,15 +20,28 @@ pipeline {
         script{
           def result
           try {
-            result = build job: 'servlettck-run',
+            def built = build( job: 'servlettck-run',
                            parameters: [string( name: 'JETTY_BRANCH', value: "${JETTY_BRANCH}" ),
                                         string( name: 'JDK', value: 'jdk11' ),
                                         string( name: 'JDKTCK', value: 'jdk9' ),
                                         string( name: 'TCKURL', value: "${TCKURL}" ),
-                                        string( name: 'SVLT_NS', value: 'javax' )]
+                                        string( name: 'SVLT_NS', value: 'javax' )] )
+            copyArtifacts(projectName: 'servlettck-run', selector: specific("${built.number}"));
           } finally {
-            echo "result $result"
+
           }
+        }
+      }
+      post {
+        always {
+          junit testResults: '**/surefire-reports/*.xml'
+          script{
+            currentBuild.description = "Build branch $JETTY_BRANCH"
+          }
+          archiveArtifacts artifacts: "**/surefire-reports/*.xml",allowEmptyArchive: true
+          archiveArtifacts artifacts: "JTReport/**",allowEmptyArchive: true
+          archiveArtifacts artifacts: "jetty-home/target/jetty-base/logs/*.*",allowEmptyArchive: true
+          publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/JTReport/html", reportFiles: 'report.html', reportName: 'TCK Report', reportTitles: ''])
         }
       }
     }
