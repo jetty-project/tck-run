@@ -1,5 +1,5 @@
 pipeline {
-  agent none
+  agent { node { label 'linux' } }
   triggers {
     cron '@daily'
   }
