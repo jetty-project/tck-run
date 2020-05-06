@@ -11,7 +11,7 @@ pipeline {
     choice(
             description: 'Github org',
             name: 'GITHUB_ORG',
-            choices: ['olamy,'eclipse-ee4j']
+            choices: ['olamy','eclipse-ee4j']
     )
     choice(
             description: 'TCK servlet job to run(servlettck-run-jetty-11.0.x/servlettck-run-jetty-10.0.x)',
