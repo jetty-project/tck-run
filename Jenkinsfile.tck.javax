@@ -32,7 +32,7 @@ pipeline {
             build job: 'external_oss/tck_build', propagate: false,
                    parameters: [string( name: 'TCK_BRANCH', value: "${TCK_BRANCH}" ),
                                 string( name: 'GITHUB_ORG', value: "${GITHUB_ORG}" ),
-                                string( name: 'TCK_TO_RUN', value: '${TCK_TO_RUN}' )]
+                                string( name: 'TCK_TO_RUN', value: "${TCK_TO_RUN}" )]
 
         }
       }
