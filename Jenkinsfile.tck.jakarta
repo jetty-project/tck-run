@@ -1,0 +1,39 @@
+#!groovy
+
+pipeline {
+  agent { node { label 'linux' } }
+  options {
+    buildDiscarder logRotator( numToKeepStr: '50' )
+  }
+  parameters {
+    choice(
+            description: 'GIT branch name to build (master/8.0/servlet_jakarta)',
+            name: 'TCK_BRANCH',
+            choices: ['servlet_jakarta','master']
+    )
+    choice(
+            description: 'Github org',
+            name: 'GITHUB_ORG',
+            choices: ['olamy','eclipse-ee4j']
+    )
+    choice(
+            description: 'TCK servlet job to run(servlettck-run-jetty-11.0.x/servlettck-run-jetty-10.0.x)',
+            name: 'TCK_TO_RUN',
+            choices: ['nightlies/servlettck-run-jetty-11.0.x']
+    )
+  }
+  stages {
+      stage("Build TCK Chain"){
+        steps {
+
+            build job: 'nightlies/tck_build', propagate: false,
+                   parameters: [string( name: 'TCK_BRANCH', value: "${TCK_BRANCH}" ),
+                                string( name: 'GITHUB_ORG', value: "${GITHUB_ORG}" ),
+                                string( name: 'TCK_TO_RUN', value: '${TCK_TO_RUN}' )]
+
+        }
+      }
+
+
+  }
+}

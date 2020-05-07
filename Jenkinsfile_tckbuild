@@ -6,12 +6,12 @@ pipeline {
     choice(
             description: 'GIT branch name to build (master/8.0/servlet_jakarta)',
             name: 'TCK_BRANCH',
-            choices: ['servlet_jakarta','8.0','master']
+            choices: ['8.0','master','servlet_jakarta']
     )
     choice(
             description: 'Github org',
             name: 'GITHUB_ORG',
-            choices: ['olamy','eclipse-ee4j']
+            choices: ['eclipse-ee4j','olamy']
     )
     choice(
             description: 'TCK servlet job to run(servlettck-run-jetty-11.0.x/servlettck-run-jetty-10.0.x)',
