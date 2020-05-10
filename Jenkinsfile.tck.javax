@@ -22,7 +22,7 @@ pipeline {
     choice(
             description: 'TCK servlet job to run(servlettck-run-jetty-11.0.x/servlettck-run-jetty-10.0.x)',
             name: 'TCK_TO_RUN',
-            choices: ['nightlies/servlettck-run-jetty-10.0.x_tck_8_0_branch']
+            choices: ['nightlies/servlettck-run-jetty-10.0.x_tck_8_0_branch','nightlies/servlettck-run-jetty-10.0.x']
     )
   }
   stages {
