@@ -43,6 +43,9 @@ pipeline {
                 sh "docker/build_standalone-tcks.sh websocket"
                 archiveArtifacts artifacts: "standalone-bundles/*.zip",allowEmptyArchive: true
             }
+            script{
+                currentBuild.description = "Build $GITHUB_ORG/$TCK_BRANCH"
+            }
         }
       }
 
@@ -54,7 +57,8 @@ pipeline {
                 TCK_URL = "$BUILD_URL/artifact/standalone-bundles/servlet-tck-4.0.0.zip"
                 echo "tckurl: $TCK_URL"
 
-                build job: "$TCK_TO_RUN", parameters: [string(name: 'TCKURL', value: "$TCK_URL")]
+                build job: "$TCK_TO_RUN", parameters: [string(name: 'TCKURL', value: "$TCK_URL"),
+                                                        string(name: 'TCKBUILD', value: "$GITHUB_ORG/$TCK_BRANCH")]
 
               }
             }
