@@ -9,15 +9,12 @@ pipeline {
     buildDiscarder logRotator( numToKeepStr: '50' )
   }
   parameters {
-    choice(
-            description: 'GIT branch name to build (master/8.0/servlet_jakarta)',
-            name: 'TCK_BRANCH',
-            choices: ['8.0']
-    )
+    string( defaultValue: '8.0', description: 'GIT branch name to build (master/8.0/servlet_jakarta/xxx)',
+            name: 'TCK_BRANCH' )
     choice(
             description: 'Github org',
             name: 'GITHUB_ORG',
-            choices: ['eclipse-ee4j']
+            choices: ['eclipse-ee4j','olamy']
     )
     choice(
             description: 'TCK servlet job to run(servlettck-run-jetty-11.0.x/servlettck-run-jetty-10.0.x)',
