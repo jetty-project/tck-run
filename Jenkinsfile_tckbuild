@@ -3,11 +3,13 @@
 pipeline {
   agent { node { label 'linux' } }
   parameters {
-    choice(
-            description: 'GIT branch name to build (master/8.0/servlet_jakarta)',
-            name: 'TCK_BRANCH',
-            choices: ['8.0','master','servlet_jakarta']
-    )
+//    choice(
+//            description: 'GIT branch name to build (master/8.0/servlet_jakarta)',
+//            name: 'TCK_BRANCH',
+//            choices: ['8.0','master','servlet_jakarta']
+//    )
+    string( defaultValue: '8.0', description: 'GIT branch name to build (master/8.0/servlet_jakarta/xxx)',
+            name: 'TCK_BRANCH' )
     choice(
             description: 'Github org',
             name: 'GITHUB_ORG',
