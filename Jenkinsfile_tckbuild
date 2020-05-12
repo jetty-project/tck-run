@@ -44,7 +44,7 @@ pipeline {
                 archiveArtifacts artifacts: "standalone-bundles/*.zip",allowEmptyArchive: true
             }
             script{
-                currentBuild.description = "Build $GITHUB_ORG/$TCK_BRANCH"
+                currentBuild.description = "Build TCK from $GITHUB_ORG/$TCK_BRANCH"
             }
         }
       }

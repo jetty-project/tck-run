@@ -26,6 +26,7 @@ pipeline {
       stage("Build TCK Chain"){
         steps {
             script {
+              currentBuild.description = "Build TCK from $GITHUB_ORG/$TCK_BRANCH"
               def built = build job: 'external_oss/tck_build', propagate: false,
                     parameters: [string( name: 'TCK_BRANCH', value: "${TCK_BRANCH}" ),
                                  string( name: 'GITHUB_ORG', value: "${GITHUB_ORG}" ),
