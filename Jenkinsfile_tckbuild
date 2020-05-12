@@ -57,10 +57,22 @@ pipeline {
                 TCK_URL = "$BUILD_URL/artifact/standalone-bundles/servlet-tck-4.0.0.zip"
                 echo "tckurl: $TCK_URL"
 
-                build job: "$TCK_TO_RUN", parameters: [string(name: 'TCKURL', value: "$TCK_URL"),
+                def built = build job: "$TCK_TO_RUN", parameters: [string(name: 'TCKURL', value: "$TCK_URL"),
                                                         string(name: 'TCKBUILD', value: "$GITHUB_ORG/$TCK_BRANCH")]
-
+                copyArtifacts(projectName: "$TCK_TO_RUN", selector: specific("${built.number}"));
               }
+            }
+        }
+        post {
+            always {
+              junit testResults: '**/surefire-reports/*.xml'
+              script{
+                currentBuild.description = "Run TCK branch ${JETTY_BRANCH}"
+              }
+              archiveArtifacts artifacts: "**/surefire-reports/*.xml",allowEmptyArchive: true
+              archiveArtifacts artifacts: "JTReport/**",allowEmptyArchive: true
+              archiveArtifacts artifacts: "jetty-home/target/jetty-base/logs/*.*",allowEmptyArchive: true
+              publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/JTReport/html", reportFiles: 'report.html', reportName: 'TCK Report', reportTitles: ''])
             }
         }
       }
