@@ -26,19 +26,19 @@ pipeline {
       stage("Build TCK Chain"){
         steps {
             script {
-              currentBuild.description = "Build TCK from $GITHUB_ORG/$TCK_BRANCH"
               def built = build job: 'external_oss/tck_build', propagate: false,
                     parameters: [string( name: 'TCK_BRANCH', value: "${TCK_BRANCH}" ),
                                  string( name: 'GITHUB_ORG', value: "${GITHUB_ORG}" ),
                                  string( name: 'TCK_TO_RUN', value: "${TCK_TO_RUN}" )]
               copyArtifacts(projectName: 'external_oss/tck_build', selector: specific("${built.number}"));
+              unarchive()
             }
         }
         post {
           always {
             junit testResults: '**/surefire-reports/*.xml'
             script{
-              currentBuild.description = "Run TCK branch ${JETTY_BRANCH}"
+              currentBuild.description = "Run TCK branch ${JETTY_BRANCH} with TCK from $GITHUB_ORG/$TCK_BRANCH"
             }
             archiveArtifacts artifacts: "**/surefire-reports/*.xml",allowEmptyArchive: true
             archiveArtifacts artifacts: "JTReport/**",allowEmptyArchive: true
