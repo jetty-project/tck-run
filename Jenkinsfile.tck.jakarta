@@ -35,7 +35,7 @@ pipeline {
                                            string( name: 'TCK_TO_RUN', value: "${TCK_TO_RUN}" )]
             copyArtifacts(projectName: 'external_oss/tck_build', selector: specific("${built.number}"));
           }
-          unarchive mapping: ['**/**' : '.']
+          //unarchive mapping: ['**/**' : '.']
         }
         post {
           always {

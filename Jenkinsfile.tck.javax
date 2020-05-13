@@ -31,7 +31,7 @@ pipeline {
                                  string( name: 'GITHUB_ORG', value: "${GITHUB_ORG}" ),
                                  string( name: 'TCK_TO_RUN', value: "${TCK_TO_RUN}" )]
               copyArtifacts(projectName: 'external_oss/tck_build', selector: specific("${built.number}"));
-              unarchive()
+              //unarchive()
             }
         }
         post {
