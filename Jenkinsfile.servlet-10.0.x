@@ -29,6 +29,7 @@ pipeline {
       }
       post {
         always {
+          tckreporttojunit tckReportTxtPath: "${env.WORKSPACE}/JTReport/text/summary.txt", junitFolderPath: 'surefire-reports'
           junit testResults: '**/surefire-reports/*.xml'
           script{
             currentBuild.description = "Run TCK branch ${JETTY_BRANCH}"
