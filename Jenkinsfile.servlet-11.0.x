@@ -26,6 +26,7 @@ pipeline {
                                         string( name: 'SVLT_NS', value: 'jakarta' )] )
             copyArtifacts(projectName: 'servlettck-run', selector: specific("${built.number}"));
         }
+        unarchive mapping: ['**/**' : '.']
       }
       post {
         always {

@@ -61,6 +61,7 @@ pipeline {
                                                         string(name: 'TCKBUILD', value: "$GITHUB_ORG/$TCK_BRANCH")]
                 copyArtifacts(projectName: "$TCK_TO_RUN", selector: specific("${built.number}"));
               }
+              unarchive mapping: ['**/**' : '.']
             }
         }
         post {
