@@ -61,11 +61,12 @@ pipeline {
                                                         string(name: 'TCKBUILD', value: "$GITHUB_ORG/$TCK_BRANCH")]
                 copyArtifacts(projectName: "$TCK_TO_RUN", selector: specific("${built.number}"));
               }
-              unarchive mapping: ['**/**' : '.']
+
             }
         }
         post {
             always {
+              tckreporttojunit tckReportTxtPath: "${env.WORKSPACE}/JTReport/text/summary.txt", junitFolderPath: 'surefire-reports'
               junit testResults: '**/surefire-reports/*.xml'
               script{
                 currentBuild.description = "Run TCK branch ${JETTY_BRANCH}"
