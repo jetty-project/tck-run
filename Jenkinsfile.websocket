@@ -8,7 +8,7 @@ pipeline {
     string( defaultValue: 'jetty-10.0.x', description: 'Jetty branch to build',
             name: 'JETTY_BRANCH' )
     string( defaultValue: 'jdk11', description: 'JDK to build Jetty', name: 'JDK' )
-    string( defaultValue: 'jdk9', description: 'JDK to run TCK (use jdk9)', name: 'JDKTCK' )
+    string( defaultValue: 'jdk11', description: 'JDK to run TCK (use jdk11)', name: 'JDKTCK' )
     string( defaultValue: "${env.JENKINS_URL}userContent/tcks/websocket-tck-1.1.1.zip",
             description: 'Url to download TCK ()',
             name: 'TCKURL' )
