@@ -83,10 +83,12 @@ pipeline {
 
           unstash name: 'wsts.jte'
           // replace values in ts.jte
-          def text = readFile "wsts.jte"
-          text = text.replaceAll( "@WORKSPACE@", "${env.WORKSPACE}" )
-          text = text.replaceAll( "@JETTY_VERSION@", jettyVersion )
-          writeFile file: "websockettck/bin/ts.jte", text: text
+          script {
+            def text = readFile "wsts.jte"
+            text = text.replaceAll( "@WORKSPACE@", "${env.WORKSPACE}" )
+            text = text.replaceAll( "@JETTY_VERSION@", jettyVersion )
+            writeFile file: "websockettck/bin/ts.jte", text: text
+          }
 
           sh "cat websockettck/bin/ts.jte"
 
