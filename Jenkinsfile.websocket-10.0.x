@@ -18,7 +18,7 @@ pipeline {
     stage( 'Tck Run' ) {
       steps {
         script{
-            def built = build( job: 'servlettck-run', propagate: false,
+            def built = build( job: 'websockettck-run', propagate: false,
                            parameters: [string( name: 'JETTY_BRANCH', value: "${JETTY_BRANCH}" ),
                                         string( name: 'JDK', value: 'jdk11' ),
                                         string( name: 'JDKTCK', value: 'jdk9' ),
