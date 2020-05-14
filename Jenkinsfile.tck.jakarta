@@ -37,19 +37,19 @@ pipeline {
           }
           //unarchive mapping: ['**/**' : '.']
         }
-        post {
-          always {
-            tckreporttojunit tckReportTxtPath: "${env.WORKSPACE}/JTReport/text/summary.txt", junitFolderPath: 'surefire-reports'
-            junit testResults: '**/surefire-reports/*.xml'
-            script{
-              currentBuild.description = "Run TCK branch ${JETTY_BRANCH} with TCK from $GITHUB_ORG/$TCK_BRANCH"
-            }
-            archiveArtifacts artifacts: "**/surefire-reports/*.xml",allowEmptyArchive: true
-            archiveArtifacts artifacts: "JTReport/**",allowEmptyArchive: true
-            archiveArtifacts artifacts: "jetty-home/target/jetty-base/logs/*.*",allowEmptyArchive: true
-            publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/JTReport/html", reportFiles: 'report.html', reportName: 'TCK Report', reportTitles: ''])
-          }
-        }
+//        post {
+//          always {
+//            tckreporttojunit tckReportTxtPath: "${env.WORKSPACE}/JTReport/text/summary.txt", junitFolderPath: 'surefire-reports'
+//            junit testResults: '**/surefire-reports/*.xml'
+//            script{
+//              currentBuild.description = "Run TCK branch ${JETTY_BRANCH} with TCK from $GITHUB_ORG/$TCK_BRANCH"
+//            }
+//            archiveArtifacts artifacts: "**/surefire-reports/*.xml",allowEmptyArchive: true
+//            archiveArtifacts artifacts: "JTReport/**",allowEmptyArchive: true
+//            archiveArtifacts artifacts: "jetty-home/target/jetty-base/logs/*.*",allowEmptyArchive: true
+//            publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/JTReport/html", reportFiles: 'report.html', reportName: 'TCK Report', reportTitles: ''])
+//          }
+//        }
       }
 
 
