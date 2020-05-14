@@ -206,7 +206,7 @@ ClientThreads=2
 ##########################################################################
 #websocket.api=${web.home}/modules/jakarta.websocket-api.jar${pathsep}${web.home}/modules/jakarta.servlet-api.jar${pathsep}${web.home}/modules/cdi-api.jar
 # mix of paths for jetty-9.4.x and jetty-10.0.x
-websocket.api=${web.home}/lib/websocket/jetty-javax-websocket-api-1.1.2.jar${pathsep}${web.home}/lib/websocket/websocket-api-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/jetty-javax-websocket-api-1.1.1.jar${pathsep}${web.home}/lib/websocket/jetty-websocket-api-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/websocket-core-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/websocket-core-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/jetty-javax-websocket-api-1.1.2.jar
+websocket.api=${web.home}/lib/websocket/jetty-javax-websocket-api-1.1.2.jar${pathsep}${web.home}/lib/websocket/websocket-api-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/jetty-javax-websocket-api-1.1.1.jar${pathsep}${web.home}/lib/websocket/jetty-websocket-api-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/websocket-core-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/jetty-javax-websocket-api-1.1.2.jar
 
 
 
