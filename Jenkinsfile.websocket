@@ -42,8 +42,10 @@ pipeline {
                      globalMavenSettingsConfig: 'oss-settings.xml',
                      mavenOpts: '-Xms1g -Xmx4g',
                      mavenLocalRepo: ".repository" ) {
-            pom = readMavenPom file: 'pom.xml'
-            jettyVersion = pom.version
+            script{
+              pom = readMavenPom file: 'pom.xml'
+              jettyVersion = pom.version
+            }
             sh "mvn -V -B -pl jetty-home -am clean install -DskipTests -T6 -e"
           }
         }
