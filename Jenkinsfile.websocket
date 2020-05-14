@@ -51,7 +51,7 @@ pipeline {
         }
       }
     }
-    stage( "Setup servlet tck" ) {
+    stage( "Setup websocket tck" ) {
       steps {
         withEnv(["JAVA_HOME=${ tool "$jdk" }", "PATH=${ tool "$jdk" }/bin:${env.PATH}"]) {
           //env.JAVA_HOME = "${tool "$jdk"}"
