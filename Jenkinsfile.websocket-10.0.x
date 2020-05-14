@@ -21,7 +21,7 @@ pipeline {
             def built = build( job: 'websockettck-run', propagate: false,
                            parameters: [string( name: 'JETTY_BRANCH', value: "${JETTY_BRANCH}" ),
                                         string( name: 'JDK', value: 'jdk11' ),
-                                        string( name: 'JDKTCK', value: 'jdk9' ),
+                                        string( name: 'JDKTCK', value: 'jdk11' ),
                                         string( name: 'TCKURL', value: "${TCKURL}" ),
                                         string( name: 'SVLT_NS', value: 'javax' )] )
             copyArtifacts(projectName: 'websockettck-run', selector: specific("${built.number}"));
