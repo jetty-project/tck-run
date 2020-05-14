@@ -26,11 +26,11 @@ pipeline {
       stage("Build TCK Chain"){
         steps {
             script {
-              def built = build job: 'external_oss/tck_build', propagate: false,
+              def built = build job: 'tck/tck_build', propagate: false,
                     parameters: [string( name: 'TCK_BRANCH', value: "${TCK_BRANCH}" ),
                                  string( name: 'GITHUB_ORG', value: "${GITHUB_ORG}" ),
                                  string( name: 'TCK_TO_RUN', value: "${TCK_TO_RUN}" )]
-              copyArtifacts(projectName: 'external_oss/tck_build', selector: specific("${built.number}"));
+              copyArtifacts(projectName: 'tck/tck_build', selector: specific("${built.number}"));
               //unarchive()
             }
         }
