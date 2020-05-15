@@ -22,6 +22,9 @@ pipeline {
             name: 'TCK_TO_RUN',
             choices: ['servlettck-run-jetty-11.0.x']
     )
+    string( defaultValue: "jetty-11.0.x",
+            description: 'Jetty 11.0.x branch to build',
+            name: 'JETTY_BRANCH' )
   }
   stages {
       stage("Build TCK Chain"){
@@ -30,7 +33,8 @@ pipeline {
             def built = build job: 'tck/tck_build', propagate: false,
                               parameters: [string( name: 'TCK_BRANCH', value: "${TCK_BRANCH}" ),
                                            string( name: 'GITHUB_ORG', value: "${GITHUB_ORG}" ),
-                                           string( name: 'TCK_TO_RUN', value: "${TCK_TO_RUN}" )]
+                                           string( name: 'TCK_TO_RUN', value: "${TCK_TO_RUN}" ),
+                                           string( name: 'JETTY_BRANCH', value: "${JETTY_BRANCH}")]
             copyArtifacts(projectName: 'tck/tck_build', selector: specific("${built.number}"));
           }
           //unarchive mapping: ['**/**' : '.']
