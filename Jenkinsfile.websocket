@@ -112,6 +112,16 @@ pipeline {
           //sh "cp clientcert.jks servlettck/bin/certificates"
           //sh "cp clientcert.jks jetty-distribution/target/jetty-base/etc"
 
+          script{
+            // download servlet-api
+            if(SVLT_NS=='javax'){
+              sh "wget -q -O servlet-api.jar https://repo.maven.apache.org/maven2/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar"
+              sh "cp servlet-api.jar websockettck/lib/servlet-api.jar"
+              sh "wget -q -O websocket-api.jar https://repo.maven.apache.org/maven2/jakarta/websocket/jakarta.websocket-api/1.1.2/jakarta.websocket-api-1.1.2.jar"
+              sh "cp websocket-api.jar websockettck/lib/websocket-api.jar"
+            }
+          }
+
           //sh "cd jetty-distribution/target/jetty-base && java -Duser.language=en -Duser.country=US -Djavax.net.ssl.trustStore=etc/cacerts.jks -Djavax.net.ssl.keyStore=etc/clientcert.jks -Djavax.net.ssl.keyStorePassword=changeit -jar ../distribution/start.jar jetty.sslContext.trustStorePath=etc/cacerts.jks &"
           sh "cd jetty-home/target/jetty-base && java -Duser.language=en -Duser.country=US -jar ../jetty-home/start.jar  &"
         }
