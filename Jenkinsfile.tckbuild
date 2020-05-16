@@ -18,7 +18,8 @@ pipeline {
     choice(
             description: 'TCK servlet job to run(servlettck-run-jetty-11.0.x/servlettck-run-jetty-10.0.x)',
             name: 'TCK_TO_RUN',
-            choices: ['servlettck-run-jetty-10.0.x','servlettck-run-jetty-11.0.x','servlettck-run-jetty-10.0.x_tck_8_0_branch']
+            choices: ['servlettck-run-jetty-10.0.x','servlettck-run-jetty-11.0.x',
+                      'servlettck-run-jetty-10.0.x_tck_8_0_branch','websockettck-run-jetty-11.0.x']
     )
   }
   stages {
@@ -55,9 +56,11 @@ pipeline {
               if (TCK_TO_RUN) {
                 //TCK_URL = "$JENKINS_URL/job/$JOB_NAME/$BUILD_NUMBER/artifact/standalone-bundles/servlet-tck-4.0.0.zip"
                 TCK_URL = "$BUILD_URL/artifact/standalone-bundles/servlet-tck-4.0.0.zip"
+                TCK_WS_URL = "$BUILD_URL/artifact/standalone-bundles/websocket-tck-2.0.0.zip"
                 echo "tckurl: $TCK_URL"
 
                 def built = build job: "$TCK_TO_RUN", parameters: [string(name: 'TCKURL', value: "$TCK_URL"),
+                                                        string(name: 'TCK_WS_URL', value: "$TCK_WS_URL"),
                                                         string(name: 'TCKBUILD', value: "$GITHUB_ORG/$TCK_BRANCH")]
                 copyArtifacts(projectName: "$TCK_TO_RUN", selector: specific("${built.number}"));
               }

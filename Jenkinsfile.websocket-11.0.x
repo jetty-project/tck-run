@@ -7,11 +7,11 @@ pipeline {
     buildDiscarder logRotator( numToKeepStr: '50' )
   }
   parameters {
-    string( defaultValue: "${env.JENKINS_URL}userContent/tcks/websocket-tck-1.1.1.zip",
+    string( defaultValue: "${env.JENKINS_URL}job/tck/job/tck_build/lastSuccessfulBuild/artifact/standalone-bundles/websocket-tck-2.0.0.zip",
             description: 'Url to download TCK () do not change anything if you are not sure :)',
             name: 'TCK_WS_URL' )
-    string( defaultValue: "jetty-10.0.x",
-            description: 'Jetty 10.0.x branch to build',
+    string( defaultValue: "jetty-11.0.x",
+            description: 'Jetty 11.0.x branch to build',
             name: 'JETTY_BRANCH' )
   }
   stages {
@@ -23,7 +23,7 @@ pipeline {
                                         string( name: 'JDK', value: 'jdk11' ),
                                         string( name: 'JDKTCK', value: 'jdk11' ),
                                         string( name: 'TCK_WS_URL', value: "${TCK_WS_URL}" ),
-                                        string( name: 'SVLT_NS', value: 'javax' )] )
+                                        string( name: 'SVLT_NS', value: 'jakarta' )] )
             copyArtifacts(projectName: 'websockettck-run', selector: specific("${built.number}"));
         }
       }
