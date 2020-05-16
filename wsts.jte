@@ -209,7 +209,13 @@ ClientThreads=2
 #websocket.api=${web.home}/lib/websocket/jetty-javax-websocket-api-1.1.2.jar${pathsep}${web.home}/lib/websocket/websocket-api-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/jetty-javax-websocket-api-1.1.1.jar${pathsep}${web.home}/lib/websocket/jetty-websocket-api-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/websocket-core-@JETTY_VERSION@.jar
 websocket.api=${ts.home}/lib/websocket-api.jar${pathsep}${ts.home}/lib/servlet-api.jar
 
-websocket.classes=${web.home}/lib/websocket/websocket-javax-client-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/websocket-javax-server-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/websocket-javax-common-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/websocket-core-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/jetty-util-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/jetty-io-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/jetty-client-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/jetty-http-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/websocket-util-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/jetty-slf4j-impl-@JETTY_VERSION@-SNAPSHOT.jar${pathsep}${web.home}/lib/logging/slf4j-api-2.0.0-alpha1.jar
+websocket.javax=${web.home}/lib/websocket/websocket-javax-client-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/websocket-javax-server-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/websocket-javax-common-@JETTY_VERSION@.jar
+websocket.jakarta=${pathsep}${web.home}/lib/websocket/websocket-jakarta-client-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/websocket-jakarta-server-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/websocket-jakarta-common-@JETTY_VERSION@.jar
+jetty.logging=${pathsep}${web.home}/lib/jetty-slf4j-impl-@JETTY_VERSION@-SNAPSHOT.jar${pathsep}${web.home}/lib/logging/slf4j-api-2.0.0-alpha1.jar
+jetty.core=${pathsep}${web.home}/lib/jetty-util-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/jetty-io-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/jetty-client-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/jetty-http-@JETTY_VERSION@.jar
+websocket.core=${pathsep}${web.home}/lib/websocket/websocket-core-@JETTY_VERSION@.jar${pathsep}${web.home}/lib/websocket/websocket-util-@JETTY_VERSION@.jar
+
+websocket.classes=${websocket.javax}${websocket.jakarta}${websocket.core}${jetty.core}${jetty.logging}
 
 ts.classpath=${websocket.api}${pathsep}${ts.harness.classpath}
 
