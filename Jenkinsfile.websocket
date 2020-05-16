@@ -119,6 +119,11 @@ pipeline {
               sh "cp servlet-api.jar websockettck/lib/servlet-api.jar"
               sh "wget -q -O websocket-api.jar https://repo.maven.apache.org/maven2/jakarta/websocket/jakarta.websocket-api/1.1.2/jakarta.websocket-api-1.1.2.jar"
               sh "cp websocket-api.jar websockettck/lib/websocket-api.jar"
+            } else {
+              sh "wget -q -O servlet-api.jar https://repo.maven.apache.org/maven2/jakarta/servlet/jakarta.servlet-api/5.0.0-M1/jakarta.servlet-api-5.0.0-M1.jar"
+              sh "cp servlet-api.jar websockettck/lib/servlet-api.jar"
+              sh "wget -q -O websocket-api.jar https://repo.maven.apache.org/maven2/jakarta/websocket/jakarta.websocket-api/2.0.0-M1/jakarta.websocket-api-2.0.0-M1.jar"
+              sh "cp websocket-api.jar websockettck/lib/websocket-api.jar"
             }
           }
 
