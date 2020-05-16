@@ -20,7 +20,7 @@ pipeline {
     choice(
             description: 'TCK servlet job to run(servlettck-run-jetty-11.0.x/servlettck-run-jetty-10.0.x)',
             name: 'TCK_TO_RUN',
-            choices: ['servlettck-run-jetty-11.0.x','websockettck-run-jetty-11.0.x']
+            choices: ['servlettck-run-jetty-11.0.x','websocket/websockettck-run-jetty-11.0.x']
     )
     string( defaultValue: "jetty-11.0.x",
             description: 'Jetty 11.0.x branch to build',
