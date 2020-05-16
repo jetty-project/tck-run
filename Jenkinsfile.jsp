@@ -9,7 +9,7 @@ pipeline {
             name: 'JETTY_BRANCH' )
     string( defaultValue: 'jdk11', description: 'JDK to build Jetty', name: 'JDK' )
     string( defaultValue: 'jdk11', description: 'JDK to run TCK (use jdk11)', name: 'JDKTCK' )
-    string( defaultValue: "${env.JENKINS_URL}userContent/tcks/websocket-tck-1.1.1.zip",
+    string( defaultValue: "${env.JENKINS_URL}userContent/tcks/pages-tck-javax.zip",
             description: 'Url to download TCK ()',
             name: 'TCK_WS_URL' )
     string( defaultValue: 'javax', description: 'Servlet Namespace (javax or jakarta)', name: 'SVLT_NS' )
@@ -24,7 +24,7 @@ pipeline {
     stage( "Checkout TCK Run" ) {
       steps {
         git url: "https://github.com/jetty-project/tck-run.git", branch: "master"
-        stash name: 'wsts.jte', includes: 'wsts.jte'
+        stash name: 'jspts.jte', includes: 'jspts.jte'
         stash name: 'log4j2.xml', includes: 'log4j2.xml'
       }
     }
@@ -69,36 +69,34 @@ pipeline {
           sh "which find"
           sh "which java"
 
-          //sh "wget https://jenkins.webtide.net/userContent/websockettck-1.1_latest.zip"
-          //sh "wget -O websockettck.zip http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8/nightly-802/websocket-tck-1.1.1.zip"
-          echo "Fetching servlettck from ${TCK_WS_URL}"
-          sh "wget -O websockettck.zip ${TCK_WS_URL}"
+          echo "Fetching jsptck from ${TCK_WS_URL}"
+          sh "wget -O pages-tck.zip ${TCK_WS_URL}"
 
-          sh "unzip websockettck.zip"
-          sh "mv websocket-tck websockettck"
+          sh "unzip pages-tck.zip"
+          sh "mv pages-tck pagestck"
           sh "ls -lrt"
           sh "cd jetty-home/target/ && mkdir jetty-base"
           script{
             if(SVLT_NS=='javax'){
-              sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,webapp,deploy,annotations,jsp,logging-log4j2,websocket"
+              sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,webapp,deploy,annotations,jsp,logging-log4j2"
             } else {
-              sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,webapp,deploy,annotations,jsp,logging-log4j2,websocket-jakarta"
+              sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,webapp,deploy,annotations,jsp,logging-log4j2"
             }
           }
-          sh 'find websockettck -name *.war -exec cp {} jetty-home/target/jetty-base/webapps/ \\;'
+          sh 'find pagestck -name *.war -exec cp {} jetty-home/target/jetty-base/webapps/ \\;'
 
-          unstash name: 'wsts.jte'
+          unstash name: 'jspts.jte'
           // replace values in ts.jte
           script {
-            def text = readFile "wsts.jte"
+            def text = readFile "jspts.jte"
             text = text.replaceAll( "@WORKSPACE@", "${env.WORKSPACE}" )
             text = text.replaceAll( "@JETTY_VERSION@", jettyVersion )
-            writeFile file: "websockettck/bin/ts.jte", text: text
+            writeFile file: "pagestck/bin/ts.jte", text: text
           }
 
           sh "ls -lrt jetty-home/target/jetty-home/"
 
-          sh "cat websockettck/bin/ts.jte"
+          sh "cat pagestck/bin/ts.jte"
 
           unstash name: 'log4j2.xml'
           sh "cp log4j2.xml jetty-home/target/jetty-base/resources/"
@@ -124,14 +122,12 @@ pipeline {
             // download servlet-api
             if(SVLT_NS=='javax'){
               sh "wget -q -O servlet-api.jar https://repo.maven.apache.org/maven2/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar"
-              sh "cp servlet-api.jar websockettck/lib/servlet-api.jar"
-              sh "wget -q -O websocket-api.jar https://repo.maven.apache.org/maven2/jakarta/websocket/jakarta.websocket-api/1.1.2/jakarta.websocket-api-1.1.2.jar"
-              sh "cp websocket-api.jar websockettck/lib/websocket-api.jar"
+              sh "cp servlet-api.jar pagestck/lib/servlet-api.jar"
+              sh "wget -q -O jsp-api.jar https://repo.maven.apache.org/maven2/jakarta/servlet/jsp/jakarta.servlet.jsp-api/2.3.4/jakarta.servlet.jsp-api-2.3.4.jar"
+              sh "cp jsp-api.jar pagestck/lib/jsp-api.jar"
+              sh "wget -q -O el-api.jar https://repo.maven.apache.org/maven2/jakarta/el/jakarta.el-api/3.0.3/jakarta.el-api-3.0.3.jar"
+              sh "cp el-api.jar pagestck/lib/el-api.jar"
             } else {
-              sh "wget -q -O servlet-api.jar https://repo.maven.apache.org/maven2/jakarta/servlet/jakarta.servlet-api/5.0.0-M1/jakarta.servlet-api-5.0.0-M1.jar"
-              sh "cp servlet-api.jar websockettck/lib/servlet-api.jar"
-              sh "wget -q -O websocket-api.jar https://repo.maven.apache.org/maven2/jakarta/websocket/jakarta.websocket-api/2.0.0-M1/jakarta.websocket-api-2.0.0-M1.jar"
-              sh "cp websocket-api.jar websockettck/lib/websocket-api.jar"
             }
           }
 
@@ -147,7 +143,7 @@ pipeline {
             withEnv(["JAVA_HOME=${ tool "${jdktck}" }", "PATH+ANT=${tool 'ant-latest'}/bin:${env.JAVA_HOME}/bin"]) {
               script {
                 try {
-                  sh "cd websockettck/bin && ant run.all"
+                  sh "cd pagestck/bin && ant run.all"
                 }catch(ex){
                   unstable('Script failed!' + ex.getMessage())
                 }
