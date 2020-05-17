@@ -7,9 +7,9 @@ pipeline {
     buildDiscarder logRotator( numToKeepStr: '50' )
   }
   parameters {
-    string( defaultValue: "${env.JENKINS_URL}userContent/tcks/pages-tck-javax.zip",
+    string( defaultValue: "${env.JENKINS_URL}job/tck/job/tck_jakarta_master_build/lastSuccessfulBuild/artifact/standalone-bundles/pages-tck-javax.zip",
             description: 'Url to download TCK () do not change anything if you are not sure :)',
-            name: 'TCKURL' )
+            name: 'TCK_JSP_URL' )
     string( defaultValue: "jetty-11.0.x",
             description: 'Jetty 11.0.x branch to build',
             name: 'JETTY_BRANCH' )
@@ -22,7 +22,7 @@ pipeline {
                            parameters: [string( name: 'JETTY_BRANCH', value: "${JETTY_BRANCH}" ),
                                         string( name: 'JDK', value: 'jdk11' ),
                                         string( name: 'JDKTCK', value: 'jdk9' ),
-                                        string( name: 'TCKURL', value: "${TCKURL}" ),
+                                        string( name: 'TCK_JSP_URL', value: "${TCK_JSP_URL}" ),
                                         string( name: 'SVLT_NS', value: 'jakarta' )] )
             copyArtifacts(projectName: 'jsptck-run', selector: specific("${built.number}"));
         }
@@ -32,7 +32,7 @@ pipeline {
           tckreporttojunit tckReportTxtPath: "${env.WORKSPACE}/JTReport/text/summary.txt", junitFolderPath: 'surefire-reports'
           junit testResults: '**/surefire-reports/*.xml'
           script{
-            currentBuild.description = "Run TCK branch ${JETTY_BRANCH}"
+            currentBuild.description = "Run TCK branch ${JETTY_BRANCH}/${TCK_JSP_URL}"
           }
           archiveArtifacts artifacts: "**/surefire-reports/*.xml",allowEmptyArchive: true
           archiveArtifacts artifacts: "JTReport/**",allowEmptyArchive: true
