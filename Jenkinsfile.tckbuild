@@ -42,6 +42,7 @@ pipeline {
                 sh "apt --yes update && apt --yes install zip"
                 sh "docker/build_standalone-tcks.sh servlet"
                 sh "docker/build_standalone-tcks.sh websocket"
+                sh "docker/build_standalone-tcks.sh jsp"
                 archiveArtifacts artifacts: "standalone-bundles/*.zip",allowEmptyArchive: true
             }
             script{
