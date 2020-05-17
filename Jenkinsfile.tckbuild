@@ -16,11 +16,12 @@ pipeline {
             choices: ['eclipse-ee4j','olamy']
     )
     choice(
-            description: 'TCK servlet job to run(servlettck-run-jetty-11.0.x/servlettck-run-jetty-10.0.x)',
+            description: 'TCK servlet job to run',
             name: 'TCK_TO_RUN',
             choices: ['servlettck-run-jetty-10.0.x','servlettck-run-jetty-11.0.x',
                       'servlettck-run-jetty-10.0.x_tck_8_0_branch','websocket/websockettck-run-jetty-11.0.x',
-                      '']
+                      'websocket/websockettck-run-jetty-10.0.x',
+                      'jsp/jsptck-run-jetty-11.0.x','jsp/jsptck-run-jetty-10.0.x']
     )
   }
   stages {
