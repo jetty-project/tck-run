@@ -23,7 +23,7 @@ pipeline {
                                         string( name: 'JDK', value: 'jdk11' ),
                                         string( name: 'JDKTCK', value: 'jdk9' ),
                                         string( name: 'TCKURL', value: "${TCKURL}" ),
-                                        string( name: 'SVLT_NS', value: 'javax' )] )
+                                        string( name: 'SVLT_NS', value: 'jakarta' )] )
             copyArtifacts(projectName: 'jsptck-run', selector: specific("${built.number}"));
         }
       }

@@ -128,6 +128,12 @@ pipeline {
               sh "wget -q -O el-api.jar https://repo.maven.apache.org/maven2/jakarta/el/jakarta.el-api/3.0.3/jakarta.el-api-3.0.3.jar"
               sh "cp el-api.jar pagestck/lib/el-api.jar"
             } else {
+              sh "wget -q -O servlet-api.jar https://repo.maven.apache.org/maven2/jakarta/servlet/jakarta.servlet-api/5.0.0-M1/jakarta.servlet-api-5.0.0-M1.jar"
+              sh "cp servlet-api.jar pagestck/lib/servlet-api.jar"
+              sh "wget -q -O jsp-api.jar https://repo.maven.apache.org/maven2/jakarta/servlet/jsp/jakarta.servlet.jsp-api/3.0.0-M1/jakarta.servlet.jsp-api-3.0.0-M1.jar"
+              sh "cp jsp-api.jar pagestck/lib/jsp-api.jar"
+              sh "wget -q -O el-api.jar https://repo.maven.apache.org/maven2/jakarta/el/jakarta.el-api/4.0.0.M1/jakarta.el-api-4.0.0.M1.jar"
+              sh "cp el-api.jar pagestck/lib/el-api.jar"
             }
           }
 
