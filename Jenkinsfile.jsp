@@ -11,7 +11,7 @@ pipeline {
     string( defaultValue: 'jdk11', description: 'JDK to run TCK (use jdk11)', name: 'JDKTCK' )
     string( defaultValue: "${env.JENKINS_URL}userContent/tcks/pages-tck-javax.zip",
             description: 'Url to download TCK ()',
-            name: 'TCK_WS_URL' )
+            name: 'TCK_JSP_URL' )
     string( defaultValue: 'javax', description: 'Servlet Namespace (javax or jakarta)', name: 'SVLT_NS' )
     string( defaultValue: 'standard', name: 'TCKBUILD')
   }
@@ -69,8 +69,8 @@ pipeline {
           sh "which find"
           sh "which java"
 
-          echo "Fetching jsptck from ${TCK_WS_URL}"
-          sh "wget -O pages-tck.zip ${TCK_WS_URL}"
+          echo "Fetching jsptck from ${TCK_JSP_URL}"
+          sh "wget -O pages-tck.zip ${TCK_JSP_URL}"
 
           sh "unzip pages-tck.zip"
           sh "mv pages-tck pagestck"
@@ -164,7 +164,7 @@ pipeline {
                            junitFolderPath: 'surefire-reports'
           junit testResults: '**/surefire-reports/*.xml'
           script{
-            currentBuild.description = "Build branch $JETTY_BRANCH with TCKBUILD $TCKBUILD from $TCK_WS_URL"
+            currentBuild.description = "Build branch $JETTY_BRANCH with TCKBUILD $TCKBUILD from $TCK_JSP_URL"
           }
           archiveArtifacts artifacts: "**/surefire-reports/*.xml",allowEmptyArchive: true
           archiveArtifacts artifacts: "JTReport/**", allowEmptyArchive: true
