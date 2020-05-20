@@ -45,6 +45,8 @@ pipeline {
                 sh "docker/build_standalone-tcks.sh servlet"
                 sh "docker/build_standalone-tcks.sh websocket"
                 sh "docker/build_standalone-tcks.sh jsp"
+                sh "docker/build_standalone-tcks.sh el"
+                sh "docker/build_standalone-tcks.sh jstl"
                 archiveArtifacts artifacts: "standalone-bundles/*.zip",allowEmptyArchive: true
             }
             script{
