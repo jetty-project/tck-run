@@ -9,7 +9,7 @@ pipeline {
   parameters {
     string( defaultValue: "${env.JENKINS_URL}job/tck/job/tck_jakarta_master_build/lastSuccessfulBuild/artifact/standalone-bundles/servlet-tck-4.0.0.zip",
             description: 'Url to download TCK () do not change anything if you are not sure :)',
-            name: 'TCKURL' )
+            name: 'TCK_SVLT_JAKARTA_URL' )
     string( defaultValue: "jetty-11.0.x",
             description: 'Jetty 11.0.x branch to build',
             name: 'JETTY_BRANCH' )
@@ -22,7 +22,7 @@ pipeline {
                            parameters: [string( name: 'JETTY_BRANCH', value: "${JETTY_BRANCH}" ),
                                         string( name: 'JDK', value: 'jdk11' ),
                                         string( name: 'JDKTCK', value: 'jdk9' ),
-                                        string( name: 'TCKURL', value: "${TCKURL}" ),
+                                        string( name: 'TCKURL', value: "${TCK_SVLT_JAKARTA_URL}" ),
                                         string( name: 'SVLT_NS', value: 'jakarta' )] )
             copyArtifacts(projectName: 'servlettck-run', selector: specific("${built.number}"));
         }
