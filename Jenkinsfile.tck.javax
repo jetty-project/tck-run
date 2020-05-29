@@ -34,6 +34,7 @@ pipeline {
                     parameters: [string( name: 'TCK_BRANCH', value: "${TCK_BRANCH}" ),
                                  string( name: 'GITHUB_ORG', value: "${GITHUB_ORG}" ),
                                  string( name: 'TCK_TO_RUN', value: "${TCK_TO_RUN}" ),
+                                 string( name: 'GLASSFISH_BUNDLE_URL', value: 'https://jenkins.webtide.net/userContent/glassfish-5.1.0.zip'),
                                  string( name: 'JETTY_BRANCH', value: "${JETTY_BRANCH}")]
               copyArtifacts(projectName: 'tck/tck_build', selector: specific("${built.number}"));
               //unarchive()

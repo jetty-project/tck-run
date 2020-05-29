@@ -35,6 +35,7 @@ pipeline {
                               parameters: [string( name: 'TCK_BRANCH', value: "${TCK_BRANCH}" ),
                                            string( name: 'GITHUB_ORG', value: "${GITHUB_ORG}" ),
                                            string( name: 'TCK_TO_RUN', value: "${TCK_TO_RUN}" ),
+                                           string( name: 'GLASSFISH_BUNDLE_URL', value: 'https://ci.eclipse.org/jakartaee-tck/job/build-glassfish/lastSuccessfulBuild/artifact/appserver/distributions/glassfish/target/glassfish.zip'),
                                            string( name: 'JETTY_BRANCH', value: "${JETTY_BRANCH}")]
             copyArtifacts(projectName: 'tck/tck_build', selector: specific("${built.number}"));
           }

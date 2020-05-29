@@ -3,11 +3,6 @@
 pipeline {
   agent { node { label 'linux' } }
   parameters {
-//    choice(
-//            description: 'GIT branch name to build (master/8.0/servlet_jakarta)',
-//            name: 'TCK_BRANCH',
-//            choices: ['8.0','master','servlet_jakarta']
-//    )
     string( defaultValue: '8.0', description: 'GIT branch name to build (master/8.0/servlet_jakarta/xxx)',
             name: 'TCK_BRANCH' )
     choice(
@@ -23,6 +18,10 @@ pipeline {
                       'websocket/websockettck-run-jetty-10.0.x',
                       'jsp/jsptck-run-jetty-11.0.x','jsp/jsptck-run-jetty-10.0.x']
     )
+    string( defaultValue: 'https://ci.eclipse.org/jakartaee-tck/job/build-glassfish/lastSuccessfulBuild/artifact/appserver/distributions/glassfish/target/glassfish.zip',
+            description: 'URL to download Glassfish bundle (https://jenkins.webtide.net/userContent/glassfish-5.1.0.zip)',
+            name: 'GLASSFISH_BUNDLE_URL' )
+
   }
   stages {
       stage("cleanup"){
@@ -40,7 +39,7 @@ pipeline {
         steps {
             withEnv(["JAVA_HOME=${ tool "jdk8" }",
                     "PATH+ANT+MAVEN=${tool 'ant-latest'}/bin:${env.JAVA_HOME}/bin:${tool 'maven3'}/bin",
-                    "GF_BUNDLE_URL=https://jenkins.webtide.net/userContent/glassfish-5.1.0.zip"]) {
+                    "GF_BUNDLE_URL=${GLASSFISH_BUNDLE_URL}"]) {
                 sh "apt --yes update && apt --yes install zip"
                 sh "bash docker/build_standalone-tcks.sh servlet"
                 sh "bash docker/build_standalone-tcks.sh websocket"
