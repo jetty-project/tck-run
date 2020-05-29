@@ -32,7 +32,7 @@ pipeline {
           tckreporttojunit tckReportTxtPath: "${env.WORKSPACE}/JTReport/text/summary.txt", junitFolderPath: 'surefire-reports'
           junit testResults: '**/surefire-reports/*.xml'
           script{
-            currentBuild.description = "Run TCK branch ${JETTY_BRANCH}/${TCK_JSP_URL}"
+            currentBuild.description = "Run TCK branch ${JETTY_BRANCH}/${TCK_JSP_JAKARTA_URL}"
           }
           archiveArtifacts artifacts: "**/surefire-reports/*.xml",allowEmptyArchive: true
           archiveArtifacts artifacts: "JTReport/**",allowEmptyArchive: true
