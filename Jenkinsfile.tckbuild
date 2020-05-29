@@ -42,11 +42,11 @@ pipeline {
                     "PATH+ANT+MAVEN=${tool 'ant-latest'}/bin:${env.JAVA_HOME}/bin:${tool 'maven3'}/bin",
                     "GF_BUNDLE_URL=https://jenkins.webtide.net/userContent/glassfish-5.1.0.zip"]) {
                 sh "apt --yes update && apt --yes install zip"
-                sh "docker/build_standalone-tcks.sh servlet"
-                sh "docker/build_standalone-tcks.sh websocket"
-                sh "docker/build_standalone-tcks.sh jsp"
-                sh "docker/build_standalone-tcks.sh el"
-                sh "docker/build_standalone-tcks.sh jstl"
+                sh "bash docker/build_standalone-tcks.sh servlet"
+                sh "bash docker/build_standalone-tcks.sh websocket"
+                sh "bash docker/build_standalone-tcks.sh jsp"
+                sh "bash docker/build_standalone-tcks.sh el"
+                sh "bash docker/build_standalone-tcks.sh jstl"
                 archiveArtifacts artifacts: "standalone-bundles/*.zip",allowEmptyArchive: true
             }
             script{
