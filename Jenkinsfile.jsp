@@ -51,7 +51,7 @@ pipeline {
         }
       }
     }
-    stage( "Setup websocket tck" ) {
+    stage( "Setup jsp tck" ) {
       steps {
         withEnv(["JAVA_HOME=${ tool "$jdk" }", "PATH=${ tool "$jdk" }/bin:${env.PATH}"]) {
           //env.JAVA_HOME = "${tool "$jdk"}"
@@ -142,7 +142,7 @@ pipeline {
         }
       }
     }
-    stage( "run websocket tck" ) {
+    stage( "run jsp tck" ) {
       steps {
         timeout( time: 3, unit: 'HOURS' ) {
           withAnt( installation: 'ant-latest', jdk: "$jdk" ) {
