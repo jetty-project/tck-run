@@ -41,11 +41,11 @@ pipeline {
                     "PATH+ANT+MAVEN=${tool 'ant-latest'}/bin:${env.JAVA_HOME}/bin:${tool 'maven3'}/bin",
                     "GF_BUNDLE_URL=${GLASSFISH_BUNDLE_URL}"]) {
                 sh "apt --yes update && apt --yes install zip"
-                sh "bash docker/build_jakartaeetck.sh servlet"
-                sh "bash docker/build_jakartaeetck.sh websocket"
-                sh "bash docker/build_jakartaeetck.sh jsp"
-                sh "bash docker/build_jakartaeetck.sh el"
-                sh "bash docker/build_jakartaeetck.sh jstl"
+                sh "bash docker/build_standalone-tcks.sh servlet"
+                sh "bash docker/build_standalone-tcks.sh websocket"
+                sh "bash docker/build_standalone-tcks.sh jsp"
+                //sh "bash docker/build_standalone-tcks.sh el"
+                //sh "bash docker/build_standalone-tcks.sh jstl"
                 archiveArtifacts artifacts: "standalone-bundles/*.zip",allowEmptyArchive: true
             }
             script{
