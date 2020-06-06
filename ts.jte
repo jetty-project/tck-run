@@ -162,6 +162,7 @@ endorsedlib.dir=${ts.home}/endorsedlib
 #                        test directories which make use of this command
 #                        are servlet and jsp.
 ########################################################################
+# -Djava.endorsed.dirs=${endorsedlib.dir} \
 command.testExecute=com.sun.ts.lib.harness.ExecTSTestCmd \
                     CLASSPATH=${JAVA_HOME}/lib/rt.jar${pathsep}\
                     ${LOCAL_CLASSES} \
@@ -169,7 +170,6 @@ command.testExecute=com.sun.ts.lib.harness.ExecTSTestCmd \
                     windir=${windir} \
                     SYSTEMROOT=${SYSTEMROOT} \
                     ${JAVA_HOME}/bin/java \
-                    -Djava.endorsed.dirs=${endorsedlib.dir} \
                     -Dbytecheck=true \
                     -Djava.protocol.handler.pkgs=javax.net.ssl \
                     -Djavax.net.ssl.keyStore=${ts.home}/bin/certificates/clientcert.jks \
