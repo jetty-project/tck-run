@@ -1,0 +1,61 @@
+#!groovy
+
+pipeline {
+  agent { node { label 'linux' } }
+  triggers {
+    cron '@daily'
+  }
+  options {
+    buildDiscarder logRotator( numToKeepStr: '50' )
+  }
+  parameters {
+
+    string( defaultValue: 'master', description: 'GIT branch name to build (master/8.0/servlet_jakarta/xxx)',
+            name: 'TCK_BRANCH' )
+    choice(
+            description: 'Github org',
+            name: 'GITHUB_ORG',
+            choices: ['eclipse-ee4j','olamy']
+    )
+    choice(
+            description: 'TCK servlet job to run(servlettck-run-jetty-11.0.x/servlettck-run-jetty-10.0.x)',
+            name: 'TCK_TO_RUN',
+            choices: ['servlettck-run-jetty-11.0.x','websocket/websockettck-run-jetty-11.0.x',
+                      'jsp/jsptck-run-jetty-11.0.x']
+    )
+    string( defaultValue: "jetty-11.0.x",
+            description: 'Jetty 11.0.x branch to build',
+            name: 'JETTY_BRANCH' )
+  }
+  stages {
+      stage("Build TCK Chain"){
+        steps {
+          script {
+            def built = build job: 'tck/tck_build', propagate: false,
+                              parameters: [string( name: 'TCK_BRANCH', value: "${TCK_BRANCH}" ),
+                                           string( name: 'GITHUB_ORG', value: "${GITHUB_ORG}" ),
+                                           string( name: 'TCK_TO_RUN', value: "${TCK_TO_RUN}" ),
+                                           string( name: 'GLASSFISH_BUNDLE_URL', value: 'https://ci.eclipse.org/jakartaee-tck/job/build-glassfish/lastSuccessfulBuild/artifact/appserver/distributions/glassfish/target/glassfish.zip'),
+                                           string( name: 'JETTY_BRANCH', value: "${JETTY_BRANCH}")]
+            copyArtifacts(projectName: 'tck/tck_build', selector: specific("${built.number}"));
+          }
+          //unarchive mapping: ['**/**' : '.']
+        }
+//        post {
+//          always {
+//            tckreporttojunit tckReportTxtPath: "${env.WORKSPACE}/JTReport/text/summary.txt", junitFolderPath: 'surefire-reports'
+//            junit testResults: '**/surefire-reports/*.xml'
+//            script{
+//              currentBuild.description = "Run TCK branch ${JETTY_BRANCH} with TCK from $GITHUB_ORG/$TCK_BRANCH"
+//            }
+//            archiveArtifacts artifacts: "**/surefire-reports/*.xml",allowEmptyArchive: true
+//            archiveArtifacts artifacts: "JTReport/**",allowEmptyArchive: true
+//            archiveArtifacts artifacts: "jetty-home/target/jetty-base/logs/*.*",allowEmptyArchive: true
+//            publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/JTReport/html", reportFiles: 'report.html', reportName: 'TCK Report', reportTitles: ''])
+//          }
+//        }
+      }
+
+
+  }
+}

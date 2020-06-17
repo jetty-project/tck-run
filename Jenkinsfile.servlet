@@ -1,0 +1,205 @@
+#!groovy
+import java.nio.file.Files
+import java.nio.file.Paths
+
+pipeline {
+  agent { node { label 'linux' } }
+  options {
+    buildDiscarder logRotator( numToKeepStr: '50' )
+  }
+  parameters {
+    string( defaultValue: 'jetty-10.0.x', description: 'Jetty branch to build',
+            name: 'JETTY_BRANCH' )
+    string( defaultValue: 'jdk11', description: 'JDK to build Jetty', name: 'JDK' )
+    string( defaultValue: 'jdk9', description: 'JDK to run TCK (use jdk9)', name: 'JDKTCK' )
+    string( defaultValue: "http://download.eclipse.org/ee4j/jakartaee-tck/master/nightly/servlet-tck-4.0.0.zip",
+            description: 'Url to download TCK ()',
+            name: 'TCKURL' )
+    string( defaultValue: 'javax', description: 'Servlet Namespace (javax or jakarta)', name: 'SVLT_NS' )
+    string( defaultValue: 'standard', name: 'TCKBUILD')
+  }
+  stages {
+    stage("cleanup"){
+      steps {
+        sh "rm -rf *"
+      }
+    }
+    stage("Checkout TCK Run") {
+      steps {
+        git url: "https://github.com/jetty-project/tck-run.git", branch: "master"
+        stash name: 'ts.jte', includes: 'ts.jte'
+        stash name: 'realm.ini', includes: 'realm.ini'
+        stash name: 'realm.properties', includes: 'realm.properties'
+        stash name: 'test-realm.xml', includes: 'test-realm.xml'
+        stash name: 'cacerts.jks', includes: 'cacerts.jks'
+        stash name: 'clientcert.jks', includes: 'clientcert.jks'
+        stash name: 'log4j2.xml', includes: 'log4j2.xml'
+        stash name: 'http.ini', includes: 'http.ini'
+      }
+    }
+
+    stage("Checkout Jetty") {
+      steps {
+        git url: "https://github.com/eclipse/jetty.project.git", branch: "$JETTY_BRANCH"
+      }
+    }
+    stage("Build Jetty") {
+      steps {
+        timeout(time: 30, unit: 'MINUTES') {
+          withMaven(
+                  maven: 'maven3',
+                  jdk: "$jdk",
+                  publisherStrategy: 'EXPLICIT',
+                  mavenOpts: '-Xms2g -Xmx4g',
+                  mavenLocalRepo: ".repository") {
+            sh "mvn -V -B -U -Psnapshot-repositories -pl jetty-home -am clean install -DskipTests -T6 -e"
+          }
+        }
+      }
+    }
+    stage("Setup servlet tck"){
+      steps {
+        echo "Starting withEnv()"
+        withEnv(["JAVA_HOME=${ tool "$jdk" }", "PATH=${ tool "$jdk" }/bin:${env.PATH}"]) {
+          // env.JAVA_HOME='${tool "$jdk"}'
+          // env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
+
+          echo "JAVA_HOME=${env.JAVA_HOME}"
+          echo "PATH=${env.PATH}"
+
+          sh "ls -la ${env.JAVA_HOME}"
+
+          // Execute some simple lookups of required command line applications
+          // If the application isn't found, then it fails the build
+          sh "which curl"
+          sh "which wget"
+          sh "which unzip"
+          sh "which find"
+          sh "which java"
+
+          //echo "Fetching servlettck from ${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip"
+          //sh "curl -O ${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip"
+
+          echo "Fetching servlettck from ${tckUrl}"
+          sh "wget -q -O servlettck.zip ${tckUrl}"
+
+          echo "Unpacking Servlet TCK"
+          sh "unzip servlettck.zip"
+
+          sh "cd jetty-home/target/ && mkdir jetty-base"
+          sh "cd jetty-home/target/jetty-base && mkdir etc && cd .."
+
+          sh "ls -la jetty-home/target/"
+          sh "ls -la jetty-home/target/jetty-base"
+
+          echo "Running home to create startd"
+
+          sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,,http2c,webapp,deploy,jsp,annotations,logging-log4j2"
+          //sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,logging-log4j2"
+
+          sh "ls -la jetty-home/target/jetty-base"
+          sh "ls -la jetty-home/target/jetty-base/start.d"
+
+          echo "Copying war from servlet TCK to webapps"
+          sh 'find servlet-tck -name *.war -exec cp {} jetty-home/target/jetty-base/webapps/ \\;'
+          // because the issue has been fixed then reverted see https://github.com/eclipse-ee4j/jakartaee-tck/issues/45
+          script {
+            if ( Files.exists( Paths.get("jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war"))){
+              sh 'cp jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered.war'
+            }
+          }
+
+          echo "Unstashing ts.jte"
+          unstash name: 'ts.jte'
+          // replace values in ts.jte
+          script{
+            def text = readFile "ts.jte"
+            text = text.replaceAll("@WORKSPACE@", "${env.WORKSPACE}")
+            writeFile file:"servlet-tck/bin/ts.jte", text: text
+          }
+
+          echo "Unstashing realm.ini"
+          unstash name: 'realm.ini'
+          sh "cp realm.ini jetty-home/target/jetty-base/start.d/"
+
+          echo "Unstashing realm.properties"
+          unstash name: 'realm.properties'
+          sh "cp realm.properties jetty-home/target/jetty-base/etc/"
+
+          echo "Unstashing test-realm.xml"
+          unstash name: 'test-realm.xml'
+          sh "cp test-realm.xml jetty-home/target/jetty-base/etc/"
+
+          echo "Unstashing cacerts.jks"
+          unstash name: 'cacerts.jks'
+          sh "cp cacerts.jks servlet-tck/bin/certificates"
+          sh "cp cacerts.jks jetty-home/target/jetty-base/etc/"
+
+          echo "Unstashing clientcerts.jks"
+          unstash name: 'clientcert.jks'
+          sh "cp clientcert.jks servlet-tck/bin/certificates"
+          sh "cp clientcert.jks jetty-home/target/jetty-base/etc/"
+
+          unstash name: 'log4j2.xml'
+          sh "cp log4j2.xml jetty-home/target/jetty-base/resources/"
+
+          unstash name: 'http.ini'
+          sh "cp http.ini jetty-home/target/jetty-base/start.d/"
+          script{
+            // download servlet-api
+            if(SVLT_NS=='javax'){
+              sh "wget -q -O servlet-api.jar https://repo.maven.apache.org/maven2/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar"
+              sh "cp servlet-api.jar servlet-tck/lib/servlet-api.jar"
+              sh "wget -q -O annotation-api.jar https://repo.maven.apache.org/maven2/javax/annotation/javax.annotation-api/1.3/javax.annotation-api-1.3.jar"
+              sh "cp annotation-api.jar servlet-tck/lib/annotation-api.jar"
+            } else {
+              sh "wget -q -O servlet-api.jar https://repo.maven.apache.org/maven2/jakarta/servlet/jakarta.servlet-api/5.0.0-M1/jakarta.servlet-api-5.0.0-M1.jar"
+              sh "cp servlet-api.jar servlet-tck/lib/servlet-api.jar"
+              sh "wget -q -O annotation-api.jar https://repo.maven.apache.org/maven2/jakarta/annotation/jakarta.annotation-api/2.0.0-RC1/jakarta.annotation-api-2.0.0-RC1.jar"
+              sh "cp annotation-api.jar servlet-tck/lib/annotation-api.jar"
+            }
+          }
+
+          sh "ls -la jetty-home/target/jetty-base"
+
+          echo "Executing Jetty Instance ..."
+          sh "cd jetty-home/target/jetty-base && java -Duser.language=en -Duser.country=US -Djavax.net.ssl.trustStore=etc/cacerts.jks -Djavax.net.ssl.keyStore=etc/clientcert.jks -Djavax.net.ssl.keyStorePassword=changeit -Dorg.eclipse.jetty.ssl.password=changeit -jar ../jetty-home/start.jar jetty.sslContext.trustStorePath=etc/cacerts.jks jetty.sslContext.keyStorePassword=changeit org.eclipse.jetty.ssl.password=changeit jetty.sslContext.trustStorePassword=changeit &"
+        }
+      }
+    }
+    stage("run servlet tck"){
+      steps {
+        timeout( time: 3, unit: 'HOURS' ) {
+          withAnt( installation: 'ant-latest', jdk: "${jdktck}") {
+            withEnv(["JAVA_HOME=${ tool "${jdktck}" }", "PATH+ANT=${tool 'ant-latest'}/bin:${env.JAVA_HOME}/bin"]) {
+              sh "ls -la jetty-home/target/jetty-base"
+              script {
+                try {
+                  sh "cd servlet-tck/bin && ant run.all"
+                }catch(ex){
+                  unstable('Script failed!' + ex.getMessage())
+                }
+              }
+            }
+          }
+        }
+      }
+      post {
+        always {
+          tckreporttojunit tckReportTxtPath: "${env.WORKSPACE}/JTReport/text/summary.txt", junitFolderPath: 'surefire-reports'
+          junit testResults: '**/surefire-reports/*.xml'
+          script{
+            currentBuild.description = "Build branch $JETTY_BRANCH with TCKBUILD $TCKBUILD from $TCKURL"
+          }
+          archiveArtifacts artifacts: "**/surefire-reports/*.xml",allowEmptyArchive: true
+          archiveArtifacts artifacts: "JTReport/**",allowEmptyArchive: true
+          archiveArtifacts artifacts: "jetty-home/target/jetty-base/logs/*.*",allowEmptyArchive: true
+          publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/JTReport/html", reportFiles: 'report.html', reportName: 'TCK Report', reportTitles: ''])
+        }
+      }
+    }
+  }
+}
+
+
+// vim:syntax=groovy expandtab tabstop=2 softtabstop=2 shiftwidth=2

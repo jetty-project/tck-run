@@ -9,8 +9,8 @@ mkdir etc
 #cd etc
 #touch keystore
 #cd ../
-#/Library/Java/JavaVirtualMachines/jdk-11.0.2.jdk/Contents/Home/bin/java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,logging-log4j2
-$JAVA_HOME/bin/java -jar $jetty_home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,http2c,webapp,deploy,jsp
+#$JAVA_HOME/bin/java -jar $jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,logging-log4j2,annotations
+$JAVA_HOME/bin/java -jar $jetty_home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,http2c,webapp,deploy,jsp,annotations
 cd $servlet_tck
 find . -name "*.war" -exec cp {} $jetty_base/webapps \;
 cd $tck_run

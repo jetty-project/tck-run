@@ -1,0 +1,99 @@
+#!groovy
+
+pipeline {
+  agent { node { label 'linux' } }
+  parameters {
+    string( defaultValue: '8.0', description: 'GIT branch name to build (master/8.0/servlet_jakarta/xxx)',
+            name: 'TCK_BRANCH' )
+    choice(
+            description: 'Github org',
+            name: 'GITHUB_ORG',
+            choices: ['eclipse-ee4j','olamy']
+    )
+    choice(
+            description: 'TCK servlet job to run',
+            name: 'TCK_TO_RUN',
+            choices: ['servlettck-run-jetty-10.0.x','servlettck-run-jetty-11.0.x',
+                      'servlettck-run-jetty-10.0.x_tck_8_0_branch','websocket/websockettck-run-jetty-11.0.x',
+                      'websocket/websockettck-run-jetty-10.0.x',
+                      'jsp/jsptck-run-jetty-11.0.x','jsp/jsptck-run-jetty-10.0.x']
+    )
+    string( defaultValue: 'https://ci.eclipse.org/jakartaee-tck/job/build-glassfish/lastSuccessfulBuild/artifact/appserver/distributions/glassfish/target/glassfish.zip',
+            description: 'URL to download Glassfish bundle (https://jenkins.webtide.net/userContent/glassfish-5.1.0.zip)',
+            name: 'GLASSFISH_BUNDLE_URL' )
+
+  }
+  stages {
+      stage("cleanup"){
+        steps {
+            sh "rm -rf *"
+        }
+      }
+      stage("Checkout TCK Run") {
+        steps {
+            git url: 'https://github.com/${GITHUB_ORG}/jakartaee-tck/', branch: '${TCK_BRANCH}'
+        }
+      }
+
+      stage("Build TCK Servlet") {
+        steps {
+            withEnv(["JAVA_HOME=${ tool "jdk8" }",
+                    "PATH+ANT+MAVEN=${tool 'ant-latest'}/bin:${env.JAVA_HOME}/bin:${tool 'maven3'}/bin",
+                    "GF_BUNDLE_URL=${GLASSFISH_BUNDLE_URL}"]) {
+                sh "apt --yes update && apt --yes install zip"
+                sh "bash docker/build_standalone-tcks.sh servlet"
+                sh "bash docker/build_standalone-tcks.sh websocket"
+                sh "bash docker/build_standalone-tcks.sh jsp"
+                //sh "bash docker/build_standalone-tcks.sh el"
+                //sh "bash docker/build_standalone-tcks.sh jstl"
+                archiveArtifacts artifacts: "standalone-bundles/*.zip",allowEmptyArchive: true
+            }
+            script{
+                currentBuild.description = "Build TCK from $GITHUB_ORG/$TCK_BRANCH"
+            }
+        }
+      }
+
+      stage("Schedule TCK run") {
+        steps {
+            script {
+              if (TCK_TO_RUN) {
+                //TCK_URL = "$JENKINS_URL/job/$JOB_NAME/$BUILD_NUMBER/artifact/standalone-bundles/servlet-tck-4.0.0.zip"
+                TCK_URL = "$BUILD_URL/artifact/standalone-bundles/servlet-tck-4.0.0.zip"
+                TCK_SVLT_JAKARTA_URL = "$BUILD_URL/artifact/standalone-bundles/servlet-tck-5.0.0.zip"
+                TCK_WS_URL = "$BUILD_URL/artifact/standalone-bundles/websocket-tck-2.0.0.zip"
+                TCK_JSP_URL = "$BUILD_URL/artifact/standalone-bundles/pages-tck-2.3.0.zip"
+                TCK_JSP_JAKARTA_URL = "$BUILD_URL/artifact/standalone-bundles/pages-tck-3.0.0.zip"
+                TCK_EL_URL = "$BUILD_URL/artifact/standalone-bundles/expression-language-tck-4.0.0.zip"
+                TCK_JSTL_URL = "$BUILD_URL/artifact/standalone-bundles/tags-tck-1.2.0.zip"
+                echo "tckurl: $TCK_URL"
+
+                def built = build job: "$TCK_TO_RUN", parameters: [string(name: 'TCKURL', value: "$TCK_URL"),
+                                                        string(name: 'TCK_WS_URL', value: "$TCK_WS_URL"),
+                                                        string(name: 'TCK_JSP_URL', value: "$TCK_JSP_URL"),
+                                                        string(name: 'TCK_EL_URL', value: "$TCK_EL_URL"),
+                                                        string(name: 'TCK_JSTL_URL', value: "$TCK_JSTL_URL"),
+                                                        string(name: 'TCK_SVLT_JAKARTA_URL', value: "$TCK_SVLT_JAKARTA_URL"),
+                                                        string(name: 'TCK_JSP_JAKARTA_URL', value: "$TCK_JSP_JAKARTA_URL"),
+                                                        string(name: 'TCKBUILD', value: "$GITHUB_ORG/$TCK_BRANCH")]
+                copyArtifacts(projectName: "$TCK_TO_RUN", selector: specific("${built.number}"));
+              }
+
+            }
+        }
+        post {
+            always {
+              tckreporttojunit tckReportTxtPath: "${env.WORKSPACE}/JTReport/text/summary.txt", junitFolderPath: 'surefire-reports'
+              junit testResults: '**/surefire-reports/*.xml'
+              script{
+                currentBuild.description = "Run TCK branch ${JETTY_BRANCH}"
+              }
+              archiveArtifacts artifacts: "**/surefire-reports/*.xml",allowEmptyArchive: true
+              archiveArtifacts artifacts: "JTReport/**",allowEmptyArchive: true
+              archiveArtifacts artifacts: "jetty-home/target/jetty-base/logs/*.*",allowEmptyArchive: true
+              publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/JTReport/html", reportFiles: 'report.html', reportName: 'TCK Report', reportTitles: ''])
+            }
+        }
+      }
+  }
+}

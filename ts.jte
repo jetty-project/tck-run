@@ -139,9 +139,18 @@ local.classes=${ts.home}/classes${pathsep}${servlet.classes}${pathsep}${ts.home}
 
 ts.classpath=${local.classes}${pathsep}${ts.harness.classpath}
 
-ts.harness.classpath=${ts.home}/lib/jaxb-xjc.jar${pathsep}${ts.home}/lib/tsharness.jar${pathsep}${ts.home}/lib/servlettck.jar${pathsep}${ts.home}/lib/javatest.jar${pathsep}${ant.home}/lib/ant.jar${pathsep}${ts.home}/lib/http.jar
+#ts.harness.classpath=${ts.home}/lib/jaxb-xjc.jar${pathsep}${ts.home}/lib/tsharness.jar${pathsep}${ts.home}/lib/servlettck.jar${pathsep}${ts.home}/lib/javatest.jar${pathsep}${ant.home}/lib/ant.jar${pathsep}${ts.home}/lib/http.jar
+ts.harness.classpath=${ts.home}/lib/jaxb-xjc.jar${pathsep}${ts.home}/lib/tsharness.jar${pathsep}${ts.home}/lib/servlettck.jar${pathsep}${ts.home}/lib/javatest.jar${pathsep}${ant.home}/lib/ant.jar${pathsep}${ts.home}/lib/http.jar${pathsep}${servlet.classes}${pathsep}${ts.home}/lib/jaxb-impl.jar${pathsep}${ts.home}/lib/jaxb-api.jar
 
-servlet.classes=${web.home}/lib/servlet-api-3.1.jar:${web.home}/lib/annotations/javax.annotation-api-1.3.jar:${web.home}/lib/jetty-servlet-api-4.0.3.jar
+servlet.classes=${ts.home}/lib/annotation-api.jar${pathsep}${ts.home}/lib/servlet-api.jar
+
+########################################################################
+# @endorsedlib.dir - Location to be used for java.endorsed.dirs as some
+#                    tests require some addition classes in the
+#                    java.util.concurrent package that are not present
+#                    in Java 8 as they were added in Java 9.
+########################################################################
+endorsedlib.dir=${ts.home}/endorsedlib
 
 ########################################################################
 ## Common environment for both ts_unix and ts_win32
@@ -154,6 +163,7 @@ servlet.classes=${web.home}/lib/servlet-api-3.1.jar:${web.home}/lib/annotations/
 #                        test directories which make use of this command
 #                        are servlet and jsp.
 ########################################################################
+# -Djava.endorsed.dirs=${endorsedlib.dir} \
 command.testExecute=com.sun.ts.lib.harness.ExecTSTestCmd \
                     CLASSPATH=${JAVA_HOME}/lib/rt.jar${pathsep}\
                     ${LOCAL_CLASSES} \
@@ -166,6 +176,7 @@ command.testExecute=com.sun.ts.lib.harness.ExecTSTestCmd \
                     -Djavax.net.ssl.keyStore=${ts.home}/bin/certificates/clientcert.jks \
                     -Djavax.net.ssl.keyStorePassword=changeit \
                     -Djavax.net.ssl.trustStore=${ts.home}/bin/certificates/cacerts.jks \
+                    --add-modules=jdk.incubator.httpclient \
                     ${JAVA_OPTIONS} $testExecuteClass $testExecuteArgs
 
 ########################################################################
