@@ -7,7 +7,7 @@ pipeline {
     buildDiscarder logRotator( numToKeepStr: '50' )
   }
   parameters {
-    string( defaultValue: "http://download.eclipse.org/ee4j/jakartaee-tck/master/nightly/pages-tck-2.3.0.zip",
+    string( defaultValue: "https://download.eclipse.org/jakartaee/pages/2.3/jakarta-pages-tck-2.3.0.zip",
             description: 'Url to download TCK () do not change anything if you are not sure :)',
             name: 'TCK_JSP_URL' )
     string( defaultValue: "jetty-10.0.x",

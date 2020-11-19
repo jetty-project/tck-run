@@ -9,7 +9,7 @@ pipeline {
             name: 'JETTY_BRANCH' )
     string( defaultValue: 'jdk11', description: 'JDK to build Jetty', name: 'JDK' )
     string( defaultValue: 'jdk11', description: 'JDK to run TCK (use jdk11)', name: 'JDKTCK' )
-    string( defaultValue: "http://download.eclipse.org/ee4j/jakartaee-tck/master/nightly/websocket-tck-1.1.0.zip",
+    string( defaultValue: "https://download.eclipse.org/jakartaee/websocket/1.1/jakarta-websocket-tck-1.1.1.zip",
             description: 'Url to download TCK ()',
             name: 'TCK_WS_URL' )
     string( defaultValue: 'javax', description: 'Servlet Namespace (javax or jakarta)', name: 'SVLT_NS' )
