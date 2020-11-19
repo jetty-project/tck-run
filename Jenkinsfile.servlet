@@ -94,7 +94,7 @@ pipeline {
 
           echo "Running home to create startd"
 
-          sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,,http2c,webapp,deploy,jsp,annotations,logging-log4j2"
+          sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,http2c,webapp,deploy,jsp,annotations,logging-log4j2"
           //sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,logging-log4j2"
 
           sh "ls -la jetty-home/target/jetty-base"
@@ -104,8 +104,10 @@ pipeline {
           sh 'find servlet-tck -name *.war -exec cp {} jetty-home/target/jetty-base/webapps/ \\;'
           // because the issue has been fixed then reverted see https://github.com/eclipse-ee4j/jakartaee-tck/issues/45
           script {
+            echo "wrong war name file pwd"
+            sh 'pwd'
             if ( Files.exists( Paths.get("jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war"))){
-              sh 'cp jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered.war'
+              sh 'mv jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered.war'
             }
           }
 
