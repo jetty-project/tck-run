@@ -106,7 +106,9 @@ pipeline {
           script {
             echo "wrong war name file pwd"
             sh 'pwd'
-            if ( Files.exists( Paths.get("./jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war"))){
+            sh 'ls -lrt ./jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war'
+            def warFile = new File("./jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war")
+            if (warFile.exists()){
               echo "copy wrong named war servlet_sec_denyUncovered_web.war"
               sh 'mv jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered.war'
             }
