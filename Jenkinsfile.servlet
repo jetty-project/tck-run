@@ -107,12 +107,12 @@ pipeline {
             echo "wrong war name file pwd"
             sh 'pwd'
             sh "ls -lrt ${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war"
-            def warFile = new File("${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war");
-            if (warFile.exists()){
+            //def warFile = new File("${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war");
+            if (fileExists("${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war")){
               echo "copy wrong named war servlet_sec_denyUncovered_web.war"
               sh 'mv jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered.war'
             } else {
-              echo "file not exists" + warFile.toString()
+              echo "file not exists: ${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war"
             }
           }
 
