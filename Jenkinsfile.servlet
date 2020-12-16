@@ -8,7 +8,7 @@ pipeline {
   parameters {
     string( defaultValue: 'jetty-10.0.x', description: 'Jetty branch to build',
             name: 'JETTY_BRANCH' )
-    string( defaultValue: 'jdk11', description: 'JDK to build Jetty', name: 'JDK' )
+    string( defaultValue: 'jdk11', description: 'JDK to build Jetty', name: 'JDKBUILD' )
     string( defaultValue: 'jdk9', description: 'JDK to run TCK (use jdk9)', name: 'JDKTCK' )
     string( defaultValue: "https://download.eclipse.org/jakartaee/servlet/4.0/jakarta-servlet-tck-4.0.0.zip",
             description: 'Url to download TCK ()',
@@ -44,7 +44,7 @@ pipeline {
     stage("Build Jetty") {
       steps {
         timeout(time: 30, unit: 'MINUTES') {
-          withEnv(["JAVA_HOME=${ tool "$jdk" }",
+          withEnv(["JAVA_HOME=${ tool "$JDKBUILD" }",
                    "PATH+MAVEN=${env.JAVA_HOME}/bin:${tool "maven3"}/bin",
                    "MAVEN_OPTS=-Xms2g -Xmx4g -Djava.awt.headless=true"]) {
             configFileProvider(
@@ -59,9 +59,7 @@ pipeline {
     stage("Setup servlet tck"){
       steps {
         echo "Starting withEnv()"
-        withEnv(["JAVA_HOME=${ tool "$jdk" }", "PATH=${ tool "$jdk" }/bin:${env.PATH}"]) {
-          // env.JAVA_HOME='${tool "$jdk"}'
-          // env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
+        withEnv(["JAVA_HOME=${ tool "$JDKBUILD" }", "PATH=${ tool "$JDKBUILD" }/bin:${env.PATH}"]) {
 
           echo "JAVA_HOME=${env.JAVA_HOME}"
           echo "PATH=${env.PATH}"

@@ -13,7 +13,7 @@ pipeline {
     string( defaultValue: "jetty-11.0.x",
             description: 'Jetty 11.0.x branch to build',
             name: 'JETTY_BRANCH' )
-    string( defaultValue: 'jdk11', description: 'JDK to build Jetty', name: 'JDK' )
+    string( defaultValue: 'jdk11', description: 'JDK to build Jetty', name: 'JDKBUILD' )
     string( defaultValue: 'jdk9', description: 'JDK to run TCK (use jdk9)', name: 'JDKTCK' )
   }
   stages {
@@ -22,7 +22,7 @@ pipeline {
         script{
             def built = build( job: 'servlettck-run', propagate: false,
                            parameters: [string( name: 'JETTY_BRANCH', value: "${JETTY_BRANCH}" ),
-                                        string( name: 'JDK', value: "${JDK}" ),
+                                        string( name: 'JDKBUILD', value: "${JDKBUILD}" ),
                                         string( name: 'JDKTCK', value: "${JDKTCK}" ),
                                         string( name: 'TCKURL', value: "${TCK_SVLT_JAKARTA_URL}" ),
                                         string( name: 'SVLT_NS', value: 'jakarta' )] )
