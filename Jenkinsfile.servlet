@@ -1,6 +1,4 @@
 #!groovy
-import java.nio.file.Files
-import java.nio.file.Paths
 
 pipeline {
   agent { node { label 'linux' } }
