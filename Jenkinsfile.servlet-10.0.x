@@ -13,6 +13,8 @@ pipeline {
     string( defaultValue: "jetty-10.0.x",
             description: 'Jetty 10.0.x branch to build',
             name: 'JETTY_BRANCH' )
+    string( defaultValue: 'jdk11', description: 'JDK to build Jetty', name: 'JDK' )
+    string( defaultValue: 'jdk9', description: 'JDK to run TCK (use jdk9)', name: 'JDKTCK' )
   }
   stages {
     stage( 'Tck Run' ) {
@@ -20,8 +22,8 @@ pipeline {
         script{
             def built = build( job: 'servlettck-run', propagate: false,
                            parameters: [string( name: 'JETTY_BRANCH', value: "${JETTY_BRANCH}" ),
-                                        string( name: 'JDK', value: 'jdk11' ),
-                                        string( name: 'JDKTCK', value: 'jdk9' ),
+                                        string( name: 'JDK', value: "${JDK}" ),
+                                        string( name: 'JDKTCK', value: "${JDKTCK}" ),
                                         string( name: 'TCKURL', value: "${TCKURL}" ),
                                         string( name: 'SVLT_NS', value: 'javax' )] )
             copyArtifacts(projectName: 'servlettck-run', selector: specific("${built.number}"));
