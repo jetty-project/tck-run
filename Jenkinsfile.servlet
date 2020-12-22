@@ -33,6 +33,8 @@ pipeline {
         stash name: 'clientcert.jks', includes: 'clientcert.jks'
         stash name: 'log4j2.xml', includes: 'log4j2.xml'
         stash name: 'http.ini', includes: 'http.ini'
+        stash name: 'tck.ini', includes: 'tck.ini'
+        stash name: 'tck.xml', includes: 'tck.xml'
       }
     }
 
@@ -163,6 +165,14 @@ pipeline {
               sh "cp annotation-api.jar servlet-tck/lib/annotation-api.jar"
             }
           }
+
+          echo "Unstashing tck.ini"
+          unstash name: 'tck.ini'
+          sh "cp tck.ini jetty-home/target/jetty-base/start.d/"
+
+          echo "Unstashing tck.xml"
+          unstash name: 'tck.xml'
+          sh "cp tck.xml jetty-home/target/jetty-base/etc/"
 
           sh "ls -la jetty-home/target/jetty-base"
 
