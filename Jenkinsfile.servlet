@@ -35,6 +35,7 @@ pipeline {
         stash name: 'http.ini', includes: 'http.ini'
         stash name: 'tck.ini', includes: 'tck.ini'
         stash name: 'tck.xml', includes: 'tck.xml'
+        stash name: 'web-fragment.xml', includes: 'META-INF/**'
       }
     }
 
@@ -123,6 +124,7 @@ pipeline {
 
             // see https://github.com/jetty-project/tck-run/issues/5
             // we need to force welcomeServlets to true for DefaultServlet
+            unstash name: 'web-fragment.xml'
             script {
               sh "zip -b META-INF force-welcome-servlet.jar META-INF/web-fragment.xml"
               if ( fileExists( "${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_spec_fragment_web.war" ) )
