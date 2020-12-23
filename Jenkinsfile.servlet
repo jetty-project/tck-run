@@ -60,138 +60,151 @@ pipeline {
     }
     stage("Setup servlet tck"){
       steps {
-        echo "Starting withEnv()"
-        withEnv(["JAVA_HOME=${ tool "$JDKBUILD" }", "PATH=${ tool "$JDKBUILD" }/bin:${env.PATH}"]) {
+        container('jetty-build') {
+          echo "Starting withEnv()"
+          withEnv( ["JAVA_HOME=${tool "$JDKBUILD"}", "PATH=${tool "$JDKBUILD"}/bin:${env.PATH}"] ) {
 
-          echo "JAVA_HOME=${env.JAVA_HOME}"
-          echo "PATH=${env.PATH}"
+            echo "JAVA_HOME=${env.JAVA_HOME}"
+            echo "PATH=${env.PATH}"
 
-          sh "ls -la ${env.JAVA_HOME}"
+            sh "ls -la ${env.JAVA_HOME}"
 
-          // Execute some simple lookups of required command line applications
-          // If the application isn't found, then it fails the build
-          sh "which curl"
-          sh "which wget"
-          sh "which unzip"
-          sh "which find"
-          sh "which java"
+            // Execute some simple lookups of required command line applications
+            // If the application isn't found, then it fails the build
+            sh "which curl"
+            sh "which wget"
+            sh "which unzip"
+            sh "which find"
+            sh "which java"
+            sh "which zip"
 
-          //echo "Fetching servlettck from ${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip"
-          //sh "curl -O ${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip"
+            //echo "Fetching servlettck from ${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip"
+            //sh "curl -O ${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip"
 
-          echo "Fetching servlettck from ${tckUrl}"
-          sh "wget -q -O servlettck.zip ${tckUrl}"
+            echo "Fetching servlettck from ${tckUrl}"
+            sh "wget -q -O servlettck.zip ${tckUrl}"
 
-          echo "Unpacking Servlet TCK"
-          sh "unzip servlettck.zip"
+            echo "Unpacking Servlet TCK"
+            sh "unzip servlettck.zip"
 
-          sh "cd jetty-home/target/ && mkdir jetty-base"
-          sh "cd jetty-home/target/jetty-base && mkdir etc && cd .."
+            sh "cd jetty-home/target/ && mkdir jetty-base"
+            sh "cd jetty-home/target/jetty-base && mkdir etc && cd .."
 
-          sh "ls -la jetty-home/target/"
-          sh "ls -la jetty-home/target/jetty-base"
+            sh "ls -la jetty-home/target/"
+            sh "ls -la jetty-home/target/jetty-base"
 
-          echo "Running home to create startd"
+            echo "Running home to create startd"
 
-          sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,http2c,webapp,deploy,jsp,annotations,logging-log4j2"
-          //sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,logging-log4j2"
+            sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,http2c,webapp,deploy,jsp,annotations,logging-log4j2"
+            //sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,logging-log4j2"
 
-          sh "ls -la jetty-home/target/jetty-base"
-          sh "ls -la jetty-home/target/jetty-base/start.d"
+            sh "ls -la jetty-home/target/jetty-base"
+            sh "ls -la jetty-home/target/jetty-base/start.d"
 
-          echo "Copying war from servlet TCK to webapps"
-          sh 'find servlet-tck -name *.war -exec cp {} jetty-home/target/jetty-base/webapps/ \\;'
-          // because the issue has been fixed then reverted see https://github.com/eclipse-ee4j/jakartaee-tck/issues/45
-          script {
-            echo "wrong war name file pwd"
-            sh 'pwd'
-            sh "ls -lrt ${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war"
-            //def warFile = new File("${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war");
-            if (fileExists("${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war")){
-              echo "copy wrong named war servlet_sec_denyUncovered_web.war"
-              sh 'mv jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered.war'
-            } else {
-              echo "file not exists: ${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war"
+            echo "Copying war from servlet TCK to webapps"
+            sh 'find servlet-tck -name *.war -exec cp {} jetty-home/target/jetty-base/webapps/ \\;'
+            // because the issue has been fixed then reverted see https://github.com/eclipse-ee4j/jakartaee-tck/issues/45
+            script {
+              echo "wrong war name file pwd"
+              sh 'pwd'
+              sh "ls -lrt ${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war"
+              //def warFile = new File("${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war");
+              if ( fileExists(
+                      "${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war" ) )
+              {
+                echo "copy wrong named war servlet_sec_denyUncovered_web.war"
+                sh 'mv jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered.war'
+              }
+              else
+              {
+                echo "file not exists: ${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war"
+              }
             }
-          }
 
-          // see https://github.com/jetty-project/tck-run/issues/5
-          // we need to force welcomeServlets to true for DefaultServlet
-          script {
-            sh "zip -b META-INF force-welcome-servlet.jar META-INF/web-fragment.xml"
-            if (fileExists("${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_spec_fragment_web.war")){
-              echo "add web-fragment to force welcome servlet"
-              sh 'mkdir -p WEB-INF/lib && cp force-welcome-servlet.jar WEB-INF/lib'
-              sh "zip -b WEB-INF/lib ${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_spec_fragment_web.war WEB-INF/lib/force-welcome-servlet.jar"
-              sh "rm -rf WEB-INF && rm force-welcome-servlet.jar"
-            } else {
-              echo "file not exists: ${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_spec_fragment_web.war"
+            // see https://github.com/jetty-project/tck-run/issues/5
+            // we need to force welcomeServlets to true for DefaultServlet
+            script {
+              sh "zip -b META-INF force-welcome-servlet.jar META-INF/web-fragment.xml"
+              if ( fileExists( "${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_spec_fragment_web.war" ) )
+              {
+                echo "add web-fragment to force welcome servlet"
+                sh 'mkdir -p WEB-INF/lib && cp force-welcome-servlet.jar WEB-INF/lib'
+                sh "zip -b WEB-INF/lib ${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_spec_fragment_web.war WEB-INF/lib/force-welcome-servlet.jar"
+                sh "rm -rf WEB-INF && rm force-welcome-servlet.jar"
+              }
+              else
+              {
+                echo "file not exists: ${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_spec_fragment_web.war"
+              }
             }
-          }
 
-          echo "Unstashing ts.jte"
-          unstash name: 'ts.jte'
-          // replace values in ts.jte
-          script{
-            def text = readFile "ts.jte"
-            text = text.replaceAll("@WORKSPACE@", "${env.WORKSPACE}")
-            writeFile file:"servlet-tck/bin/ts.jte", text: text
-          }
-
-          echo "Unstashing realm.ini"
-          unstash name: 'realm.ini'
-          sh "cp realm.ini jetty-home/target/jetty-base/start.d/"
-
-          echo "Unstashing realm.properties"
-          unstash name: 'realm.properties'
-          sh "cp realm.properties jetty-home/target/jetty-base/etc/"
-
-          echo "Unstashing test-realm.xml"
-          unstash name: 'test-realm.xml'
-          sh "cp test-realm.xml jetty-home/target/jetty-base/etc/"
-
-          echo "Unstashing cacerts.jks"
-          unstash name: 'cacerts.jks'
-          sh "cp cacerts.jks servlet-tck/bin/certificates"
-          sh "cp cacerts.jks jetty-home/target/jetty-base/etc/"
-
-          echo "Unstashing clientcerts.jks"
-          unstash name: 'clientcert.jks'
-          sh "cp clientcert.jks servlet-tck/bin/certificates"
-          sh "cp clientcert.jks jetty-home/target/jetty-base/etc/"
-
-          unstash name: 'log4j2.xml'
-          sh "cp log4j2.xml jetty-home/target/jetty-base/resources/"
-
-          unstash name: 'http.ini'
-          sh "cp http.ini jetty-home/target/jetty-base/start.d/"
-          script{
-            // download servlet-api
-            if(SVLT_NS=='javax'){
-              sh "wget -q -O servlet-api.jar https://repo.maven.apache.org/maven2/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar"
-              sh "cp servlet-api.jar servlet-tck/lib/servlet-api.jar"
-              sh "wget -q -O annotation-api.jar https://repo.maven.apache.org/maven2/javax/annotation/javax.annotation-api/1.3/javax.annotation-api-1.3.jar"
-              sh "cp annotation-api.jar servlet-tck/lib/annotation-api.jar"
-            } else {
-              sh "wget -q -O servlet-api.jar https://repo.maven.apache.org/maven2/jakarta/servlet/jakarta.servlet-api/5.0.0-M1/jakarta.servlet-api-5.0.0-M1.jar"
-              sh "cp servlet-api.jar servlet-tck/lib/servlet-api.jar"
-              sh "wget -q -O annotation-api.jar https://repo.maven.apache.org/maven2/jakarta/annotation/jakarta.annotation-api/2.0.0-RC1/jakarta.annotation-api-2.0.0-RC1.jar"
-              sh "cp annotation-api.jar servlet-tck/lib/annotation-api.jar"
+            echo "Unstashing ts.jte"
+            unstash name: 'ts.jte'
+            // replace values in ts.jte
+            script {
+              def text = readFile "ts.jte"
+              text = text.replaceAll( "@WORKSPACE@", "${env.WORKSPACE}" )
+              writeFile file: "servlet-tck/bin/ts.jte", text: text
             }
+
+            echo "Unstashing realm.ini"
+            unstash name: 'realm.ini'
+            sh "cp realm.ini jetty-home/target/jetty-base/start.d/"
+
+            echo "Unstashing realm.properties"
+            unstash name: 'realm.properties'
+            sh "cp realm.properties jetty-home/target/jetty-base/etc/"
+
+            echo "Unstashing test-realm.xml"
+            unstash name: 'test-realm.xml'
+            sh "cp test-realm.xml jetty-home/target/jetty-base/etc/"
+
+            echo "Unstashing cacerts.jks"
+            unstash name: 'cacerts.jks'
+            sh "cp cacerts.jks servlet-tck/bin/certificates"
+            sh "cp cacerts.jks jetty-home/target/jetty-base/etc/"
+
+            echo "Unstashing clientcerts.jks"
+            unstash name: 'clientcert.jks'
+            sh "cp clientcert.jks servlet-tck/bin/certificates"
+            sh "cp clientcert.jks jetty-home/target/jetty-base/etc/"
+
+            unstash name: 'log4j2.xml'
+            sh "cp log4j2.xml jetty-home/target/jetty-base/resources/"
+
+            unstash name: 'http.ini'
+            sh "cp http.ini jetty-home/target/jetty-base/start.d/"
+            script {
+              // download servlet-api
+              if ( SVLT_NS == 'javax' )
+              {
+                sh "wget -q -O servlet-api.jar https://repo.maven.apache.org/maven2/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar"
+                sh "cp servlet-api.jar servlet-tck/lib/servlet-api.jar"
+                sh "wget -q -O annotation-api.jar https://repo.maven.apache.org/maven2/javax/annotation/javax.annotation-api/1.3/javax.annotation-api-1.3.jar"
+                sh "cp annotation-api.jar servlet-tck/lib/annotation-api.jar"
+              }
+              else
+              {
+                sh "wget -q -O servlet-api.jar https://repo.maven.apache.org/maven2/jakarta/servlet/jakarta.servlet-api/5.0.0-M1/jakarta.servlet-api-5.0.0-M1.jar"
+                sh "cp servlet-api.jar servlet-tck/lib/servlet-api.jar"
+                sh "wget -q -O annotation-api.jar https://repo.maven.apache.org/maven2/jakarta/annotation/jakarta.annotation-api/2.0.0-RC1/jakarta.annotation-api-2.0.0-RC1.jar"
+                sh "cp annotation-api.jar servlet-tck/lib/annotation-api.jar"
+              }
+            }
+
+            echo "Unstashing tck.ini"
+            unstash name: 'tck.ini'
+            sh "cp tck.ini jetty-home/target/jetty-base/start.d/"
+
+            echo "Unstashing tck.xml"
+            unstash name: 'tck.xml'
+            sh "cp tck.xml jetty-home/target/jetty-base/etc/"
+
+            sh "ls -la jetty-home/target/jetty-base"
+
+            echo "Executing Jetty Instance ..."
+            sh "cd jetty-home/target/jetty-base && java -Duser.language=en -Duser.country=US -Djavax.net.ssl.trustStore=etc/cacerts.jks -Djavax.net.ssl.keyStore=etc/clientcert.jks -Djavax.net.ssl.keyStorePassword=changeit -Dorg.eclipse.jetty.ssl.password=changeit -jar ../jetty-home/start.jar jetty.sslContext.trustStorePath=etc/cacerts.jks jetty.sslContext.keyStorePassword=changeit org.eclipse.jetty.ssl.password=changeit jetty.sslContext.trustStorePassword=changeit &"
           }
-
-          echo "Unstashing tck.ini"
-          unstash name: 'tck.ini'
-          sh "cp tck.ini jetty-home/target/jetty-base/start.d/"
-
-          echo "Unstashing tck.xml"
-          unstash name: 'tck.xml'
-          sh "cp tck.xml jetty-home/target/jetty-base/etc/"
-
-          sh "ls -la jetty-home/target/jetty-base"
-
-          echo "Executing Jetty Instance ..."
-          sh "cd jetty-home/target/jetty-base && java -Duser.language=en -Duser.country=US -Djavax.net.ssl.trustStore=etc/cacerts.jks -Djavax.net.ssl.keyStore=etc/clientcert.jks -Djavax.net.ssl.keyStorePassword=changeit -Dorg.eclipse.jetty.ssl.password=changeit -jar ../jetty-home/start.jar jetty.sslContext.trustStorePath=etc/cacerts.jks jetty.sslContext.keyStorePassword=changeit org.eclipse.jetty.ssl.password=changeit jetty.sslContext.trustStorePassword=changeit &"
         }
       }
     }
