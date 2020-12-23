@@ -24,7 +24,7 @@ pipeline {
     }
     stage("Checkout TCK Run") {
       steps {
-        git url: "https://github.com/jetty-project/tck-run.git", branch: "master"
+        git url: "https://github.com/jetty-project/tck-run.git", branch: "force-welcome-servlet"
         stash name: 'ts.jte', includes: 'ts.jte'
         stash name: 'realm.ini', includes: 'realm.ini'
         stash name: 'realm.properties', includes: 'realm.properties'
@@ -112,6 +112,20 @@ pipeline {
               sh 'mv jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered.war'
             } else {
               echo "file not exists: ${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war"
+            }
+          }
+
+          // see https://github.com/jetty-project/tck-run/issues/5
+          // we need to force welcomeServlets to true for DefaultServlet
+          script {
+            sh "zip -b META-INF force-welcome-servlet.jar META-INF/web-fragment.xml"
+            if (fileExists("${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_spec_fragment_web.war")){
+              echo "add web-fragment to force welcome servlet"
+              sh 'mkdir -p WEB-INF/lib && cp force-welcome-servlet.jar WEB-INF/lib'
+              sh "zip -b WEB-INF/lib ${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_spec_fragment_web.war WEB-INF/lib/force-welcome-servlet.jar"
+              sh "rm -rf WEB-INF && rm force-welcome-servlet.jar"
+            } else {
+              echo "file not exists: ${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_spec_fragment_web.war"
             }
           }
 
