@@ -126,12 +126,12 @@ pipeline {
             // we need to force welcomeServlets to true for DefaultServlet
             unstash name: 'web-fragment.xml'
             script {
-              sh "zip -b META-INF force-welcome-servlet.jar META-INF/web-fragment.xml"
               if ( fileExists( "${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_spec_fragment_web.war" ) )
               {
                 echo "add web-fragment to force welcome servlet"
+                sh "zip -b META-INF force-welcome-servlet.jar META-INF/web-fragment.xml"
                 sh 'mkdir -p WEB-INF/lib && cp force-welcome-servlet.jar WEB-INF/lib'
-                sh "zip -b WEB-INF/lib ${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_spec_fragment_web.war WEB-INF/lib/force-welcome-servlet.jar"
+                sh "zip -b WEB-INF/lib jetty-home/target/jetty-base/webapps/servlet_spec_fragment_web.war WEB-INF/lib/force-welcome-servlet.jar"
                 sh "rm -rf WEB-INF && rm force-welcome-servlet.jar"
               }
               else
