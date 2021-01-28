@@ -176,7 +176,7 @@ command.testExecute=com.sun.ts.lib.harness.ExecTSTestCmd \
                     -Djavax.net.ssl.keyStore=${ts.home}/bin/certificates/clientcert.jks \
                     -Djavax.net.ssl.keyStorePassword=changeit \
                     -Djavax.net.ssl.trustStore=${ts.home}/bin/certificates/cacerts.jks \
-                    --add-modules=jdk.incubator.httpclient
+                    --add-modules=jdk.incubator.httpclient \
                     ${JAVA_OPTIONS} $testExecuteClass $testExecuteArgs
 
 ########################################################################
