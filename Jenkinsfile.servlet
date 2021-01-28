@@ -95,7 +95,7 @@ pipeline {
 
           echo "Running home to create startd"
 
-          sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,http2c,webapp,deploy,jsp,annotations,ssl,logging-log4j2"
+          sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-module=resources,server,http,http2c,webapp,deploy,jsp,annotations,ssl,logging-log4j2"
           //sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,logging-log4j2"
 
           sh "ls -la jetty-home/target/jetty-base"
@@ -140,12 +140,11 @@ pipeline {
 
           echo "Unstashing cacerts.jks"
           unstash name: 'cacerts.jks'
-          //sh "cp cacerts.jks servlet-tck/bin/certificates"
+          sh "cp cacerts.jks servlet-tck/bin/certificates"
           sh "cp cacerts.jks jetty-home/target/jetty-base/etc/"
 
           echo "Unstashing clientcerts.jks"
           unstash name: 'clientcert.jks'
-          //sh "cp clientcert.jks servlet-tck/bin/certificates"
           sh "cp clientcert.jks jetty-home/target/jetty-base/etc/"
 
           unstash name: 'log4j2.xml'

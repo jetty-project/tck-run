@@ -8,7 +8,7 @@
   <Appenders>
     <Console name="console" target="SYSTEM_ERR">
       <PatternLayout>
-        <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Pattern>
+        <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c:%L - %m%n</Pattern>
       </PatternLayout>
     </Console>
 
@@ -30,10 +30,11 @@
   </Appenders>
 
   <Loggers>
-    <Root level="info">
+    <Root level="debug">
       <AppenderRef ref="file"/>
       <AppenderRef ref="console"/>
     </Root>
+    <Logger name="org.eclipse.jetty.util.Scanner" level="error"/>
     <!--
     To have all logger async 
     <AsyncRoot level="info">
