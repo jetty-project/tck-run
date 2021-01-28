@@ -164,9 +164,10 @@ endorsedlib.dir=${ts.home}/endorsedlib
 #                        are servlet and jsp.
 ########################################################################
 # -Djava.endorsed.dirs=${endorsedlib.dir} \
+# CLASSPATH=${JAVA_HOME}/lib/rt.jar${pathsep}\
+# --add-modules=jdk.incubator.httpclient \
 command.testExecute=com.sun.ts.lib.harness.ExecTSTestCmd \
-                    CLASSPATH=${JAVA_HOME}/lib/rt.jar${pathsep}\
-                    ${LOCAL_CLASSES} \
+                    CLASSPATH=${LOCAL_CLASSES} \
                     HOME="${user.home}" \
                     windir=${windir} \
                     SYSTEMROOT=${SYSTEMROOT} \
@@ -176,7 +177,6 @@ command.testExecute=com.sun.ts.lib.harness.ExecTSTestCmd \
                     -Djavax.net.ssl.keyStore=${ts.home}/bin/certificates/clientcert.jks \
                     -Djavax.net.ssl.keyStorePassword=changeit \
                     -Djavax.net.ssl.trustStore=${ts.home}/bin/certificates/cacerts.jks \
-                    --add-modules=jdk.incubator.httpclient \
                     ${JAVA_OPTIONS} $testExecuteClass $testExecuteArgs
 
 ########################################################################
@@ -193,7 +193,8 @@ env.ts_win32.menu=true
 # The sigTestClasspath specify the location of servlet implementation 
 # classes that used for signature test
 ##########################################################################
-sigTestClasspath=${java.home}/lib/rt.jar${pathsep}${servlet.classes}
+# sigTestClasspath=${java.home}/lib/rt.jar${pathsep}${servlet.classes}
+sigTestClasspath=${servlet.classes}
 
 ########################################################################
 ## These properties are used by the harness.  "harness.log.port"
