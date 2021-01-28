@@ -164,10 +164,9 @@ endorsedlib.dir=${ts.home}/endorsedlib
 #                        are servlet and jsp.
 ########################################################################
 # -Djava.endorsed.dirs=${endorsedlib.dir} \
-# CLASSPATH=${JAVA_HOME}/lib/rt.jar${pathsep}\
-# --add-modules=jdk.incubator.httpclient \
+
 command.testExecute=com.sun.ts.lib.harness.ExecTSTestCmd \
-                    CLASSPATH=${LOCAL_CLASSES} \
+                    CLASSPATH=${JAVA_HOME}/lib/rt.jar${pathsep}\
                     HOME="${user.home}" \
                     windir=${windir} \
                     SYSTEMROOT=${SYSTEMROOT} \
@@ -177,6 +176,7 @@ command.testExecute=com.sun.ts.lib.harness.ExecTSTestCmd \
                     -Djavax.net.ssl.keyStore=${ts.home}/bin/certificates/clientcert.jks \
                     -Djavax.net.ssl.keyStorePassword=changeit \
                     -Djavax.net.ssl.trustStore=${ts.home}/bin/certificates/cacerts.jks \
+                    --add-modules=jdk.incubator.httpclient
                     ${JAVA_OPTIONS} $testExecuteClass $testExecuteArgs
 
 ########################################################################
