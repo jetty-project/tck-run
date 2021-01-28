@@ -32,6 +32,7 @@
   <Loggers>
     <Root level="info">
       <AppenderRef ref="file"/>
+      <AppenderRef ref="console"/>
     </Root>
     <!--
     To have all logger async 
