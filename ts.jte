@@ -140,6 +140,7 @@ local.classes=${ts.home}/classes${pathsep}${servlet.classes}${pathsep}${ts.home}
 ts.classpath=${local.classes}${pathsep}${ts.harness.classpath}
 
 #ts.harness.classpath=${ts.home}/lib/jaxb-xjc.jar${pathsep}${ts.home}/lib/tsharness.jar${pathsep}${ts.home}/lib/servlettck.jar${pathsep}${ts.home}/lib/javatest.jar${pathsep}${ant.home}/lib/ant.jar${pathsep}${ts.home}/lib/http.jar
+# to run with jdk9
 ts.harness.classpath=${ts.home}/lib/jaxb-xjc.jar${pathsep}${ts.home}/lib/tsharness.jar${pathsep}${ts.home}/lib/servlettck.jar${pathsep}${ts.home}/lib/javatest.jar${pathsep}${ant.home}/lib/ant.jar${pathsep}${ts.home}/lib/http.jar${pathsep}${servlet.classes}${pathsep}${ts.home}/lib/jaxb-impl.jar${pathsep}${ts.home}/lib/jaxb-api.jar
 
 servlet.classes=${ts.home}/lib/annotation-api.jar${pathsep}${ts.home}/lib/servlet-api.jar
@@ -164,9 +165,9 @@ endorsedlib.dir=${ts.home}/endorsedlib
 #                        are servlet and jsp.
 ########################################################################
 # -Djava.endorsed.dirs=${endorsedlib.dir} \
-
 command.testExecute=com.sun.ts.lib.harness.ExecTSTestCmd \
                     CLASSPATH=${JAVA_HOME}/lib/rt.jar${pathsep}\
+                    ${LOCAL_CLASSES} \
                     HOME="${user.home}" \
                     windir=${windir} \
                     SYSTEMROOT=${SYSTEMROOT} \
@@ -193,8 +194,7 @@ env.ts_win32.menu=true
 # The sigTestClasspath specify the location of servlet implementation 
 # classes that used for signature test
 ##########################################################################
-# sigTestClasspath=${java.home}/lib/rt.jar${pathsep}${servlet.classes}
-sigTestClasspath=${servlet.classes}
+sigTestClasspath=${java.home}/lib/rt.jar${pathsep}${servlet.classes}
 
 ########################################################################
 ## These properties are used by the harness.  "harness.log.port"
