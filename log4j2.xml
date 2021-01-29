@@ -30,11 +30,12 @@
   </Appenders>
 
   <Loggers>
-    <Root level="debug">
+    <Root level="info">
       <AppenderRef ref="file"/>
       <AppenderRef ref="console"/>
     </Root>
     <Logger name="org.eclipse.jetty.util.Scanner" level="error"/>
+    <Logger name="org.eclipse.jetty.security" level="debug"/>
     <!--
     To have all logger async 
     <AsyncRoot level="info">
