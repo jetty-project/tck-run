@@ -106,15 +106,17 @@ pipeline {
           sh 'find servlet-tck -name *.war -exec cp {} jetty-home/target/jetty-base/webapps/ \\;'
           // because the issue has been fixed then reverted see https://github.com/eclipse-ee4j/jakartaee-tck/issues/45
           script {
-            echo "wrong war name file pwd"
-            sh 'pwd'
-            sh "ls -lrt ${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war"
-            //def warFile = new File("${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war");
-            if (fileExists("${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war")){
-              echo "copy wrong named war servlet_sec_denyUncovered_web.war"
-              sh 'mv jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered.war'
-            } else {
-              echo "file not exists: ${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war"
+            if(SVLT_NS=='javax') {
+              echo "wrong war name file pwd"
+              sh 'pwd'
+              sh "ls -lrt ${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war"
+              //def warFile = new File("${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war");
+              if (fileExists("${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war")){
+                echo "copy wrong named war servlet_sec_denyUncovered_web.war"
+                sh 'mv jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered.war'
+              } else {
+                echo "file not exists: ${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war"
+              }
             }
           }
 
