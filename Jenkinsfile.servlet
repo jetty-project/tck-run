@@ -37,7 +37,8 @@ pipeline {
         stash name: 'ssl.ini', includes: 'ssl.ini'
         stash name: 'tck.ini', includes: 'tck.ini'
         stash name: 'tck.xml', includes: 'tck.xml'
-        stash name: 'servlet_spec_fragment_web', includes: "servlet_spec_fragment_web/**"
+        stash name: 'servlet_spec_fragment_web', includes: "servlet_spec_fragment_web/*"
+        sh "ls -lrt"
       }
     }
 
