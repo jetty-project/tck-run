@@ -14,7 +14,7 @@ pipeline {
             description: 'Jetty 11.0.x branch to build',
             name: 'JETTY_BRANCH' )
     string( defaultValue: 'jdk11', description: 'JDK to build Jetty', name: 'JDKBUILD' )
-    string( defaultValue: 'jdk9', description: 'JDK to run TCK (use jdk9)', name: 'JDKTCK' )
+    string( defaultValue: 'jdk8', description: 'JDK to run TCK (use jdk8)', name: 'JDKTCK' )
   }
   stages {
     stage( 'Tck Run' ) {
