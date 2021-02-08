@@ -9,7 +9,7 @@ pipeline {
     string( defaultValue: 'jetty-10.0.x', description: 'Jetty branch to build',
             name: 'JETTY_BRANCH' )
     string( defaultValue: 'jdk11', description: 'JDK to build Jetty', name: 'JDKBUILD' )
-    string( defaultValue: 'jdk9', description: 'JDK to run TCK (use jdk9)', name: 'JDKTCK' )
+    string( defaultValue: 'jdk8', description: 'JDK to run TCK (use jdk8)', name: 'JDKTCK' )
     string( defaultValue: "https://download.eclipse.org/jakartaee/servlet/4.0/jakarta-servlet-tck-4.0.0.zip",
             description: 'Url to download TCK ()',
             name: 'TCKURL' )

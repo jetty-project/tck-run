@@ -164,7 +164,7 @@ endorsedlib.dir=${ts.home}/endorsedlib
 #                        test directories which make use of this command
 #                        are servlet and jsp.
 ########################################################################
-# -Djava.endorsed.dirs=${endorsedlib.dir} \
+# --add-modules=jdk.incubator.httpclient \
 command.testExecute=com.sun.ts.lib.harness.ExecTSTestCmd \
                     CLASSPATH=${JAVA_HOME}/lib/rt.jar${pathsep}\
                     ${LOCAL_CLASSES} \
@@ -177,7 +177,7 @@ command.testExecute=com.sun.ts.lib.harness.ExecTSTestCmd \
                     -Djavax.net.ssl.keyStore=${ts.home}/bin/certificates/clientcert.jks \
                     -Djavax.net.ssl.keyStorePassword=changeit \
                     -Djavax.net.ssl.trustStore=${ts.home}/bin/certificates/cacerts.jks \
-                    --add-modules=jdk.incubator.httpclient \
+                    -Djava.endorsed.dirs=${endorsedlib.dir} \
                     ${JAVA_OPTIONS} $testExecuteClass $testExecuteArgs
 
 ########################################################################
