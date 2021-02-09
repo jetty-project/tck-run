@@ -87,7 +87,7 @@ pipeline {
           sh "wget -q -O servlettck.zip ${tckUrl}"
 
           echo "Unpacking Servlet TCK"
-          sh "unzip servlettck.zip"
+          sh "unzip -q servlettck.zip"
 
           sh "cd jetty-home/target/ && mkdir jetty-base"
           sh "cd jetty-home/target/jetty-base && mkdir etc && cd .."
