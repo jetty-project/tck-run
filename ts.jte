@@ -177,6 +177,7 @@ command.testExecute=com.sun.ts.lib.harness.ExecTSTestCmd \
                     -Djavax.net.ssl.keyStore=${ts.home}/bin/certificates/clientcert.jks \
                     -Djavax.net.ssl.keyStorePassword=changeit \
                     -Djavax.net.ssl.trustStore=${ts.home}/bin/certificates/cacerts.jks \
+                    -Duser.language=en -Duser.country=US \
                     -Djava.endorsed.dirs=${endorsedlib.dir} \
                     ${JAVA_OPTIONS} $testExecuteClass $testExecuteArgs
 
