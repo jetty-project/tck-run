@@ -30,8 +30,6 @@ pipeline {
         stash name: 'realm.ini', includes: 'realm.ini'
         stash name: 'realm.properties', includes: 'realm.properties'
         stash name: 'test-realm.xml', includes: 'test-realm.xml'
-        //stash name: 'cacerts.jks', includes: 'cacerts.jks'
-        //stash name: 'clientcert.jks', includes: 'clientcert.jks'
         stash name: 'log4j2.xml', includes: 'log4j2.xml'
         stash name: 'http.ini', includes: 'http.ini'
         stash name: 'ssl.ini', includes: 'ssl.ini'
@@ -142,15 +140,6 @@ pipeline {
           echo "Unstashing test-realm.xml"
           unstash name: 'test-realm.xml'
           sh "cp test-realm.xml jetty-home/target/jetty-base/etc/"
-
-//          echo "Unstashing cacerts.jks"
-//          unstash name: 'cacerts.jks'
-//          sh "cp cacerts.jks servlet-tck/bin/certificates"
-//          sh "cp cacerts.jks jetty-home/target/jetty-base/etc/"
-
-//          echo "Unstashing clientcerts.jks"
-//          unstash name: 'clientcert.jks'
-//          sh "cp clientcert.jks jetty-home/target/jetty-base/etc/"
 
           // generate certificate/trustore etc...
           withEnv(["JAVA_HOME=${ tool "${jdktck}" }", "PATH+ANT=${tool 'ant-latest'}/bin:${env.JAVA_HOME}/bin"]) {
