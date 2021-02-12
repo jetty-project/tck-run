@@ -1,7 +1,7 @@
 pipeline {
   agent { node { label 'linux' } }
   triggers {
-    cron ('H */3 * * *')
+    cron ('H */8 * * *')
   }
   options {
     buildDiscarder logRotator( numToKeepStr: '50' )
@@ -42,7 +42,34 @@ pipeline {
           archiveArtifacts artifacts: "jetty-home/target/jetty-base/logs/*.*",allowEmptyArchive: true
           publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/JTReport/html", reportFiles: 'report.html', reportName: 'TCK Report', reportTitles: ''])
         }
+        failure {
+          slackNotif()
+        }
+        unstable {
+          slackNotif()
+        }
+        fixed {
+          slackNotif()
+        }
       }
+    }
+  }
+}
+
+def slackNotif() {
+  script {
+    try
+    {
+      //BUILD_USER = currentBuild.rawBuild.getCause(Cause.UserIdCause).getUserId()
+      // by ${BUILD_USER}
+      COLOR_MAP = ['SUCCESS': 'good', 'FAILURE': 'danger', 'UNSTABLE': 'danger', 'ABORTED': 'danger']
+      slackSend channel: '#jenkins',
+                color: COLOR_MAP[currentBuild.currentResult],
+                message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} - ${env.BUILD_URL}"
+
+    } catch (Exception e) {
+      e.printStackTrace()
+      echo "skip failure slack notification: " + e.getMessage()
     }
   }
 }
