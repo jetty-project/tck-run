@@ -1,9 +1,7 @@
 TCK Run Jetty Project
 =====================
-This project contains some utility files to run TCK (Servlet and Websocket) against Jetty Project
+This project contains some utility files to run TCK (Servlet, Websocket, Jsp) against Jetty Project
 
-Download TCK from https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8/promoted/
+10.0.x: Jenkins job running every day in case of code change in branch 10.0.x (https://jenkins.webtide.net/job/tck/job/servlettck-run-jetty-10.0.x/)
 
-See [RESULTS](https://github.com/jetty-project/tck-run/blob/master/RESULTS.md)
-
-`Import bin/cts_cert to a truststore doing: "keytool -import -alias cts -file cts_cert -storetype JKS -keystore cacerts.jks" password should be "changeit"`
+11.0.x: Jenkins job running every day in case of code change in branch 11.0.x (https://jenkins.webtide.net/job/tck/job/servlettck-run-jetty-11.0.x/)
