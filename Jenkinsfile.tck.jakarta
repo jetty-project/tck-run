@@ -2,9 +2,9 @@
 
 pipeline {
   agent { node { label 'linux' } }
-  triggers {
-    cron '@daily'
-  }
+  //triggers {
+  //  cron '@daily'
+  //}
   options {
     buildDiscarder logRotator( numToKeepStr: '50' )
   }
