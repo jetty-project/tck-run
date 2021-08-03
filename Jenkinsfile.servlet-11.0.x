@@ -42,15 +42,15 @@ pipeline {
           archiveArtifacts artifacts: "jetty-home/target/jetty-base/logs/*.*",allowEmptyArchive: true
           publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/JTReport/html", reportFiles: 'report.html', reportName: 'TCK Report', reportTitles: ''])
         }
-        failure {
-          //slackNotif()
-        }
-        unstable {
-          //slackNotif()
-        }
-        fixed {
-          //slackNotif()
-        }
+//        failure {
+//          slackNotif()
+//        }
+//        unstable {
+//          slackNotif()
+//        }
+//        fixed {
+//          slackNotif()
+//        }
       }
     }
   }
