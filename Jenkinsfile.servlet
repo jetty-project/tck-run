@@ -132,6 +132,7 @@ pipeline {
               writeFile file: "servlet-tck/bin/ts.jte", text: text
             }
 
+            sh "mkdir -p ${env.WORKSPACE}/tmp/jdk-bundles"
             echo "Unstashing 'ts.jte.jdk11'"
             unstash name: 'ts.jte.jdk11'
             // replace values in ts.jte.jdk11
