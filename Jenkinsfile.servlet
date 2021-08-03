@@ -132,18 +132,19 @@ pipeline {
               writeFile file: "servlet-tck/bin/ts.jte", text: text
             }
 
-            if (SVLT_NS == 'jakarta') {
-              sh "mkdir -p ${env.WORKSPACE}/tmp/jdk-bundles"
-              echo "Unstashing 'ts.jte.jdk11'"
-              unstash name: 'ts.jte.jdk11'
-              // replace values in ts.jte.jdk11
-              script {
-                def text = readFile "ts.jte.jdk11"
-                text = text.replaceAll("@WORKSPACE@", "${env.WORKSPACE}")
-                writeFile file: "servlet-tck/bin/ts.jte", text: text
+            script {
+              if (SVLT_NS == 'jakarta') {
+                sh "mkdir -p ${env.WORKSPACE}/tmp/jdk-bundles"
+                echo "Unstashing 'ts.jte.jdk11'"
+                unstash name: 'ts.jte.jdk11'
+                // replace values in ts.jte.jdk11
+                script {
+                  def text = readFile "ts.jte.jdk11"
+                  text = text.replaceAll("@WORKSPACE@", "${env.WORKSPACE}")
+                  writeFile file: "servlet-tck/bin/ts.jte", text: text
+                }
               }
             }
-
 
             echo "Unstashing realm.ini"
             unstash name: 'realm.ini'
