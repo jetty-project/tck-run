@@ -7,14 +7,14 @@ pipeline {
     buildDiscarder logRotator( numToKeepStr: '50' )
   }
   parameters {
-    string( defaultValue: "https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9/promoted/servlet-tck-5.0.2.zip",
+    string( defaultValue: "https://download.eclipse.org/jakartaee/servlet/5.0/jakarta-servlet-tck-5.0.2.zip",
             description: 'Url to download TCK () do not change anything if you are not sure :)',
             name: 'TCK_SVLT_JAKARTA_URL' )
     string( defaultValue: "jetty-11.0.x",
             description: 'Jetty 11.0.x branch to build',
             name: 'JETTY_BRANCH' )
     string( defaultValue: 'jdk11', description: 'JDK to build Jetty', name: 'JDKBUILD' )
-    string( defaultValue: 'jdk8', description: 'JDK to run TCK (use jdk8)', name: 'JDKTCK' )
+    string( defaultValue: 'jdk11', description: 'JDK to run TCK (use jdk11)', name: 'JDKTCK' )
   }
   stages {
     stage( 'Tck Run' ) {
