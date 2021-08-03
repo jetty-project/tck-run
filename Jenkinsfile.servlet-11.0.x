@@ -43,13 +43,13 @@ pipeline {
           publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/JTReport/html", reportFiles: 'report.html', reportName: 'TCK Report', reportTitles: ''])
         }
         failure {
-          slackNotif()
+          //slackNotif()
         }
         unstable {
-          slackNotif()
+          //slackNotif()
         }
         fixed {
-          slackNotif()
+          //slackNotif()
         }
       }
     }
