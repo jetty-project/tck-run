@@ -196,6 +196,7 @@ env.ts_win32.menu=true
 # The sigTestClasspath specify the location of servlet implementation 
 # classes that used for signature test
 ##########################################################################
+jimage.dir=@WORKSPACE@/tmp/jdk-bundles
 sigTestClasspath=${java.home}/lib/rt.jar${pathsep}${servlet.classes}
 
 ########################################################################
