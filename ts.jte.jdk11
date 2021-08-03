@@ -308,7 +308,7 @@ authpassword=javajoe
 #                        Set this property with your application
 #                        server's secured webservice port.
 ###############################################################
-securedWebServicePort=
+securedWebServicePort=8443
 
 ###############################################################################
 # @client.cert.test.jdk.tls.client.protocols JDK 11 in TLSv1.3 does not support
