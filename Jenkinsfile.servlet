@@ -81,9 +81,6 @@ pipeline {
             sh "which find"
             sh "which java"
 
-            //echo "Fetching servlettck from ${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip"
-            //sh "curl -O ${env.JENKINS_URL}userContent/tcks/servlettck-4.0_latest.zip"
-
             echo "Fetching servlettck from ${tckUrl}"
             sh "wget -q -O servlettck.zip ${tckUrl}"
 
@@ -99,8 +96,6 @@ pipeline {
             echo "Running home to create startd"
 
             sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-module=resources,server,http,https,http2c,webapp,deploy,jsp,annotations,ssl,logging-log4j2"
-
-            //sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,https,http2c,webapp,deploy,jsp,logging-log4j2"
 
             sh "ls -la jetty-home/target/jetty-base"
             sh "ls -la jetty-home/target/jetty-base/start.d"
