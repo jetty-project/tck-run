@@ -49,6 +49,7 @@ pipeline {
     }
     stage("Build Jetty") {
       steps {
+        container('jetty-build') {
         timeout(time: 30, unit: 'MINUTES') {
           withEnv(["JAVA_HOME=${ tool "$JDKBUILD" }",
                    "PATH+MAVEN=${env.JAVA_HOME}/bin:${tool "maven3"}/bin",
@@ -58,8 +59,8 @@ pipeline {
               sh "mvn -Pfast --no-transfer-progress -s $GLOBAL_MVN_SETTINGS -V -B -U -Psnapshot-repositories -pl jetty-home -am clean install -DskipTests -T6 -e"
             }
           }
-
         }
+      }    
       }
     }
     stage("Setup servlet tck"){
@@ -210,6 +211,7 @@ pipeline {
     }
     stage("run servlet tck"){
       steps {
+        container('jetty-build') {
         timeout( time: 3, unit: 'HOURS' ) {
           withAnt( installation: 'ant-latest', jdk: "${jdktck}") {
             withEnv(["JAVA_HOME=${ tool "${jdktck}" }", "PATH+ANT=${tool 'ant-latest'}/bin:${env.JAVA_HOME}/bin"]) {
@@ -223,6 +225,7 @@ pipeline {
               }
             }
           }
+        }
         }
       }
       post {
