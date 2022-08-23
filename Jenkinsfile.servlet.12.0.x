@@ -6,14 +6,14 @@ pipeline {
     buildDiscarder logRotator( numToKeepStr: '50' )
   }
   parameters {
-    string( defaultValue: 'jetty-10.0.x', description: 'Jetty branch to build',
+    string( defaultValue: 'jetty-12.0.x', description: 'Jetty branch to build',
             name: 'JETTY_BRANCH' )
-    string( defaultValue: 'jdk11', description: 'JDK to build Jetty', name: 'JDKBUILD' )
-    string( defaultValue: 'jdk8', description: 'JDK to run TCK (use jdk8)', name: 'JDKTCK' )
-    string( defaultValue: "https://download.eclipse.org/jakartaee/servlet/4.0/jakarta-servlet-tck-4.0.0.zip",
+    string( defaultValue: 'jdk17', description: 'JDK to build Jetty', name: 'JDKBUILD' )
+    string( defaultValue: 'jdk11', description: 'JDK to run TCK (use jdk11)', name: 'JDKTCK' )
+    string( defaultValue: "https://download.eclipse.org/jakartaee/servlet/6.0/jakarta-servlet-tck-6.0.0.zip",
             description: 'Url to download TCK ()',
             name: 'TCKURL' )
-    string( defaultValue: 'javax', description: 'Servlet Namespace (javax or jakarta)', name: 'SVLT_NS' )
+    string( defaultValue: 'ee10', description: 'EE version (ee8, ee9 ee10)', name: 'EEX' )
     string( defaultValue: 'standard', name: 'TCKBUILD')
     string( defaultValue: 'master', name: 'TCKRUN_BRANCH')
   }
@@ -96,7 +96,7 @@ pipeline {
 
             echo "Running home to create startd"
 
-            sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-module=resources,server,http,https,http2c,webapp,deploy,jsp,annotations,ssl,logging-log4j2"
+            sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-module=resources,server,http,https,http2c,$EEX-webapp,$EEX-deploy,$EEX-jsp,$EEX-annotations,ssl,logging-log4j2"
 
             sh "ls -la jetty-home/target/jetty-base"
             sh "ls -la jetty-home/target/jetty-base/start.d"
@@ -105,7 +105,7 @@ pipeline {
             sh 'find servlet-tck -name *.war -exec cp {} jetty-home/target/jetty-base/webapps/ \\;'
             // because the issue has been fixed then reverted see https://github.com/eclipse-ee4j/jakartaee-tck/issues/45
             script {
-              if (SVLT_NS == 'javax') {
+              if (EEX == 'ee8') {
                 echo "wrong war name file pwd"
                 sh 'pwd'
                 sh "ls -lrt ${env.WORKSPACE}/jetty-home/target/jetty-base/webapps/servlet_sec_denyUncovered_web.war"
@@ -129,7 +129,7 @@ pipeline {
             }
 
             script {
-              if (SVLT_NS == 'jakarta') {
+              if (EEX != 'ee8') {
                 sh "mkdir -p ${env.WORKSPACE}/tmp/jdk-bundles"
                 echo "Unstashing 'ts.jte.jdk11'"
                 unstash name: 'ts.jte.jdk11'
@@ -180,16 +180,21 @@ pipeline {
 
             script {
               // download servlet-api
-              if (SVLT_NS == 'javax') {
+              if (EEX == 'ee8') {
                 sh "wget -q -O servlet-api.jar http://10.0.0.15:8081/repository/maven-public/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar"
                 sh "cp servlet-api.jar servlet-tck/lib/servlet-api.jar"
                 sh "wget -q -O annotation-api.jar http://10.0.0.15:8081/repository/maven-public/javax/annotation/javax.annotation-api/1.3/javax.annotation-api-1.3.jar"
                 sh "cp annotation-api.jar servlet-tck/lib/annotation-api.jar"
-              } else {
+              } else if (EEX == 'ee9'){
                 sh "wget -q -O servlet-api.jar http://10.0.0.15:8081/repository/maven-public/jakarta/servlet/jakarta.servlet-api/5.0.0/jakarta.servlet-api-5.0.0.jar"
                 sh "cp servlet-api.jar servlet-tck/lib/servlet-api.jar"
                 sh "wget -q -O annotation-api.jar http://10.0.0.15:8081/repository/maven-public/jakarta/annotation/jakarta.annotation-api/2.0.0/jakarta.annotation-api-2.0.0.jar"
                 sh "cp annotation-api.jar servlet-tck/lib/annotation-api.jar"
+              } else {
+                sh "wget -q -O servlet-api.jar http://10.0.0.15:8081/repository/maven-public/jakarta/servlet/jakarta.servlet-api/6.0.0/jakarta.servlet-api-6.0.0.jar"
+                sh "cp servlet-api.jar servlet-tck/lib/servlet-api.jar"
+                sh "wget -q -O annotation-api.jar http://10.0.0.15:8081/repository/maven-public/jakarta/annotation/jakarta.annotation-api/2.1.1/jakarta.annotation-api-2.1.1.jar"
+                sh "cp annotation-api.jar servlet-tck/lib/annotation-api.jar"                
               }
             }
 
