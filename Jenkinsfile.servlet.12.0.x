@@ -152,7 +152,7 @@ pipeline {
 
             echo "Unstashing test-realm.xml"
             unstash name: 'test-realm.xml'
-            sh "cp test-realm.xml jetty-home/target/jetty-base/etc/"
+            sh "cp test-realm.xml jetty-home/target/jetty-base/etc/test-realm-$EEX.xml"
 
             // generate certificate/trustore etc...
             withEnv(["JAVA_HOME=${tool "${jdktck}"}", "PATH+ANT=${tool 'ant-latest'}/bin:${env.JAVA_HOME}/bin"]) {
