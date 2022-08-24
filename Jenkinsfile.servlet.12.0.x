@@ -28,10 +28,9 @@ pipeline {
         git url: "https://github.com/jetty-project/tck-run.git", branch: "$TCKRUN_BRANCH"
         stash name: 'ts.jte', includes: 'ts.jte'
         stash name: 'ts.jte.jdk11', includes: 'ts.jte.jdk11'
-        stash name: 'realm.ini', includes: 'realm.ini'
+        stash name: 'realm.ini', includes: 'realm*.ini'
         stash name: 'realm.properties', includes: 'realm.properties'
-        stash name: 'test-realm.xml', includes: 'test-realm.xml'
-        stash name: 'test-realm-ee10.xml', includes: 'test-realm-ee10.xml'
+        stash name: 'test-realm.xml', includes: 'test-realm*.xml'
         stash name: 'log4j2.xml', includes: 'log4j2.xml'
         stash name: 'http.ini', includes: 'http.ini'
         stash name: 'ssl.ini', includes: 'ssl.ini'
@@ -145,15 +144,14 @@ pipeline {
 
             echo "Unstashing realm.ini"
             unstash name: 'realm.ini'
-            sh "cp realm.ini jetty-home/target/jetty-base/start.d/"
+            sh "cp realm-${EEX}.ini jetty-home/target/jetty-base/start.d/"
 
             echo "Unstashing realm.properties"
             unstash name: 'realm.properties'
             sh "cp realm.properties jetty-home/target/jetty-base/etc/"
 
             echo "Unstashing test-realm.xml"
-            unstash name: 'test-realm.xml'
-            unstash name: 'test-realm-ee10.xml'
+            unstash name: 'test-realm.xml'      
             sh "cp test-realm-${EEX}.xml jetty-home/target/jetty-base/etc/test-realm.xml"
 
             // generate certificate/trustore etc...
@@ -225,7 +223,8 @@ pipeline {
               sh "ls -la jetty-home/target/jetty-base"
               script {
                 try {
-                  sh "cd servlet-tck/bin && ant run.all"
+                  //sh "cd servlet-tck/bin && ant run.all"
+                  sh "curl -vvv http://localhost:8080"
                 }catch(ex){
                   unstable('Script failed!' + ex.getMessage())
                 }
