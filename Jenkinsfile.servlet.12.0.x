@@ -96,7 +96,7 @@ pipeline {
 
             echo "Running home to create startd"
 
-            sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-module=resources,server,http,https,http2c,$EEX-webapp,$EEX-deploy,$EEX-jsp,ssl,logging-log4j2"
+            sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-module=resources,server,http,https,http2c,$EEX-webapp,$EEX-deploy,$EEX-servlet,$EEX-jsp,ssl,logging-log4j2"
 
             sh "ls -la jetty-home/target/jetty-base"
             sh "ls -la jetty-home/target/jetty-base/start.d"
