@@ -28,9 +28,9 @@ pipeline {
         git url: "https://github.com/jetty-project/tck-run.git", branch: "$TCKRUN_BRANCH"
         stash name: 'ts.jte', includes: 'ts.jte'
         stash name: 'ts.jte.jdk11', includes: 'ts.jte.jdk11'
-        stash name: 'realm.ini', includes: 'realm*.ini'
+        stash name: 'realm.ini', includes: '*realm.ini'
         stash name: 'realm.properties', includes: 'realm.properties'
-        stash name: 'test-realm.xml', includes: 'test-realm*.xml'
+        stash name: 'test-realm.xml', includes: '*test-realm.xml'
         stash name: 'log4j2.xml', includes: 'log4j2.xml'
         stash name: 'http.ini', includes: 'http.ini'
         stash name: 'ssl.ini', includes: 'ssl.ini'
