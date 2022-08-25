@@ -144,7 +144,7 @@ pipeline {
 
             echo "Unstashing realm.ini"
             unstash name: 'realm.ini'
-            sh "cp realm-${EEX}.ini jetty-home/target/jetty-base/start.d/"
+            sh "cp ${EEX}-realm.ini jetty-home/target/jetty-base/start.d/"
 
             echo "Unstashing realm.properties"
             unstash name: 'realm.properties'
@@ -152,7 +152,7 @@ pipeline {
 
             echo "Unstashing test-realm.xml"
             unstash name: 'test-realm.xml'      
-            sh "cp test-realm-${EEX}.xml jetty-home/target/jetty-base/etc/test-realm.xml"
+            sh "cp ${EEX}-test-realm.xml jetty-home/target/jetty-base/etc/"
 
             // generate certificate/trustore etc...
             withEnv(["JAVA_HOME=${tool "${jdktck}"}", "PATH+ANT=${tool 'ant-latest'}/bin:${env.JAVA_HOME}/bin"]) {
