@@ -211,7 +211,7 @@ pipeline {
             sh "ls -la jetty-home/target/jetty-base/start.d"
             sh "date"
             echo "Running Jetty Instance ..."
-            sh "cd jetty-home/target/jetty-base && java -Duser.language=en -Duser.country=US -Djava.locale.providers=COMPAT,CLDR -jar ../jetty-home/start.jar &"
+            sh "cd jetty-home/target/jetty-base && java -Duser.language=en -Duser.country=US -Djava.locale.providers=COMPAT,CLDR -jar ../jetty-home/start.jar --debug &"
           }
         }
       }
@@ -226,7 +226,7 @@ pipeline {
               script {
                 try {
                   //sh "cd servlet-tck/bin && ant run.all"
-                  sh "curl -vvv http://localhost:8080"
+                  sh "curl -vvv http://localhost:8080/"
                 }catch(ex){
                   unstable('Script failed!' + ex.getMessage())
                 }
@@ -242,11 +242,11 @@ pipeline {
           archiveArtifacts artifacts: "JTReport/**",allowEmptyArchive: true
           archiveArtifacts artifacts: "jetty-home/target/jetty-base/logs/*.*",allowEmptyArchive: true          
           tckreporttojunit tckReportTxtPath: "${env.WORKSPACE}/JTReport/text/summary.txt", junitFolderPath: 'surefire-reports'
-          junit testResults: '**/surefire-reports/*.xml'
+          junit testResults: '**/surefire-reports/*.xml', allowEmptyResults: true
           script{
             currentBuild.description = "Build branch $JETTY_BRANCH with TCKBUILD $TCKBUILD from $TCKURL"
           }
-          publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/JTReport/html", reportFiles: 'report.html', reportName: 'TCK Report', reportTitles: ''])
+          publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/JTReport/html", reportFiles: 'report.html', reportName: 'TCK Report', reportTitles: ''])
         }
       }
     }
