@@ -208,6 +208,10 @@ pipeline {
 
             sh "ls -la jetty-home/target/jetty-base"
 
+            sh "ls -la jetty-home/target/jetty-base/etc"
+
+            sh "ls -la jetty-home/target/jetty-base/start.d"
+
             echo "Running Jetty Instance ..."
             sh "cd jetty-home/target/jetty-base && java -Duser.language=en -Duser.country=US -Djava.locale.providers=COMPAT,CLDR -jar ../jetty-home/start.jar &"
           }
