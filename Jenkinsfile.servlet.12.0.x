@@ -206,13 +206,10 @@ pipeline {
             echo "Unstashing tck.xml"
             unstash name: 'tck.xml'
             sh "cp tck.xml jetty-home/target/jetty-base/etc/"
-
             sh "ls -la jetty-home/target/jetty-base"
-
             sh "ls -la jetty-home/target/jetty-base/etc"
-
             sh "ls -la jetty-home/target/jetty-base/start.d"
-
+            sh "date"
             echo "Running Jetty Instance ..."
             sh "cd jetty-home/target/jetty-base && java -Duser.language=en -Duser.country=US -Djava.locale.providers=COMPAT,CLDR -jar ../jetty-home/start.jar &"
           }
@@ -241,14 +238,14 @@ pipeline {
       }
       post {
         always {
+          archiveArtifacts artifacts: "**/surefire-reports/*.xml",allowEmptyArchive: true
+          archiveArtifacts artifacts: "JTReport/**",allowEmptyArchive: true
+          archiveArtifacts artifacts: "jetty-home/target/jetty-base/logs/*.*",allowEmptyArchive: true          
           tckreporttojunit tckReportTxtPath: "${env.WORKSPACE}/JTReport/text/summary.txt", junitFolderPath: 'surefire-reports'
           junit testResults: '**/surefire-reports/*.xml'
           script{
             currentBuild.description = "Build branch $JETTY_BRANCH with TCKBUILD $TCKBUILD from $TCKURL"
           }
-          archiveArtifacts artifacts: "**/surefire-reports/*.xml",allowEmptyArchive: true
-          archiveArtifacts artifacts: "JTReport/**",allowEmptyArchive: true
-          archiveArtifacts artifacts: "jetty-home/target/jetty-base/logs/*.*",allowEmptyArchive: true
           publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/JTReport/html", reportFiles: 'report.html', reportName: 'TCK Report', reportTitles: ''])
         }
       }
