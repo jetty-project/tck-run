@@ -227,8 +227,8 @@ pipeline {
               sh "ls -la jetty-home/target/jetty-base"
               script {
                 try {
-                  //sh "cd servlet-tck/bin && ant run.all"
-                  sh "curl -vvv http://localhost:8080/"
+                  sh "cd servlet-tck/bin && ant run.all"
+                  //sh "curl -vvv http://localhost:8080/"
                 }catch(ex){
                   unstable('Script failed!' + ex.getMessage())
                 }
