@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "https://www.eclipse.org/jetty/configure_10_0.dtd">
+
+<Configure class="org.eclipse.jetty.webapp.WebAppContext">
+
+  <Set name="contextPath">/servlet_spec_errorpage_web</Set>
+  <Set name="war"><Property name="jetty.webapps" default="." />/servlet_spec_errorpage_web.war</Set>
+
+  <Set name="errorHandler">
+    <New class="org.eclipse.jetty.servlet.ErrorPageErrorHandler">
+      <Set name="unwrapServletException">true</Set>
+    </New>
+  </Set>
+
+</Configure>

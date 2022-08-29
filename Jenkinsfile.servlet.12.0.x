@@ -173,13 +173,11 @@ pipeline {
             sh "cp ssl.ini jetty-home/target/jetty-base/start.d/"
 
             unstash name: 'servlet_spec_fragment_web'
-            // FIXME class name in those files
-            //sh "cp servlet_spec_fragment_web/webdefault.xml jetty-home/target/jetty-base/etc/"
-            //sh "cp servlet_spec_fragment_web/servlet_spec_fragment_web.xml jetty-home/target/jetty-base/webapps/"
+            sh "cp servlet_spec_fragment_web/webdefault.xml jetty-home/target/jetty-base/etc/"
+            sh "cp servlet_spec_fragment_web/${EEX}-servlet_spec_fragment_web.xml jetty-home/target/jetty-base/webapps/servlet_spec_fragment_web.xml"
 
             unstash name: 'servlet_spec_errorpage_web'
-            // FIXME class name in those files
-            //sh "cp servlet_spec_errorpage_web/servlet_spec_errorpage_web.xml jetty-home/target/jetty-base/webapps/"
+            sh "cp servlet_spec_errorpage_web/${EEX}-servlet_spec_errorpage_web.xml jetty-home/target/jetty-base/webapps/servlet_spec_errorpage_web.xml"
 
             script {
               // download servlet-api
