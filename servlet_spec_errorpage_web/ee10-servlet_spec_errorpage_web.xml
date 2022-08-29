@@ -6,7 +6,7 @@
   <Set name="contextPath">/servlet_spec_errorpage_web</Set>
   <Set name="war"><Property name="jetty.webapps" default="." />/servlet_spec_errorpage_web.war</Set>
 
-  <Set name="errorHandler">
+  <Set name="errorProcessor">
     <New class="org.eclipse.jetty.ee10.servlet.ErrorPageErrorHandler">
       <Set name="unwrapServletException">true</Set>
     </New>
