@@ -18,7 +18,7 @@
 
     <Call name="addBean">
       <Arg>
-        <New class="org.eclipse.jetty.ee9.servlet.security.HashLoginService">
+        <New class="org.eclipse.jetty.ee9.security.HashLoginService">
           <Set name="name">default</Set>
           <Set name="config"><Ref refid="realmResource"/></Set>
           <Set name="hotReload">false</Set>
