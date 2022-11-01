@@ -54,78 +54,76 @@ pipeline {
     }
     stage( "Setup websocket tck" ) {
       steps {
-        container('jetty-build') {
-          withEnv(["JAVA_HOME=${tool "$jdk"}", "PATH=${tool "$jdk"}/bin:${env.PATH}"]) {
-            //env.JAVA_HOME = "${tool "$jdk"}"
-            //env.PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
-            echo "JAVA_HOME=${env.JAVA_HOME}"
-            echo "PATH=${env.PATH}"
+        withEnv(["JAVA_HOME=${tool "$jdk"}", "PATH=${tool "$jdk"}/bin:${env.PATH}"]) {
+          //env.JAVA_HOME = "${tool "$jdk"}"
+          //env.PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
+          echo "JAVA_HOME=${env.JAVA_HOME}"
+          echo "PATH=${env.PATH}"
 
-            sh "ls -la ${env.JAVA_HOME}"
+          sh "ls -la ${env.JAVA_HOME}"
 
-            // Execute some simple lookups of required command line applications
-            // If the application isn't found, then it fails the build
-            sh "which curl"
-            sh "which wget"
-            sh "which unzip"
-            sh "which find"
-            sh "which java"
+          // Execute some simple lookups of required command line applications
+          // If the application isn't found, then it fails the build
+          sh "which curl"
+          sh "which wget"
+          sh "which unzip"
+          sh "which find"
+          sh "which java"
 
-            //sh "wget https://jenkins.webtide.net/userContent/websockettck-1.1_latest.zip"
-            //sh "wget -O websockettck.zip http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8/nightly-802/websocket-tck-1.1.1.zip"
-            echo "Fetching servlettck from ${TCK_WS_URL}"
-            sh "wget -O websockettck.zip ${TCK_WS_URL}"
+          //sh "wget https://jenkins.webtide.net/userContent/websockettck-1.1_latest.zip"
+          //sh "wget -O websockettck.zip http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8/nightly-802/websocket-tck-1.1.1.zip"
+          echo "Fetching servlettck from ${TCK_WS_URL}"
+          sh "wget -O websockettck.zip ${TCK_WS_URL}"
 
-            sh "unzip websockettck.zip"
-            sh "mv websocket-tck websockettck"
-            sh "ls -lrt"
-            sh "cd jetty-home/target/ && mkdir jetty-base"
-            script {
-              if (SVLT_NS == 'javax') {
-                sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,webapp,deploy,annotations,jsp,logging-log4j2,websocket"
-              } else {
-                sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,webapp,deploy,annotations,jsp,logging-log4j2,websocket-jakarta"
-              }
+          sh "unzip websockettck.zip"
+          sh "mv websocket-tck websockettck"
+          sh "ls -lrt"
+          sh "cd jetty-home/target/ && mkdir jetty-base"
+          script {
+            if (SVLT_NS == 'javax') {
+              sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,webapp,deploy,annotations,jsp,logging-log4j2,websocket"
+            } else {
+              sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,webapp,deploy,annotations,jsp,logging-log4j2,websocket-jakarta"
             }
-            sh 'find websockettck -name *.war -exec cp {} jetty-home/target/jetty-base/webapps/ \\;'
-
-            unstash name: 'wsts.jte'
-            // replace values in ts.jte
-            script {
-              def text = readFile "wsts.jte"
-              text = text.replaceAll("@WORKSPACE@", "${env.WORKSPACE}")
-              text = text.replaceAll("@JETTY_VERSION@", jettyVersion)
-              writeFile file: "websockettck/bin/ts.jte", text: text
-            }
-
-            sh "ls -lrt jetty-home/target/jetty-home/"
-
-            sh "cat websockettck/bin/ts.jte"
-
-            unstash name: 'log4j2.xml'
-            sh "cp log4j2.xml jetty-home/target/jetty-base/resources/"
-
-            unstash name: 'http.ini'
-            sh "cp http.ini jetty-home/target/jetty-base/start.d/"
-
-            script {
-              // download servlet-api
-              if (SVLT_NS == 'javax') {
-                sh "wget -q -O servlet-api.jar https://repo.maven.apache.org/maven2/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar"
-                sh "cp servlet-api.jar websockettck/lib/servlet-api.jar"
-                sh "wget -q -O websocket-api.jar https://repo.maven.apache.org/maven2/jakarta/websocket/jakarta.websocket-api/1.1.2/jakarta.websocket-api-1.1.2.jar"
-                sh "cp websocket-api.jar websockettck/lib/websocket-api.jar"
-              } else {
-                sh "wget -q -O servlet-api.jar https://repo.maven.apache.org/maven2/jakarta/servlet/jakarta.servlet-api/5.0.0-M1/jakarta.servlet-api-5.0.0-M1.jar"
-                sh "cp servlet-api.jar websockettck/lib/servlet-api.jar"
-                sh "wget -q -O websocket-api.jar https://repo.maven.apache.org/maven2/jakarta/websocket/jakarta.websocket-api/2.0.0-M1/jakarta.websocket-api-2.0.0-M1.jar"
-                sh "cp websocket-api.jar websockettck/lib/websocket-api.jar"
-              }
-            }
-
-            //sh "cd jetty-distribution/target/jetty-base && java -Duser.language=en -Duser.country=US -Djavax.net.ssl.trustStore=etc/cacerts.jks -Djavax.net.ssl.keyStore=etc/clientcert.jks -Djavax.net.ssl.keyStorePassword=changeit -jar ../distribution/start.jar jetty.sslContext.trustStorePath=etc/cacerts.jks &"
-            sh "cd jetty-home/target/jetty-base && java -Duser.language=en -Duser.country=US -jar ../jetty-home/start.jar  &"
           }
+          sh 'find websockettck -name *.war -exec cp {} jetty-home/target/jetty-base/webapps/ \\;'
+
+          unstash name: 'wsts.jte'
+          // replace values in ts.jte
+          script {
+            def text = readFile "wsts.jte"
+            text = text.replaceAll("@WORKSPACE@", "${env.WORKSPACE}")
+            text = text.replaceAll("@JETTY_VERSION@", jettyVersion)
+            writeFile file: "websockettck/bin/ts.jte", text: text
+          }
+
+          sh "ls -lrt jetty-home/target/jetty-home/"
+
+          sh "cat websockettck/bin/ts.jte"
+
+          unstash name: 'log4j2.xml'
+          sh "cp log4j2.xml jetty-home/target/jetty-base/resources/"
+
+          unstash name: 'http.ini'
+          sh "cp http.ini jetty-home/target/jetty-base/start.d/"
+
+          script {
+            // download servlet-api
+            if (SVLT_NS == 'javax') {
+              sh "wget -q -O servlet-api.jar https://repo.maven.apache.org/maven2/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar"
+              sh "cp servlet-api.jar websockettck/lib/servlet-api.jar"
+              sh "wget -q -O websocket-api.jar https://repo.maven.apache.org/maven2/jakarta/websocket/jakarta.websocket-api/1.1.2/jakarta.websocket-api-1.1.2.jar"
+              sh "cp websocket-api.jar websockettck/lib/websocket-api.jar"
+            } else {
+              sh "wget -q -O servlet-api.jar https://repo.maven.apache.org/maven2/jakarta/servlet/jakarta.servlet-api/5.0.0-M1/jakarta.servlet-api-5.0.0-M1.jar"
+              sh "cp servlet-api.jar websockettck/lib/servlet-api.jar"
+              sh "wget -q -O websocket-api.jar https://repo.maven.apache.org/maven2/jakarta/websocket/jakarta.websocket-api/2.0.0-M1/jakarta.websocket-api-2.0.0-M1.jar"
+              sh "cp websocket-api.jar websockettck/lib/websocket-api.jar"
+            }
+          }
+
+          //sh "cd jetty-distribution/target/jetty-base && java -Duser.language=en -Duser.country=US -Djavax.net.ssl.trustStore=etc/cacerts.jks -Djavax.net.ssl.keyStore=etc/clientcert.jks -Djavax.net.ssl.keyStorePassword=changeit -jar ../distribution/start.jar jetty.sslContext.trustStorePath=etc/cacerts.jks &"
+          sh "cd jetty-home/target/jetty-base && java -Duser.language=en -Duser.country=US -jar ../jetty-home/start.jar  &"
         }
       }
     }
