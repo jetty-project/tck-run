@@ -44,7 +44,10 @@ pipeline {
 
     stage("Checkout Jetty") {
       steps {
-        git url: "https://github.com/eclipse/jetty.project.git", branch: "$JETTY_BRANCH"
+        checkout([$class: 'GitSCM',
+                  branches: [[name: "*/$JETTY_BRANCH"]],
+                  extensions: [[$class: 'CloneOption', depth: 1, noTags: true, shallow: true]],
+                  userRemoteConfigs: [[url: 'https://github.com/eclipse/jetty.project.git']]])           
       }
     }
     stage("Build Jetty") {
