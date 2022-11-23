@@ -205,7 +205,8 @@ pipeline {
 
           echo "Unstashing tck.xml"
           unstash name: 'tck.xml'
-          sh "cp tck.xml jetty-home/target/jetty-base/etc/"
+          // do not force encoding
+          //sh "cp tck.xml jetty-home/target/jetty-base/etc/"
           sh "ls -la jetty-home/target/jetty-base"
           sh "ls -la jetty-home/target/jetty-base/etc"
           sh "ls -la jetty-home/target/jetty-base/start.d"
