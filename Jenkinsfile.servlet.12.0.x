@@ -35,7 +35,7 @@ pipeline {
         stash name: 'http.ini', includes: 'http.ini'
         stash name: 'ssl.ini', includes: 'ssl.ini'
         stash name: 'tck.ini', includes: 'tck.ini'
-        stash name: 'tck.xml', includes: 'tck.xml'
+        stash name: 'tck.xml', includes: 'tck-12.xml'
         stash name: 'servlet_spec_fragment_web', includes: "servlet_spec_fragment_web/*"
         stash name: 'servlet_spec_errorpage_web', includes: "servlet_spec_errorpage_web/*"
         sh "ls -lrt"
@@ -206,7 +206,7 @@ pipeline {
           echo "Unstashing tck.xml"
           unstash name: 'tck.xml'
           // do not force encoding
-          //sh "cp tck.xml jetty-home/target/jetty-base/etc/"
+          sh "cp tck-12.xml jetty-home/target/jetty-base/etc/tck.xml"
           sh "ls -la jetty-home/target/jetty-base"
           sh "ls -la jetty-home/target/jetty-base/etc"
           sh "ls -la jetty-home/target/jetty-base/start.d"
