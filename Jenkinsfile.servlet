@@ -96,7 +96,7 @@ pipeline {
 
           echo "Running home to create startd"
 
-          sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-module=resources,server,http,https,http2c,webapp,deploy,jsp,annotations,ssl,logging-log4j2"
+          sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses maven.repo.uri=http://10.0.0.15:8081/repository/maven-public/ --create-startd --add-module=resources,server,http,https,http2c,webapp,deploy,jsp,annotations,ssl,logging-log4j2"
 
           sh "ls -la jetty-home/target/jetty-base"
           sh "ls -la jetty-home/target/jetty-base/start.d"
