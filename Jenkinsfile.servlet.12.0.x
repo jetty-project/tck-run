@@ -46,7 +46,7 @@ pipeline {
       steps {
         checkout([$class: 'GitSCM',
                   branches: [[name: "*/$JETTY_BRANCH"]],
-                  extensions: [[$class: 'CloneOption', depth: 1, noTags: true, shallow: true]],
+                  extensions: [[$class: 'CloneOption', depth: 1, noTags: true, shallow: true, reference: "/home/jenkins/jetty.project.git"]],
                   userRemoteConfigs: [[url: 'https://github.com/eclipse/jetty.project.git']]])           
       }
     }
