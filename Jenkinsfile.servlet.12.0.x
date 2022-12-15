@@ -32,6 +32,7 @@ pipeline {
         stash name: 'realm.properties', includes: '*realm.properties'
         stash name: 'test-realm.xml', includes: '*test-realm.xml'
         stash name: 'log4j2.xml', includes: 'log4j2.xml'
+        sh "cp http-12.ini http.ini"
         stash name: 'http.ini', includes: 'http.ini'
         stash name: 'ssl.ini', includes: 'ssl.ini'
         stash name: 'tck.ini', includes: 'tck.ini'
