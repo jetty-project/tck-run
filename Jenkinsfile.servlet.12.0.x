@@ -38,7 +38,6 @@ pipeline {
         stash name: 'tck.ini', includes: 'tck.ini'
         stash name: 'tck.xml', includes: 'tck-12.xml'
         stash name: 'servlet_spec_fragment_web', includes: "servlet_spec_fragment_web/*"
-        stash name: 'servlet_spec_errorpage_web', includes: "servlet_spec_errorpage_web/*"
         sh "ls -lrt"
       }
     }
@@ -176,9 +175,6 @@ pipeline {
           unstash name: 'servlet_spec_fragment_web'
           sh "cp servlet_spec_fragment_web/webdefault.xml jetty-home/target/jetty-base/etc/"
           sh "cp servlet_spec_fragment_web/${EEX}-servlet_spec_fragment_web.xml jetty-home/target/jetty-base/webapps/servlet_spec_fragment_web.xml"
-
-          unstash name: 'servlet_spec_errorpage_web'
-          sh "cp servlet_spec_errorpage_web/${EEX}-servlet_spec_errorpage_web.xml jetty-home/target/jetty-base/webapps/servlet_spec_errorpage_web.xml"
 
           script {
             // download servlet-api
