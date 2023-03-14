@@ -173,7 +173,7 @@ pipeline {
           sh "cp ssl.ini jetty-home/target/jetty-base/start.d/"
 
           unstash name: 'servlet_spec_fragment_web'
-          sh "cp servlet_spec_fragment_web/webdefault.xml jetty-home/target/jetty-base/etc/"
+          sh "cp servlet_spec_fragment_web/webdefault*.xml jetty-home/target/jetty-base/etc/"
           sh "cp servlet_spec_fragment_web/${EEX}-servlet_spec_fragment_web.xml jetty-home/target/jetty-base/webapps/servlet_spec_fragment_web.xml"
 
           script {
