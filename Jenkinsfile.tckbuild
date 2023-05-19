@@ -20,6 +20,10 @@ pipeline {
                       'websocket/websockettck-run-jetty-10.0.x',
                       'jsp/jsptck-run-jetty-11.0.x','jsp/jsptck-run-jetty-10.0.x']
     )
+
+    string( defaultValue: '6.0.0',
+            description: 'tck servlet version',
+            name: 'TCK_SERVLET_VERSION')    
     string( defaultValue: 'https://ci.eclipse.org/jakartaee-tck/job/build-glassfish/lastSuccessfulBuild/artifact/appserver/distributions/glassfish/target/glassfish.zip',
             description: 'URL to download Glassfish bundle (https://jenkins.webtide.net/userContent/glassfish-5.1.0.zip)',
             name: 'GLASSFISH_BUNDLE_URL' )
@@ -67,7 +71,7 @@ pipeline {
               if (TCK_TO_RUN) {
                 //TCK_URL = "$JENKINS_URL/job/$JOB_NAME/$BUILD_NUMBER/artifact/standalone-bundles/servlet-tck-4.0.0.zip"
                 TCK_URL = "$BUILD_URL/artifact/standalone-bundles/servlet-tck-4.0.0.zip"
-                TCK_SVLT_JAKARTA_URL = "$BUILD_URL/artifact/standalone-bundles/servlet-tck-5.0.0.zip"
+                TCK_SVLT_JAKARTA_URL = "$BUILD_URL/artifact/standalone-bundles/servlet-tck-$TCK_SERVLET_VERSION.zip"
                 TCK_WS_URL = "$BUILD_URL/artifact/standalone-bundles/websocket-tck-2.0.0.zip"
                 TCK_JSP_URL = "$BUILD_URL/artifact/standalone-bundles/pages-tck-2.3.0.zip"
                 TCK_JSP_JAKARTA_URL = "$BUILD_URL/artifact/standalone-bundles/pages-tck-3.0.0.zip"
