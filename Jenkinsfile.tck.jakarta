@@ -15,12 +15,13 @@ pipeline {
     choice(
             description: 'Github org',
             name: 'GITHUB_ORG',
-            choices: ['eclipse-ee4j','olamy']
+            choices: ['jakartaee','olamy']
     )
     choice(
             description: 'TCK servlet job to run(servlettck-run-jetty-11.0.x/servlettck-run-jetty-10.0.x)',
             name: 'TCK_TO_RUN',
-            choices: ['servlettck-run-jetty-11.0.x','websocket/websockettck-run-jetty-11.0.x',
+            choices: ['servlettck-run-12.0.x-ee10', 'servlettck-run-12.0.x-ee9',
+                      'servlettck-run-jetty-11.0.x','websocket/websockettck-run-jetty-11.0.x',
                       'jsp/jsptck-run-jetty-11.0.x']
     )
     string( defaultValue: "jetty-11.0.x",
