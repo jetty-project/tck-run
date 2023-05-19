@@ -3,6 +3,7 @@
 pipeline {
   agent { node { label 'linux' } }
   parameters {
+    string( defaultValue: 'jdk11', description: 'JDK to build TCK (use jdk11)', name: 'JDKTCK' )
     string( defaultValue: '8.0', description: 'GIT branch name to build (master/8.0/servlet_jakarta/xxx)',
             name: 'TCK_BRANCH' )
     choice(
@@ -38,7 +39,7 @@ pipeline {
 
       stage("Build TCK Servlet") {
         steps {
-            withEnv(["JAVA_HOME=${ tool "jdk8" }",
+            withEnv(["JAVA_HOME=${ tool "${JDKTCK}" }",
                     "PATH+ANT+MAVEN=${tool 'ant-latest'}/bin:${env.JAVA_HOME}/bin:${tool 'maven3'}/bin",
                     "GF_BUNDLE_URL=${GLASSFISH_BUNDLE_URL}"]) {
                 sh "apt --yes update && apt --yes install zip"
