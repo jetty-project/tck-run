@@ -4,7 +4,7 @@ pipeline {
   agent { node { label 'linux' } }
   parameters {
     string( defaultValue: 'jdk11', description: 'JDK to build TCK (use jdk11)', name: 'JDKTCK' )
-    string( defaultValue: '8.0', description: 'GIT branch name to build (master/8.0/servlet_jakarta/xxx)',
+    string( defaultValue: 'master', description: 'GIT branch name to build (master/8.0/servlet_jakarta/xxx)',
             name: 'TCK_BRANCH' )
     choice(
             description: 'Github org',
