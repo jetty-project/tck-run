@@ -72,7 +72,7 @@ pipeline {
             script {
               if (TCK_TO_RUN) {
                 //TCK_URL = "$JENKINS_URL/job/$JOB_NAME/$BUILD_NUMBER/artifact/standalone-bundles/servlet-tck-4.0.0.zip"
-                TCK_URL = "$BUILD_URL/artifact/standalone-bundles/servlet-tck-4.0.0.zip"
+                TCK_URL = "$BUILD_URL/artifact/standalone-bundles/servlet-tck-${TCK_SERVLET_VERSION}.zip"
                 TCK_SVLT_JAKARTA_URL = "$BUILD_URL/artifact/standalone-bundles/servlet-tck-${TCK_SERVLET_VERSION}.zip"
                 TCK_WS_URL = "$BUILD_URL/artifact/standalone-bundles/websocket-tck-2.0.0.zip"
                 TCK_JSP_URL = "$BUILD_URL/artifact/standalone-bundles/pages-tck-2.3.0.zip"
