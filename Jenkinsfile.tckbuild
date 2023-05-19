@@ -20,7 +20,9 @@ pipeline {
                       'websocket/websockettck-run-jetty-10.0.x',
                       'jsp/jsptck-run-jetty-11.0.x','jsp/jsptck-run-jetty-10.0.x']
     )
-
+    string( defaultValue: "jetty-12.0.x",
+            description: 'Jetty 12.0.x branch to build',
+            name: 'JETTY_BRANCH' )
     string( defaultValue: '6.0.0',
             description: 'tck servlet version',
             name: 'TCK_SERVLET_VERSION')    
@@ -80,6 +82,7 @@ pipeline {
                 echo "tckurl: $TCK_URL"
 
                 def built = build job: "$TCK_TO_RUN", parameters: [string(name: 'TCKURL', value: "$TCK_URL"),
+                                                        string(name: 'JETTY_BRANCH', value: "$JETTY_BRANCH"),                                                        
                                                         string(name: 'TCK_WS_URL', value: "$TCK_WS_URL"),
                                                         string(name: 'TCK_JSP_URL', value: "$TCK_JSP_URL"),
                                                         string(name: 'TCK_EL_URL', value: "$TCK_EL_URL"),
