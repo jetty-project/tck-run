@@ -24,8 +24,8 @@ pipeline {
                       'servlettck-run-jetty-11.0.x','websocket/websockettck-run-jetty-11.0.x',
                       'jsp/jsptck-run-jetty-11.0.x']
     )
-    string( defaultValue: "jetty-11.0.x",
-            description: 'Jetty 11.0.x branch to build',
+    string( defaultValue: "jetty-12.0.x",
+            description: 'Jetty 12.0.x branch to build',
             name: 'JETTY_BRANCH' )
   }
   stages {
