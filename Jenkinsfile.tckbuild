@@ -8,7 +8,7 @@ pipeline {
     choice(
             description: 'Github org',
             name: 'GITHUB_ORG',
-            choices: ['eclipse-ee4j','olamy']
+            choices: ['jakartaee','olamy']
     )
     choice(
             description: 'TCK servlet job to run',
