@@ -33,7 +33,11 @@ pipeline {
       }
       stage("Checkout TCK Run") {
         steps {
-            git url: 'https://github.com/${GITHUB_ORG}/jakartaee-tck/', branch: '${TCK_BRANCH}'
+            //git url: 'https://github.com/${GITHUB_ORG}/jakartaee-tck/', branch: '${TCK_BRANCH}'
+            checkout([$class: 'GitSCM',
+                  branches: [[name: "*/${TCK_BRANCH}"]],
+                  extensions: [[$class: 'CloneOption', depth: 1, noTags: true, shallow: true,
+                  userRemoteConfigs: [[url: 'https://github.com/${GITHUB_ORG}/jakartaee-tck/']]])            
         }
       }
 
