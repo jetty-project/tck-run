@@ -84,9 +84,9 @@ pipeline {
           sh "cd jetty-home/target/ && mkdir jetty-base"
           script {
             if (SVLT_NS == 'javax') {
-              sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,webapp,deploy,annotations,jsp,logging-log4j2,websocket"
+              sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,webapp,deploy,annotations,jsp,logging-slf4j,logging-log4j2,websocket"
             } else {
-              sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,webapp,deploy,annotations,jsp,slf4j,logging-log4j2,websocket-jakarta"
+              sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses --create-startd --add-to-start=resources,server,http,webapp,deploy,annotations,jsp,logging-slf4j,logging-log4j2,websocket-jakarta"
             }
           }
           sh 'find websockettck -name *.war -exec cp {} jetty-home/target/jetty-base/webapps/ \\;'
