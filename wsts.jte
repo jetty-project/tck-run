@@ -334,6 +334,7 @@ user=j2ee
 password=j2ee
 authuser=javajoe
 authpassword=javajoe
+jimage.dir=/tmp/
  
 ##########################################################################
 # Waiting time in seconds for socket to send/receive a message
