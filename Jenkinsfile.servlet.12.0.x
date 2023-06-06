@@ -32,8 +32,7 @@ pipeline {
         stash name: 'realm.properties', includes: '*realm.properties'
         stash name: 'test-realm.xml', includes: '*test-realm.xml'
         stash name: 'log4j2.xml', includes: 'log4j2.xml'
-        sh "cp http-12.ini http.ini"
-        stash name: 'http.ini', includes: 'http-12.ini'
+        stash name: 'http.ini', includes: 'http-12*.ini'
         stash name: 'ssl.ini', includes: 'ssl.ini'
         stash name: 'tck.ini', includes: 'tck.ini'
         stash name: 'tck.xml', includes: 'tck-12.xml'
@@ -167,7 +166,7 @@ pipeline {
           sh "cp log4j2.xml jetty-home/target/jetty-base/resources/"
 
           unstash name: 'http.ini'
-          sh "cp http-12.ini jetty-home/target/jetty-base/start.d/http.ini"
+          sh "cp http-12-${EEX}.ini jetty-home/target/jetty-base/start.d/http.ini"
 
           unstash name: 'ssl.ini'
           sh "cp ssl.ini jetty-home/target/jetty-base/start.d/"
