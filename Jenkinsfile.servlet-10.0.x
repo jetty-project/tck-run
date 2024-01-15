@@ -1,5 +1,5 @@
 pipeline {
-  agent none
+  agent any
   triggers {
     //cron ('H */8 * * *')
     cron '@daily'
