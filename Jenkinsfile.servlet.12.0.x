@@ -95,7 +95,7 @@ pipeline {
 
           echo "Running home to create startd"
 
-          sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses maven.repo.uri=http://10.0.0.15:8081/repository/maven-public/ --create-startd --add-module=resources,server,http,https,http2c,$EEX-webapp,$EEX-deploy,$EEX-servlet,$EEX-security,$EEX-jsp,ssl,logging-log4j2"
+          sh "cd jetty-home/target/jetty-base && java -jar ../jetty-home/start.jar --approve-all-licenses maven.repo.uri=http://nexus-service.nexus.svc.cluster.local:8081/repository/maven-public/ --create-startd --add-module=resources,server,http,https,http2c,$EEX-webapp,$EEX-deploy,$EEX-servlet,$EEX-security,$EEX-jsp,ssl,logging-log4j2"
 
           sh "ls -la jetty-home/target/jetty-base"
           sh "ls -la jetty-home/target/jetty-base/start.d"
@@ -178,19 +178,19 @@ pipeline {
           script {
             // download servlet-api
             if (EEX == 'ee8') {
-              sh "wget -q -O servlet-api.jar http://10.0.0.15:8081/repository/maven-public/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar"
+              sh "wget -q -O servlet-api.jar http://nexus-service.nexus.svc.cluster.local:8081/repository/maven-public/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar"
               sh "cp servlet-api.jar servlet-tck/lib/servlet-api.jar"
-              sh "wget -q -O annotation-api.jar http://10.0.0.15:8081/repository/maven-public/javax/annotation/javax.annotation-api/1.3/javax.annotation-api-1.3.jar"
+              sh "wget -q -O annotation-api.jar http://nexus-service.nexus.svc.cluster.local:8081/repository/maven-public/javax/annotation/javax.annotation-api/1.3/javax.annotation-api-1.3.jar"
               sh "cp annotation-api.jar servlet-tck/lib/annotation-api.jar"
             } else if (EEX == 'ee9'){
-              sh "wget -q -O servlet-api.jar http://10.0.0.15:8081/repository/maven-public/jakarta/servlet/jakarta.servlet-api/5.0.0/jakarta.servlet-api-5.0.0.jar"
+              sh "wget -q -O servlet-api.jar http://nexus-service.nexus.svc.cluster.local:8081/repository/maven-public/jakarta/servlet/jakarta.servlet-api/5.0.0/jakarta.servlet-api-5.0.0.jar"
               sh "cp servlet-api.jar servlet-tck/lib/servlet-api.jar"
-              sh "wget -q -O annotation-api.jar http://10.0.0.15:8081/repository/maven-public/jakarta/annotation/jakarta.annotation-api/2.0.0/jakarta.annotation-api-2.0.0.jar"
+              sh "wget -q -O annotation-api.jar http://nexus-service.nexus.svc.cluster.local:8081/repository/maven-public/jakarta/annotation/jakarta.annotation-api/2.0.0/jakarta.annotation-api-2.0.0.jar"
               sh "cp annotation-api.jar servlet-tck/lib/annotation-api.jar"
             } else {
-              sh "wget -q -O servlet-api.jar http://10.0.0.15:8081/repository/maven-public/jakarta/servlet/jakarta.servlet-api/6.0.0/jakarta.servlet-api-6.0.0.jar"
+              sh "wget -q -O servlet-api.jar http://nexus-service.nexus.svc.cluster.local:8081/repository/maven-public/jakarta/servlet/jakarta.servlet-api/6.0.0/jakarta.servlet-api-6.0.0.jar"
               sh "cp servlet-api.jar servlet-tck/lib/servlet-api.jar"
-              sh "wget -q -O annotation-api.jar http://10.0.0.15:8081/repository/maven-public/jakarta/annotation/jakarta.annotation-api/2.1.1/jakarta.annotation-api-2.1.1.jar"
+              sh "wget -q -O annotation-api.jar http://nexus-service.nexus.svc.cluster.local:8081/repository/maven-public/jakarta/annotation/jakarta.annotation-api/2.1.1/jakarta.annotation-api-2.1.1.jar"
               sh "cp annotation-api.jar servlet-tck/lib/annotation-api.jar"                
             }
           }
